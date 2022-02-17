@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : app
+ Source Server         : xzd
  Source Server Type    : MySQL
- Source Server Version : 80020
+ Source Server Version : 80012
  Source Host           : localhost:3306
- Source Schema         : wechat-mall
+ Source Schema         : mall2
 
  Target Server Type    : MySQL
- Target Server Version : 80020
+ Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 14/10/2020 14:46:26
+ Date: 17/02/2022 22:22:25
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号',
@@ -31,9 +31,9 @@ CREATE TABLE `address`  (
   `county` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '县区',
   `street` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细地址',
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮编',
-  `isDefault` int(0) NULL DEFAULT 1 COMMENT '是否默认',
+  `isDefault` int(11) NULL DEFAULT 1 COMMENT '是否默认',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of address
@@ -52,7 +52,7 @@ INSERT INTO `address` VALUES (8, 'oShUg5dO2dJN7gjezrL3CvBOoHP0', '林心如', '1
 -- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `fullname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
@@ -61,10 +61,10 @@ CREATE TABLE `admin`  (
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号码',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '注册邮箱',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `login_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '登录时间',
-  `login_count` bigint(0) NOT NULL DEFAULT 1 COMMENT '登录次数',
+  `login_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '登录时间',
+  `login_count` bigint(20) NOT NULL DEFAULT 1 COMMENT '登录次数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin
@@ -73,54 +73,50 @@ INSERT INTO `admin` VALUES (1, 'admin', '123456', '超级管理员', '男', 'htt
 INSERT INTO `admin` VALUES (2, 'moz', '123456', '黄小米', '女', 'http://localhost:3003/images/avatar/default.jpg', '13475829262', 'nn880328@126.com', '2019-05-11 18:21:37', '2020-10-10 10:48:38', 9);
 
 -- ----------------------------
--- Table structure for admin_role
+-- Table structure for banner
 -- ----------------------------
-DROP TABLE IF EXISTS `admin_role`;
-CREATE TABLE `admin_role`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `admin_id` int(0) NULL DEFAULT NULL COMMENT '用户id',
-  `role_id` int(0) NULL DEFAULT NULL COMMENT '角色id',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = FIXED;
-
--- ----------------------------
--- Records of admin_role
--- ----------------------------
-INSERT INTO `admin_role` VALUES (1, 1, 1);
-INSERT INTO `admin_role` VALUES (2, 2, 2);
+DROP TABLE IF EXISTS `banner`;
+CREATE TABLE `banner`  (
+  `bannerId` int(11) NOT NULL,
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `state` int(1) NULL DEFAULT NULL COMMENT '0 下架 1 上架',
+  PRIMARY KEY (`bannerId`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for cart
 -- ----------------------------
 DROP TABLE IF EXISTS `cart`;
 CREATE TABLE `cart`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
-  `goods_id` int(0) NOT NULL COMMENT '商品id',
-  `goods_num` int(0) NOT NULL COMMENT '商品数量',
-  `status` tinyint(0) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
+  `goods_id` int(11) NOT NULL COMMENT '商品id',
+  `goods_num` int(11) NOT NULL COMMENT '商品数量',
+  `status` tinyint(4) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `update_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  `update_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = FIXED;
+) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of cart
 -- ----------------------------
 INSERT INTO `cart` VALUES (1, 'oShUg5dO2dJN7gjezrL3CvBOoHP0', 37, 3, 1, '2020-08-27 23:13:50', '2020-08-27 23:17:21');
+INSERT INTO `cart` VALUES (2, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 25, 1, 1, '2022-02-13 22:04:30', '2022-02-13 22:04:30');
+INSERT INTO `cart` VALUES (3, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 38, 3, 1, '2022-02-17 20:53:08', '2022-02-17 20:53:08');
 
 -- ----------------------------
 -- Table structure for category
 -- ----------------------------
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `cateId` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
-  `pId` int(0) NOT NULL COMMENT '父级id',
-  `level` int(0) NULL DEFAULT NULL COMMENT '层级',
+  `pId` int(11) NOT NULL COMMENT '父级id x',
+  `level` int(11) NULL DEFAULT NULL COMMENT '层级 x',
   `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 136 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = DYNAMIC;
+  PRIMARY KEY (`cateId`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 136 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of category
@@ -266,12 +262,12 @@ INSERT INTO `category` VALUES (135, '显示器', 123, NULL, '');
 -- ----------------------------
 DROP TABLE IF EXISTS `city`;
 CREATE TABLE `city`  (
-  `_id` int(0) NOT NULL DEFAULT 0,
+  `_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `city_id` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `province_id` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of city
@@ -625,11 +621,11 @@ INSERT INTO `city` VALUES (343, '自治区直辖县级行政区划', '6590000000
 -- ----------------------------
 DROP TABLE IF EXISTS `collection`;
 CREATE TABLE `collection`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户id',
-  `goods_id` int(0) NULL DEFAULT NULL COMMENT '商品id',
+  `goods_id` int(11) NULL DEFAULT NULL COMMENT '商品id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户收藏商品' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户收藏商品' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of collection
@@ -642,12 +638,12 @@ INSERT INTO `collection` VALUES (2, 'oShUg5dO2dJN7gjezrL3CvBOoHP0', 38);
 -- ----------------------------
 DROP TABLE IF EXISTS `county`;
 CREATE TABLE `county`  (
-  `_id` int(0) NOT NULL DEFAULT 0,
+  `_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `county_id` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `city_id` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of county
@@ -3940,28 +3936,28 @@ INSERT INTO `county` VALUES (3282, '铁门关市', '659006000000', '659000000000
 -- ----------------------------
 DROP TABLE IF EXISTS `goods`;
 CREATE TABLE `goods`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `cate_1st` int(0) NOT NULL COMMENT '一级分类id',
-  `cate_2nd` int(0) NOT NULL COMMENT '二级分类id',
-  `cate_3rd` int(0) NULL DEFAULT NULL COMMENT '三级分类id',
+  `goodsId` int(11) NOT NULL AUTO_INCREMENT,
+  `cateId` int(11) NOT NULL COMMENT '一级分类id',
+  `cate_2nd` int(11) NOT NULL COMMENT '二级分类id x',
+  `cate_3rd` int(11) NULL DEFAULT NULL COMMENT '三级分类id x',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品名称',
-  `hotPoint` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品热点描述',
+  `hotPoint` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品热点描述 x',
   `price` decimal(10, 2) NOT NULL COMMENT '商品价格',
-  `marketPrice` decimal(10, 2) NOT NULL COMMENT '市场价',
-  `cost` decimal(10, 2) NOT NULL COMMENT '成本价',
-  `discount` decimal(10, 0) NULL DEFAULT NULL COMMENT '折扣',
-  `inventory` int(0) NOT NULL COMMENT '库存',
-  `articleNo` varchar(255) NOT NULL COMMENT '货号',
-  `img_lg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品主图-720',
-  `img_md` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品主图-360',
+  `marketPrice` decimal(10, 2) NOT NULL COMMENT '市场价 x',
+  `cost` decimal(10, 2) NOT NULL COMMENT '成本价 x',
+  `discount` decimal(10, 0) NULL DEFAULT NULL COMMENT '折扣 x',
+  `inventory` int(11) NOT NULL COMMENT '库存',
+  `articleNo` int(11) NOT NULL COMMENT '货号 x',
+  `img_lg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品主图-720 x',
+  `img_md` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品主图-360 x',
   `slider` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品轮播图片',
-  `brand` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品品牌',
+  `brand` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品品牌 x',
   `detail` varchar(5000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品详情',
-  `freight` decimal(10, 0) NULL DEFAULT 0 COMMENT '商品运费',
+  `freight` decimal(10, 0) NULL DEFAULT 0 COMMENT '商品运费 ',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = DYNAMIC;
+  PRIMARY KEY (`goodsId`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of goods
@@ -3988,313 +3984,19 @@ INSERT INTO `goods` VALUES (37, 2, 24, 30, '梵希2020夏季新款复古方领�
 INSERT INTO `goods` VALUES (38, 2, 24, 30, '蜜搭 新款复古收腰桔梗初恋裙 夏法式方领绿色泡泡袖中长款连衣裙 158', '', 98.00, 189.00, 35.00, 5, 1000, 258, 'http://localhost:3003/images/goods/fa05bfe0-dbf6-11ea-8858-c992a1c4bc0e_720.jpeg', 'http://localhost:3003/images/goods/fa05bfe0-dbf6-11ea-8858-c992a1c4bc0e_360.jpeg', 'http://localhost:3003/images/goods/00176640-dbf7-11ea-8858-c992a1c4bc0e_720.jpeg,http://localhost:3003/images/goods/04569690-dbf7-11ea-8858-c992a1c4bc0e_720.jpeg', '蜜芽', '<p><img src=\"http://localhost:3003/images/details/0aabae90-dbf7-11ea-8858-c992a1c4bc0e.jpeg\" style=\"max-width:100%;\"><img src=\"http://localhost:3003/images/details/0f139c90-dbf7-11ea-8858-c992a1c4bc0e.jpeg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/13071de0-dbf7-11ea-8858-c992a1c4bc0e.jpeg\" style=\"max-width: 100%;\"><br></p>', 0, '2020-08-12 01:21:44', NULL);
 
 -- ----------------------------
--- Table structure for icon
--- ----------------------------
-DROP TABLE IF EXISTS `icon`;
-CREATE TABLE `icon`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标名称',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 281 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of icon
--- ----------------------------
-INSERT INTO `icon` VALUES (1, 'platform-eleme');
-INSERT INTO `icon` VALUES (2, 'eleme');
-INSERT INTO `icon` VALUES (3, 'delete-solid');
-INSERT INTO `icon` VALUES (4, 'delete');
-INSERT INTO `icon` VALUES (5, 's-tools');
-INSERT INTO `icon` VALUES (6, 'setting');
-INSERT INTO `icon` VALUES (7, 'user-solid');
-INSERT INTO `icon` VALUES (8, 'user');
-INSERT INTO `icon` VALUES (9, 'phone');
-INSERT INTO `icon` VALUES (10, 'phone-outline');
-INSERT INTO `icon` VALUES (11, 'more');
-INSERT INTO `icon` VALUES (12, 'more-outline');
-INSERT INTO `icon` VALUES (13, 'star-on');
-INSERT INTO `icon` VALUES (14, 'star-off');
-INSERT INTO `icon` VALUES (15, 's-goods');
-INSERT INTO `icon` VALUES (16, 'goods');
-INSERT INTO `icon` VALUES (17, 'warning');
-INSERT INTO `icon` VALUES (18, 'warning-outline');
-INSERT INTO `icon` VALUES (19, 'question');
-INSERT INTO `icon` VALUES (20, 'info');
-INSERT INTO `icon` VALUES (21, 'remove');
-INSERT INTO `icon` VALUES (22, 'circle-plus');
-INSERT INTO `icon` VALUES (23, 'success');
-INSERT INTO `icon` VALUES (24, 'error');
-INSERT INTO `icon` VALUES (25, 'zoom-in');
-INSERT INTO `icon` VALUES (26, 'zoom-out');
-INSERT INTO `icon` VALUES (27, 'remove-outline');
-INSERT INTO `icon` VALUES (28, 'circle-plus-outline');
-INSERT INTO `icon` VALUES (29, 'circle-check');
-INSERT INTO `icon` VALUES (30, 'circle-close');
-INSERT INTO `icon` VALUES (31, 's-help');
-INSERT INTO `icon` VALUES (32, 'help');
-INSERT INTO `icon` VALUES (33, 'minus');
-INSERT INTO `icon` VALUES (34, 'plus');
-INSERT INTO `icon` VALUES (35, 'check');
-INSERT INTO `icon` VALUES (36, 'close');
-INSERT INTO `icon` VALUES (37, 'picture');
-INSERT INTO `icon` VALUES (38, 'picture-outline');
-INSERT INTO `icon` VALUES (39, 'picture-outline-round');
-INSERT INTO `icon` VALUES (40, 'upload');
-INSERT INTO `icon` VALUES (41, 'upload2');
-INSERT INTO `icon` VALUES (42, 'download');
-INSERT INTO `icon` VALUES (43, 'camera-solid');
-INSERT INTO `icon` VALUES (44, 'camera');
-INSERT INTO `icon` VALUES (45, 'video-camera-solid');
-INSERT INTO `icon` VALUES (46, 'video-camera');
-INSERT INTO `icon` VALUES (47, 'message-solid');
-INSERT INTO `icon` VALUES (48, 'bell');
-INSERT INTO `icon` VALUES (49, 's-cooperation');
-INSERT INTO `icon` VALUES (50, 's-order');
-INSERT INTO `icon` VALUES (51, 's-platform');
-INSERT INTO `icon` VALUES (52, 's-fold');
-INSERT INTO `icon` VALUES (53, 's-unfold');
-INSERT INTO `icon` VALUES (54, 's-operation');
-INSERT INTO `icon` VALUES (55, 's-promotion');
-INSERT INTO `icon` VALUES (56, 's-home');
-INSERT INTO `icon` VALUES (57, 's-release');
-INSERT INTO `icon` VALUES (58, 's-ticket');
-INSERT INTO `icon` VALUES (59, 's-management');
-INSERT INTO `icon` VALUES (60, 's-open');
-INSERT INTO `icon` VALUES (61, 's-shop');
-INSERT INTO `icon` VALUES (62, 's-marketing');
-INSERT INTO `icon` VALUES (63, 's-flag');
-INSERT INTO `icon` VALUES (64, 's-comment');
-INSERT INTO `icon` VALUES (65, 's-finance');
-INSERT INTO `icon` VALUES (66, 's-claim');
-INSERT INTO `icon` VALUES (67, 's-custom');
-INSERT INTO `icon` VALUES (68, 's-opportunity');
-INSERT INTO `icon` VALUES (69, 's-data');
-INSERT INTO `icon` VALUES (70, 's-check');
-INSERT INTO `icon` VALUES (71, 's-grid');
-INSERT INTO `icon` VALUES (72, 'menu');
-INSERT INTO `icon` VALUES (73, 'share');
-INSERT INTO `icon` VALUES (74, 'd-caret');
-INSERT INTO `icon` VALUES (75, 'caret-left');
-INSERT INTO `icon` VALUES (76, 'caret-right');
-INSERT INTO `icon` VALUES (77, 'caret-bottom');
-INSERT INTO `icon` VALUES (78, 'caret-top');
-INSERT INTO `icon` VALUES (79, 'bottom-left');
-INSERT INTO `icon` VALUES (80, 'bottom-right');
-INSERT INTO `icon` VALUES (81, 'back');
-INSERT INTO `icon` VALUES (82, 'right');
-INSERT INTO `icon` VALUES (83, 'bottom');
-INSERT INTO `icon` VALUES (84, 'top');
-INSERT INTO `icon` VALUES (85, 'top-left');
-INSERT INTO `icon` VALUES (86, 'top-right');
-INSERT INTO `icon` VALUES (87, 'arrow-left');
-INSERT INTO `icon` VALUES (88, 'arrow-right');
-INSERT INTO `icon` VALUES (89, 'arrow-down');
-INSERT INTO `icon` VALUES (90, 'arrow-up');
-INSERT INTO `icon` VALUES (91, 'd-arrow-left');
-INSERT INTO `icon` VALUES (92, 'd-arrow-right');
-INSERT INTO `icon` VALUES (93, 'video-pause');
-INSERT INTO `icon` VALUES (94, 'video-play');
-INSERT INTO `icon` VALUES (95, 'refresh');
-INSERT INTO `icon` VALUES (96, 'refresh-right');
-INSERT INTO `icon` VALUES (97, 'refresh-left');
-INSERT INTO `icon` VALUES (98, 'finished');
-INSERT INTO `icon` VALUES (99, 'sort');
-INSERT INTO `icon` VALUES (100, 'sort-up');
-INSERT INTO `icon` VALUES (101, 'sort-down');
-INSERT INTO `icon` VALUES (102, 'rank');
-INSERT INTO `icon` VALUES (103, 'loading');
-INSERT INTO `icon` VALUES (104, 'view');
-INSERT INTO `icon` VALUES (105, 'c-scale-to-original');
-INSERT INTO `icon` VALUES (106, 'date');
-INSERT INTO `icon` VALUES (107, 'edit');
-INSERT INTO `icon` VALUES (108, 'edit-outline');
-INSERT INTO `icon` VALUES (109, 'folder');
-INSERT INTO `icon` VALUES (110, 'folder-opened');
-INSERT INTO `icon` VALUES (111, 'folder-add');
-INSERT INTO `icon` VALUES (112, 'folder-remove');
-INSERT INTO `icon` VALUES (113, 'folder-delete');
-INSERT INTO `icon` VALUES (114, 'folder-checked');
-INSERT INTO `icon` VALUES (115, 'tickets');
-INSERT INTO `icon` VALUES (116, 'document-remove');
-INSERT INTO `icon` VALUES (117, 'document-delete');
-INSERT INTO `icon` VALUES (118, 'document-copy');
-INSERT INTO `icon` VALUES (119, 'document-checked');
-INSERT INTO `icon` VALUES (120, 'document');
-INSERT INTO `icon` VALUES (121, 'document-add');
-INSERT INTO `icon` VALUES (122, 'printer');
-INSERT INTO `icon` VALUES (123, 'paperclip');
-INSERT INTO `icon` VALUES (124, 'takeaway-box');
-INSERT INTO `icon` VALUES (125, 'search');
-INSERT INTO `icon` VALUES (126, 'monitor');
-INSERT INTO `icon` VALUES (127, 'attract');
-INSERT INTO `icon` VALUES (128, 'mobile');
-INSERT INTO `icon` VALUES (129, 'scissors');
-INSERT INTO `icon` VALUES (130, 'umbrella');
-INSERT INTO `icon` VALUES (131, 'headset');
-INSERT INTO `icon` VALUES (132, 'brush');
-INSERT INTO `icon` VALUES (133, 'mouse');
-INSERT INTO `icon` VALUES (134, 'coordinate');
-INSERT INTO `icon` VALUES (135, 'magic-stick');
-INSERT INTO `icon` VALUES (136, 'reading');
-INSERT INTO `icon` VALUES (137, 'data-line');
-INSERT INTO `icon` VALUES (138, 'data-board');
-INSERT INTO `icon` VALUES (139, 'pie-chart');
-INSERT INTO `icon` VALUES (140, 'data-analysis');
-INSERT INTO `icon` VALUES (141, 'collection-tag');
-INSERT INTO `icon` VALUES (142, 'film');
-INSERT INTO `icon` VALUES (143, 'suitcase');
-INSERT INTO `icon` VALUES (144, 'suitcase-1');
-INSERT INTO `icon` VALUES (145, 'receiving');
-INSERT INTO `icon` VALUES (146, 'collection');
-INSERT INTO `icon` VALUES (147, 'files');
-INSERT INTO `icon` VALUES (148, 'notebook-1');
-INSERT INTO `icon` VALUES (149, 'notebook-2');
-INSERT INTO `icon` VALUES (150, 'toilet-paper');
-INSERT INTO `icon` VALUES (151, 'office-building');
-INSERT INTO `icon` VALUES (152, 'school');
-INSERT INTO `icon` VALUES (153, 'table-lamp');
-INSERT INTO `icon` VALUES (154, 'house');
-INSERT INTO `icon` VALUES (155, 'no-smoking');
-INSERT INTO `icon` VALUES (156, 'smoking');
-INSERT INTO `icon` VALUES (157, 'shopping-cart-full');
-INSERT INTO `icon` VALUES (158, 'shopping-cart-1');
-INSERT INTO `icon` VALUES (159, 'shopping-cart-2');
-INSERT INTO `icon` VALUES (160, 'shopping-bag-1');
-INSERT INTO `icon` VALUES (161, 'shopping-bag-2');
-INSERT INTO `icon` VALUES (162, 'sold-out');
-INSERT INTO `icon` VALUES (163, 'sell');
-INSERT INTO `icon` VALUES (164, 'present');
-INSERT INTO `icon` VALUES (165, 'box');
-INSERT INTO `icon` VALUES (166, 'bank-card');
-INSERT INTO `icon` VALUES (167, 'money');
-INSERT INTO `icon` VALUES (168, 'coin');
-INSERT INTO `icon` VALUES (169, 'wallet');
-INSERT INTO `icon` VALUES (170, 'discount');
-INSERT INTO `icon` VALUES (171, 'price-tag');
-INSERT INTO `icon` VALUES (172, 'news');
-INSERT INTO `icon` VALUES (173, 'guide');
-INSERT INTO `icon` VALUES (174, 'male');
-INSERT INTO `icon` VALUES (175, 'female');
-INSERT INTO `icon` VALUES (176, 'thumb');
-INSERT INTO `icon` VALUES (177, 'cpu');
-INSERT INTO `icon` VALUES (178, 'link');
-INSERT INTO `icon` VALUES (179, 'connection');
-INSERT INTO `icon` VALUES (180, 'open');
-INSERT INTO `icon` VALUES (181, 'turn-off');
-INSERT INTO `icon` VALUES (182, 'set-up');
-INSERT INTO `icon` VALUES (183, 'chat-round');
-INSERT INTO `icon` VALUES (184, 'chat-line-round');
-INSERT INTO `icon` VALUES (185, 'chat-square');
-INSERT INTO `icon` VALUES (186, 'chat-dot-round');
-INSERT INTO `icon` VALUES (187, 'chat-dot-square');
-INSERT INTO `icon` VALUES (188, 'chat-line-square');
-INSERT INTO `icon` VALUES (189, 'message');
-INSERT INTO `icon` VALUES (190, 'postcard');
-INSERT INTO `icon` VALUES (191, 'position');
-INSERT INTO `icon` VALUES (192, 'turn-off-microphone');
-INSERT INTO `icon` VALUES (193, 'microphone');
-INSERT INTO `icon` VALUES (194, 'close-notification');
-INSERT INTO `icon` VALUES (195, 'bangzhu');
-INSERT INTO `icon` VALUES (196, 'time');
-INSERT INTO `icon` VALUES (197, 'odometer');
-INSERT INTO `icon` VALUES (198, 'crop');
-INSERT INTO `icon` VALUES (199, 'aim');
-INSERT INTO `icon` VALUES (200, 'switch-button');
-INSERT INTO `icon` VALUES (201, 'full-screen');
-INSERT INTO `icon` VALUES (202, 'copy-document');
-INSERT INTO `icon` VALUES (203, 'mic');
-INSERT INTO `icon` VALUES (204, 'stopwatch');
-INSERT INTO `icon` VALUES (205, 'medal-1');
-INSERT INTO `icon` VALUES (206, 'medal');
-INSERT INTO `icon` VALUES (207, 'trophy');
-INSERT INTO `icon` VALUES (208, 'trophy-1');
-INSERT INTO `icon` VALUES (209, 'first-aid-kit');
-INSERT INTO `icon` VALUES (210, 'discover');
-INSERT INTO `icon` VALUES (211, 'place');
-INSERT INTO `icon` VALUES (212, 'location');
-INSERT INTO `icon` VALUES (213, 'location-outline');
-INSERT INTO `icon` VALUES (214, 'location-information');
-INSERT INTO `icon` VALUES (215, 'add-location');
-INSERT INTO `icon` VALUES (216, 'delete-location');
-INSERT INTO `icon` VALUES (217, 'map-location');
-INSERT INTO `icon` VALUES (218, 'alarm-clock');
-INSERT INTO `icon` VALUES (219, 'timer');
-INSERT INTO `icon` VALUES (220, 'watch-1');
-INSERT INTO `icon` VALUES (221, 'watch');
-INSERT INTO `icon` VALUES (222, 'lock');
-INSERT INTO `icon` VALUES (223, 'unlock');
-INSERT INTO `icon` VALUES (224, 'key');
-INSERT INTO `icon` VALUES (225, 'service');
-INSERT INTO `icon` VALUES (226, 'mobile-phone');
-INSERT INTO `icon` VALUES (227, 'bicycle');
-INSERT INTO `icon` VALUES (228, 'truck');
-INSERT INTO `icon` VALUES (229, 'ship');
-INSERT INTO `icon` VALUES (230, 'basketball');
-INSERT INTO `icon` VALUES (231, 'football');
-INSERT INTO `icon` VALUES (232, 'soccer');
-INSERT INTO `icon` VALUES (233, 'baseball');
-INSERT INTO `icon` VALUES (234, 'wind-power');
-INSERT INTO `icon` VALUES (235, 'light-rain');
-INSERT INTO `icon` VALUES (236, 'lightning');
-INSERT INTO `icon` VALUES (237, 'heavy-rain');
-INSERT INTO `icon` VALUES (238, 'sunrise');
-INSERT INTO `icon` VALUES (239, 'sunrise-1');
-INSERT INTO `icon` VALUES (240, 'sunset');
-INSERT INTO `icon` VALUES (241, 'sunny');
-INSERT INTO `icon` VALUES (242, 'cloudy');
-INSERT INTO `icon` VALUES (243, 'partly-cloudy');
-INSERT INTO `icon` VALUES (244, 'cloudy-and-sunny');
-INSERT INTO `icon` VALUES (245, 'moon');
-INSERT INTO `icon` VALUES (246, 'moon-night');
-INSERT INTO `icon` VALUES (247, 'dish');
-INSERT INTO `icon` VALUES (248, 'dish-1');
-INSERT INTO `icon` VALUES (249, 'food');
-INSERT INTO `icon` VALUES (250, 'chicken');
-INSERT INTO `icon` VALUES (251, 'fork-spoon');
-INSERT INTO `icon` VALUES (252, 'knife-fork');
-INSERT INTO `icon` VALUES (253, 'burger');
-INSERT INTO `icon` VALUES (254, 'tableware');
-INSERT INTO `icon` VALUES (255, 'sugar');
-INSERT INTO `icon` VALUES (256, 'dessert');
-INSERT INTO `icon` VALUES (257, 'ice-cream');
-INSERT INTO `icon` VALUES (258, 'hot-water');
-INSERT INTO `icon` VALUES (259, 'water-cup');
-INSERT INTO `icon` VALUES (260, 'coffee-cup');
-INSERT INTO `icon` VALUES (261, 'cold-drink');
-INSERT INTO `icon` VALUES (262, 'goblet');
-INSERT INTO `icon` VALUES (263, 'goblet-full');
-INSERT INTO `icon` VALUES (264, 'goblet-square');
-INSERT INTO `icon` VALUES (265, 'goblet-square-full');
-INSERT INTO `icon` VALUES (266, 'refrigerator');
-INSERT INTO `icon` VALUES (267, 'grape');
-INSERT INTO `icon` VALUES (268, 'watermelon');
-INSERT INTO `icon` VALUES (269, 'cherry');
-INSERT INTO `icon` VALUES (270, 'apple');
-INSERT INTO `icon` VALUES (271, 'pear');
-INSERT INTO `icon` VALUES (272, 'orange');
-INSERT INTO `icon` VALUES (273, 'coffee');
-INSERT INTO `icon` VALUES (274, 'ice-tea');
-INSERT INTO `icon` VALUES (275, 'ice-drink');
-INSERT INTO `icon` VALUES (276, 'milk-tea');
-INSERT INTO `icon` VALUES (277, 'potato-strips');
-INSERT INTO `icon` VALUES (278, 'lollipop');
-INSERT INTO `icon` VALUES (279, 'ice-cream-square');
-INSERT INTO `icon` VALUES (280, 'ice-cream-round');
-
--- ----------------------------
 -- Table structure for menu
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
-  `pId` int(0) NULL DEFAULT NULL COMMENT '父级id',
+  `pId` int(11) NULL DEFAULT NULL COMMENT '父级id',
   `component` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组件名称',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接url',
   `menu_order` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '显示顺序',
   `icon_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -4319,8 +4021,8 @@ INSERT INTO `menu` VALUES (14, '菜单权限', 6, NULL, '/auth/menu', '6002', NU
 -- ----------------------------
 DROP TABLE IF EXISTS `order_address`;
 CREATE TABLE `order_address`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `order_id` int(0) NOT NULL COMMENT '订单id',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL COMMENT '订单id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号',
   `province` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '省',
@@ -4329,7 +4031,7 @@ CREATE TABLE `order_address`  (
   `street` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '街道',
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮编',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of order_address
@@ -4343,15 +4045,15 @@ INSERT INTO `order_address` VALUES (22, 16, '黄小米', '15863008280', '山东'
 -- ----------------------------
 DROP TABLE IF EXISTS `order_goods`;
 CREATE TABLE `order_goods`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `order_id` int(0) NOT NULL COMMENT '订单id',
-  `goods_id` int(0) NULL DEFAULT NULL COMMENT '商品id',
-  `goods_num` int(0) NULL DEFAULT NULL COMMENT '商品数量',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL COMMENT '订单id',
+  `goods_id` int(11) NULL DEFAULT NULL COMMENT '商品id',
+  `goods_num` int(11) NULL DEFAULT NULL COMMENT '商品数量',
   `goods_price` double(20, 2) NULL DEFAULT NULL COMMENT '商品价格',
-  `status` tinyint(0) NULL DEFAULT 1 COMMENT '0-禁用，1-正常，-1-删除',
-  `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  `status` tinyint(4) NULL DEFAULT 1 COMMENT '0-禁用，1-正常，-1-删除',
+  `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = FIXED;
+) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of order_goods
@@ -4368,12 +4070,12 @@ INSERT INTO `order_goods` VALUES (14, 16, 26, 1, 259.00, 1, '2018-11-23 15:52:56
 -- ----------------------------
 DROP TABLE IF EXISTS `order_status`;
 CREATE TABLE `order_status`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `code` tinyint(0) NULL DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` tinyint(4) NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `text` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态-字典表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态-字典表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of order_status
@@ -4394,10 +4096,10 @@ INSERT INTO `order_status` VALUES (10, 8, 'ORDER_CLOSED', '订单关闭');
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
   `payment` double(20, 2) NULL DEFAULT NULL COMMENT '支付金额',
-  `payment_type` tinyint(0) NULL DEFAULT NULL COMMENT '1-在线支付，1-货到付款',
+  `payment_type` tinyint(4) NULL DEFAULT NULL COMMENT '1-在线支付，1-货到付款',
   `pay_time` datetime(0) NULL DEFAULT NULL COMMENT '支付时间',
   `ship_fee` double(20, 2) NULL DEFAULT NULL COMMENT '邮费',
   `ship_time` datetime(0) NULL DEFAULT NULL COMMENT '发货时间',
@@ -4408,12 +4110,12 @@ CREATE TABLE `orders`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `finish_time` datetime(0) NULL DEFAULT NULL COMMENT '交易完成时间',
   `close_time` datetime(0) NULL DEFAULT NULL COMMENT '交易关闭时间',
-  `order_state` int(0) NULL DEFAULT 0 COMMENT '状态字典',
-  `status` tinyint(0) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
-  `refund_state` tinyint(0) NULL DEFAULT NULL COMMENT '退款状态',
-  `comment_state` tinyint(0) NULL DEFAULT NULL COMMENT '评论状态',
+  `order_state` int(11) NULL DEFAULT 0 COMMENT '状态字典',
+  `status` tinyint(4) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
+  `refund_state` tinyint(4) NULL DEFAULT NULL COMMENT '退款状态',
+  `comment_state` tinyint(4) NULL DEFAULT NULL COMMENT '评论状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
@@ -4427,11 +4129,11 @@ INSERT INTO `orders` VALUES (16, '2', 5000.00, NULL, NULL, NULL, NULL, NULL, NUL
 -- ----------------------------
 DROP TABLE IF EXISTS `province`;
 CREATE TABLE `province`  (
-  `_id` int(0) NOT NULL DEFAULT 0,
+  `_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `province_id` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of province
@@ -4469,88 +4171,16 @@ INSERT INTO `province` VALUES (30, '宁夏回族自治区', '640000000000');
 INSERT INTO `province` VALUES (31, '新疆维吾尔自治区', '650000000000');
 
 -- ----------------------------
--- Table structure for role
--- ----------------------------
-DROP TABLE IF EXISTS `role`;
-CREATE TABLE `role`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '角色id',
-  `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of role
--- ----------------------------
-INSERT INTO `role` VALUES (1, '超级管理员');
-INSERT INTO `role` VALUES (2, '管理员');
-INSERT INTO `role` VALUES (3, '运营人员');
-INSERT INTO `role` VALUES (4, '设计人员');
-INSERT INTO `role` VALUES (5, '财务人员');
-INSERT INTO `role` VALUES (6, '仓库人员');
-
--- ----------------------------
--- Table structure for role_menu
--- ----------------------------
-DROP TABLE IF EXISTS `role_menu`;
-CREATE TABLE `role_menu`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `role_id` int(0) NULL DEFAULT NULL COMMENT '角色id',
-  `menu_id` int(0) NULL DEFAULT NULL COMMENT '权限id',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 58 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = FIXED;
-
--- ----------------------------
--- Records of role_menu
--- ----------------------------
-INSERT INTO `role_menu` VALUES (1, 1, 2);
-INSERT INTO `role_menu` VALUES (2, 1, 7);
-INSERT INTO `role_menu` VALUES (3, 1, 8);
-INSERT INTO `role_menu` VALUES (4, 1, 9);
-INSERT INTO `role_menu` VALUES (5, 1, 3);
-INSERT INTO `role_menu` VALUES (6, 1, 10);
-INSERT INTO `role_menu` VALUES (7, 1, 4);
-INSERT INTO `role_menu` VALUES (8, 1, 11);
-INSERT INTO `role_menu` VALUES (9, 1, 5);
-INSERT INTO `role_menu` VALUES (10, 1, 12);
-INSERT INTO `role_menu` VALUES (16, 1, 14);
-INSERT INTO `role_menu` VALUES (15, 1, 13);
-INSERT INTO `role_menu` VALUES (14, 1, 6);
-INSERT INTO `role_menu` VALUES (27, 2, 2);
-INSERT INTO `role_menu` VALUES (30, 2, 9);
-INSERT INTO `role_menu` VALUES (29, 2, 8);
-INSERT INTO `role_menu` VALUES (28, 2, 7);
-INSERT INTO `role_menu` VALUES (21, 2, 3);
-INSERT INTO `role_menu` VALUES (22, 2, 10);
-INSERT INTO `role_menu` VALUES (23, 2, 4);
-INSERT INTO `role_menu` VALUES (24, 2, 11);
-INSERT INTO `role_menu` VALUES (25, 2, 5);
-INSERT INTO `role_menu` VALUES (26, 2, 12);
-INSERT INTO `role_menu` VALUES (43, 4, 2);
-INSERT INTO `role_menu` VALUES (44, 4, 7);
-INSERT INTO `role_menu` VALUES (45, 4, 8);
-INSERT INTO `role_menu` VALUES (46, 4, 9);
-INSERT INTO `role_menu` VALUES (47, 3, 2);
-INSERT INTO `role_menu` VALUES (48, 3, 7);
-INSERT INTO `role_menu` VALUES (51, 3, 8);
-INSERT INTO `role_menu` VALUES (50, 3, 9);
-INSERT INTO `role_menu` VALUES (52, 3, 4);
-INSERT INTO `role_menu` VALUES (53, 3, 11);
-INSERT INTO `role_menu` VALUES (54, 3, 5);
-INSERT INTO `role_menu` VALUES (55, 3, 12);
-INSERT INTO `role_menu` VALUES (56, 4, 5);
-INSERT INTO `role_menu` VALUES (57, 4, 12);
-
--- ----------------------------
 -- Table structure for town
 -- ----------------------------
 DROP TABLE IF EXISTS `town`;
 CREATE TABLE `town`  (
-  `_id` int(0) NOT NULL DEFAULT 0,
+  `_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `town_id` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `county_id` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of town
@@ -47940,7 +47570,7 @@ INSERT INTO `town` VALUES (43379, '双丰镇', '659006101000', '659006000000');
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
   `sex` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '男' COMMENT '性别 0：未知、1：男、2：女',
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT './images/avatar/default.jpg' COMMENT '头像',
@@ -47951,11 +47581,12 @@ CREATE TABLE `user`  (
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '小程序唯一标示id',
   `session_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '会话密钥',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES (3, '紫风', '1', 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83ersiaibpEqVs2Id31CMSTyA4BDxKKib2ayvUx1lwFJeIDGSmCJaXfxPKem9cIiaDoiaBFf3Th733UCOOlg/132', NULL, '中国', '山东', '青岛', 'oShUg5dO2dJN7gjezrL3CvBOoHP0', 'SgRA/mb1PhM3r6pHznCiIA==');
+INSERT INTO `user` VALUES (4, NULL, '男', './images/avatar/default.jpg', NULL, NULL, NULL, NULL, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 'bzpPv2frzTCgSw7uh3D3EQ==');
 
 SET FOREIGN_KEY_CHECKS = 1;
