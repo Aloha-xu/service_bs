@@ -46,11 +46,16 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 //使用中间件验证token合法性
-app.use(
-  expressJwt({ secret: "secret" }).unless({
-    path: ["/", "/api/user/token", "/api/admin/register", "/api/admin/login"], //除了这些地址，其他的URL都需要验证
-  })
-);
+// app.use(
+//   expressJwt({ secret: "secret" }).unless({
+//     path: [
+//       "/",
+//       "/api/user/token",
+//       "/api/admin/register",
+//       "/api/admin/login",
+//     ], //除了这些地址，其他的URL都需要验证
+//   })
+// );
 
 app.use("/", index);
 

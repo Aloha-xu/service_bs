@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "cross-env-shell SERVER=http://localhost:3003 npm run server",
-    "server": "node bin/www"
+    "server": "node bin/www",
+    "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -25,6 +26,7 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.15"
   }
 }
