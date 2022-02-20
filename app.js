@@ -18,6 +18,7 @@ let userUpload = require("./routes/mall/upload");
 let PCCT = require("./routes/mall/PCCT");
 let collection = require("./routes/mall/collection");
 let home = require("./routes/mall/home");
+let common = require("./routes/mall/common");
 
 let role = require("./routes/admin/role");
 let menu = require("./routes/admin/menu");
@@ -45,17 +46,22 @@ app.use(express.static(path.join(__dirname, "public")));
 // 设置跨域资源分享CORS
 app.use(cors());
 
-//使用中间件验证token合法性
-// app.use(
-//   expressJwt({ secret: "secret" }).unless({
-//     path: [
-//       "/",
-//       "/api/user/token",
-//       "/api/admin/register",
-//       "/api/admin/login",
-//     ], //除了这些地址，其他的URL都需要验证
-//   })
-// );
+// 使用中间件验证token合法性
+app.use(
+  expressJwt({ secret: "secret" }).unless({
+    path: [
+      "/",
+      "/api/user/token",
+      "/api/admin/register",
+      "/api/admin/login",
+      "/api/cart/list",
+      "/api/common/categoryList",
+      "/api/goods/list",
+      "/api/goods/detail",
+      "/api/home/appInfo"
+    ], //除了这些地址，其他的URL都需要验证
+  })
+);
 
 app.use("/", index);
 
@@ -68,6 +74,7 @@ app.use("/api/upload", userUpload);
 app.use("/api/pcct", PCCT);
 app.use("/api/collection", collection);
 app.use("/api/home", home);
+app.use("/api/common", common);
 
 app.use("/api/role", role);
 app.use("/api/menu", menu);
@@ -96,10 +103,6 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
   // render the error page
   res.status(err.status || 500);
   res.render("error");

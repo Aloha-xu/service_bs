@@ -22,12 +22,11 @@ let { appid, appSecret } = require("../../config/wx");
 // 如果使用这个接口 就需要在前端的每一个接口都需要带上token 这使用的是token
 // //给Authorization设置token
 // config.headers.Authorization = getTOKEN();
-
 router.post("/token", function (req, res) {
-  let { code } = req.body;
+  let { code } = req.body.info;
   // 请求微信API
   let url = `https:/\/\api.weixin.qq.com/\sns/\jscode2session?appid=${appid}&secret=${appSecret}&js_code=${code}&grant_type=authorization_code`;
-  request(url, function (error, response, body) {
+  request(url, async (error, response, body) => {
     if (error) {
       console.log(error);
       return;
@@ -40,6 +39,7 @@ router.post("/token", function (req, res) {
       return;
     }
     let data = JSON.parse(body);
+    console.log(data)
     // 微信api返回错误
     if (data.errcode) {
       res.json({
@@ -51,35 +51,65 @@ router.post("/token", function (req, res) {
     // 生成token
     let token = jwt.sign(data, "secret");
     // 查询数据库中是否有此openid
-    let sql = "SELECT * FROM user WHERE openid = ?";
-    db.query(sql, [data.openid], function (results) {
-      // 如果没有此openid，插入新的数据
-      if (results.length == 0) {
-        let sql = "INSERT INTO user (openid,session_key) VALUES (?,?)";
-        db.query(sql, [data.openid, data.session_key], function (results) {
-          if (results.affectedRows > 0) {
-            res.json({
-              status: true,
-              token: token,
-            });
-          }
+    let sql = `SELECT * FROM user WHERE openid =?`;
+    // db.query(sql, [data.openid], function (results) {
+    //   // 如果没有此openid，插入新的数据
+    //   if (results.length == 0) {
+    //     let sql = "INSERT INTO user (openid,session_key) VALUES (?,?)";
+    //     db.query(sql, [data.openid, data.session_key], function (results) {
+    //       if (results.affectedRows > 0) {
+    //         res.json({
+    //           status: true,
+    //           token: token,
+    //         });
+    //       }
+    //     });
+    //     return;
+    //   }
+    //   // 如果有此openid，更新session_key的数据
+    //   let sql = "UPDATE user SET session_key = ? WHERE openid = ?";
+    //   db.query(sql, [data.session_key, data.openid], function (results) {
+    //     if (results.affectedRows > 0) {
+    //       res.json({
+    //         status: true,
+    //         token: token,
+    //       });
+    //       return;
+    //     }
+    //   });
+    // });
+    let userInfo = await db.query(sql, data.openid)
+    // 如果没有此openid，插入新的数据
+    if (userInfo.length == 0) {
+      sql = "INSERT INTO user (openid,session_key) VALUES (?,?);";
+      let results = await db.query(sql, [data.openid, data.session_key])
+      if (results.affectedRows > 0) {
+        res.json({
+          status: true,
+          token: token,
         });
-        return;
       }
+      return;
+    } else {
       // 如果有此openid，更新session_key的数据
-      let sql = "UPDATE user SET session_key = ? WHERE openid = ?";
-      db.query(sql, [data.session_key, data.openid], function (results) {
-        if (results.affectedRows > 0) {
-          res.json({
-            status: true,
-            token: token,
-          });
-          return;
-        }
-      });
-    });
+      sql = `UPDATE user SET session_key = ? WHERE openid = ?`;
+      let results = await db.query(sql, [data.session_key, data.openid])
+      if (results.affectedRows > 0) {
+        res.json({
+          status: true,
+          token: token,
+        });
+      }
+      return;
+    }
   });
 });
+
+
+
+
+
+
 /**
  * @api {put} /api/user/info 上传微信用户信息
  * @apiName userInfoUpload
