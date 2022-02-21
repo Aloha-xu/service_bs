@@ -77,9 +77,14 @@ router.get("/addressDetail", async (req, res) => {
  * @apiSampleRequest /api/address/
  */
 router.post("/addAddress", async (req, res) => {
-  let sql;
+  let sql
   let { name, tel, province, city, county, street, isDefault } = req.body;
   let { openid } = req.user;
+  //判断是不是设置了默认值
+  if (isDefault == 1) {
+    sql = `UPDATE address SET isDefault = 0 WHERE isDefault = 1`
+    await db.query(sql)
+  }
   sql = `INSERT INTO address(openid, name, tel, province, city, county, street, isDefault) VALUES(?,?,?,?,?,?,?,?)`;
   let results = await db.query(sql, [
     openid,
@@ -89,14 +94,13 @@ router.post("/addAddress", async (req, res) => {
     city,
     county,
     street,
-    code,
     isDefault,
-    address,
   ]);
   if (results.affectedRows > 0) {
     res.json({
       status: true,
       msg: "添加成功！",
+      errno: 0,
     });
   }
 });
@@ -120,10 +124,14 @@ router.post("/addAddress", async (req, res) => {
  * @apiSampleRequest /api/address/
  */
 router.post("/updataAdress", async (req, res) => {
-  let sql;
-  let { name, tel, province, city, county, street, isDefault } = req.body;
-  let { id } = req.params;
+  let sql
+  let { name, tel, province, city, county, street, isDefault, id } = req.body;
   //   let { openid } = req.user;
+  //判断是不是设置了默认值
+  if (isDefault == 1) {
+    sql = `UPDATE address SET isDefault = 0 WHERE isDefault = 1`
+    await db.query(sql)
+  }
   sql = `UPDATE address SET name = ?, tel = ?, province = ?, city = ?, county = ?, street = ?, isDefault = ? WHERE id = ?`;
   let results = await db.query(sql, [
     name,
@@ -132,7 +140,6 @@ router.post("/updataAdress", async (req, res) => {
     city,
     county,
     street,
-    code,
     isDefault,
     id,
   ]);
@@ -140,30 +147,36 @@ router.post("/updataAdress", async (req, res) => {
     res.json({
       status: true,
       msg: "修改成功！",
+      errno: 0,
     });
   }
 });
 
-// /**
-//  * @api {delete} /api/address/delAdsress/:id 删除收货地址
-//  * @apiName addressDelete
-//  * @apiGroup Address
-//  * @apiPermission user
-//  *
-//  * @apiParam {Number} id 收货地址id.
-//  *
-//  * @apiSampleRequest /api/address
-//  */
-// router.get("/:id", function (req, res) {
-//   let { id } = req.params;
-//   var sql = `DELETE FROM address WHERE id = ? `;
-//   db.query(sql, [id], function (results) {
-//     res.json({
-//       status: true,
-//       data: results,
-//       msg: "删除成功！",
-//     });
-//   });
-// });
+/**
+ * @api {delete} /api/address/delAdsress/:id 删除收货地址
+ * @apiName addressDelete
+ * @apiGroup Address
+ * @apiPermission user
+ *
+ * @apiParam {Number} id 收货地址id.
+ *
+ * @apiSampleRequest /api/address
+ */
+router.get("/delAdsress", async (req, res) => {
+  let { id } = req.query;
+  let sql = `DELETE FROM address WHERE id = ? `;
+  let results = await db.query(sql, id);
+  if (results.affectedRows > 0) {
+    res.json({
+      status: true,
+      data: results,
+      msg: "删除成功！",
+      errno: 0,
+    });
+
+  }
+
+
+});
 
 module.exports = router;
