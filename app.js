@@ -54,11 +54,11 @@ app.use(
       "/api/user/token",
       "/api/admin/register",
       "/api/admin/login",
-      "/api/cart/list",
+
       "/api/common/categoryList",
       "/api/goods/list",
       "/api/goods/detail",
-      "/api/home/appInfo"
+      "/api/home/appInfo",
     ], //除了这些地址，其他的URL都需要验证
   })
 );
@@ -85,7 +85,7 @@ app.use("/api/upload", adminUpload);
 app.use("/api/admin/order", adminOrder);
 app.use("/api/admin/icon", icon);
 
-// 处理401错误
+// 处理401错误 解析不到token就会UnauthorizedError
 app.use(function (err, req, res, next) {
   if (err.name === "UnauthorizedError") {
     res.status(401).json({
