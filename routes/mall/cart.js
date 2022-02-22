@@ -4,7 +4,7 @@ const router = express.Router();
 let db = require('../../config/mysql');
 
 /**
- * @api {post} /api/cart 添加商品至购物车
+ * @api {post} /api/cart/add 添加商品至购物车
  * @apiName AddCart
  * @apiGroup Cart
  * @apiPermission user
@@ -14,7 +14,7 @@ let db = require('../../config/mysql');
  *
  * @apiSampleRequest /api/cart
  */
-router.post('/', function (req, res) {
+router.post('/add', function (req, res) {
     let { id, num } = req.body;
     let { openid } = req.user;
     // 检查购物车是否已经有此商品
@@ -43,7 +43,7 @@ router.post('/', function (req, res) {
  *
  * @apiSampleRequest /api/cart/list
  */
-router.get('/list', function (req, res) {
+router.posy('/list', function (req, res) {
     let { openid } = req.user;
     let sql =
         `SELECT cart.id, cart.goods_id, goods.img_md AS img, goods.name, goods.price, cart.goods_num 
@@ -59,7 +59,7 @@ router.get('/list', function (req, res) {
     });
 });
 /**
- * @api {delete} /api/cart/:id 购物车删除商品
+ * @api {delete} /api/cart/delete/:id 购物车删除商品
  * @apiName DeleteCart
  * @apiGroup Cart
  * @apiPermission user
@@ -68,7 +68,7 @@ router.get('/list', function (req, res) {
  *
  * @apiSampleRequest /api/cart
  */
-router.delete('/:id', function (req, res) {
+router.post('/del', function (req, res) {
     let { id } = req.params;
     let sql = `DELETE FROM cart WHERE id = ?`;
     db.query(sql, [id], function (results) {
