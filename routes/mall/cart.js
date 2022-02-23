@@ -24,13 +24,18 @@ router.post("/add", async (req, res) => {
   sql = `INSERT INTO cart ( openid , goodsId , goodsNumber , createTime ) VALUES ( '${openid}' , ${goodsId} , ${number} ,CURRENT_TIMESTAMP())`;
   // 已有此商品，增加数量
   if (results.length > 0) {
-    sql = `UPDATE cart SET goodsNumber = goodsNumber + ${number} WHERE goodsId = ${goodsId} AND openid = '${openid}'`;
+    sql = `UPDATE cart SET goodsNumber = goodsNumber + ${number} , updateTime = CURRENT_TIMESTAMP() WHERE goodsId = ${goodsId} AND openid = '${openid}'`;
   }
   results = await db.query(sql);
-  if (results.length > 0) {
+  if (results.affectedRows > 0) {
     res.json({
-      status: true,
       msg: "success!",
+      errno: 0
+    });
+  } else {
+    res.json({
+      msg: "加入购物车失败!",
+      errno: 1
     });
   }
 });
@@ -44,12 +49,14 @@ router.post("/add", async (req, res) => {
  */
 router.post("/list", async (req, res) => {
   let { openid } = req.user;
-  let sql = `SELECT cart.cartId, cart.goodsId, goods.img, goods.name, goods.price, cart.goodsNumber FROM cart JOIN goods WHERE cart.openid = '${openid}' AND cart.goodsId = goods.goodsId`;
-  let cartList = await db.query(sql);
+  let data = {}
+  let sql = `SELECT cart.cartId, cart.goodsId, goods.img, goods.name, goods.price, cart.goodsNumber, goods.state , cart.checked FROM cart JOIN goods WHERE cart.openid = '${openid}' AND cart.goodsId = goods.goodsId`;
+  data.cartList = await db.query(sql);
   res.json({
-    status: true,
     msg: "success!",
-    data: cartList,
+    data,
+    errno: 0,
+    status: true,
   });
 });
 /**
@@ -66,10 +73,11 @@ router.post("/del", async (req, res) => {
   let { id } = req.body;
   let sql = `DELETE FROM cart WHERE cartId = ${id}`;
   results = await db.query(sql);
-  if (results.length > 0) {
+  if (results.affectedRows > 0) {
     res.json({
       status: true,
       msg: "success!",
+      errno: 0
     });
   }
 });
@@ -79,10 +87,12 @@ router.post("/del", async (req, res) => {
  * @apiDescription 更新商品数量
  */
 router.post("/update", async (req, res) => {
+  let data = {}
   let { goodsNumber, cartId, goodsId } = req.body;
+  let { openid } = req.user;
   //判断库存够不够
   let sql = `SELECT inventory FROM goods WHERE goodsId = ${goodsId}`;
-  let goodsnumber = await db.query(sql, [goodsNumber, cartId]);
+  let goodsnumber = await db.query(sql);
   if (goodsnumber < goodsNumber) {
     //库存不住
     res.json({
@@ -91,14 +101,62 @@ router.post("/update", async (req, res) => {
     });
     return;
   }
-  sql = `UPDATE cart SET goodsNumber = goodsNumber ${goodsNumber} WHERE cartId = ${cartId}`;
+
+  sql = `UPDATE cart SET goodsNumber = ${goodsNumber} WHERE cartId = ${cartId}`;
   results = await db.query(sql);
-  if (results.length > 0) {
+
+  sql = `SELECT cart.cartId, cart.goodsId, goods.img, goods.name, goods.price, cart.goodsNumber, goods.state FROM cart JOIN goods WHERE cart.openid = '${openid}' AND cart.goodsId = goods.goodsId`;
+  data.cartList = await db.query(sql);
+
+  if (results.affectedRows > 0) {
     res.json({
-      status: true,
+      data: data,
       msg: "success!",
+      errno: 0,
     });
   }
 });
+
+
+/**
+ * @api {put} /api/cart/goodsCartCount
+ * @apiDescription 获取商品数量
+ */
+router.post("/goodsCartCount", async (req, res) => {
+  let data = {
+    cartTotal: {}
+  }
+  let { openid } = req.user;
+  let sql = `SELECT count(*) as goodsCount FROM cart WHERE openid = '${openid}'`;
+  let count = await db.query(sql);
+  data.cartTotal.goodsCount = count[0].goodsCount
+  res.json({
+    data: data,
+    msg: "success!",
+    errno: 0,
+  });
+});
+
+/**
+ * @api {put} /api/cart/checked
+ * @apiDescription 选择或取消选择商品
+ */
+router.post("/checked", async (req, res) => {
+  let {cartId , isChecked} = req.body
+
+  sql = `UPDATE cart SET checked = ${isChecked} WHERE cartId = ${cartId}`;
+  let count = await db.query(sql);
+  if (results.affectedRows > 0) {
+    res.json({
+      data: data,
+      msg: "success!",
+      errno: 0,
+    });
+  }
+});
+
+
+
+
 
 module.exports = router;
