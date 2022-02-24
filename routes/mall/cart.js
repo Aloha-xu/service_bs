@@ -30,12 +30,12 @@ router.post("/add", async (req, res) => {
   if (results.affectedRows > 0) {
     res.json({
       msg: "success!",
-      errno: 0
+      errno: 0,
     });
   } else {
     res.json({
       msg: "加入购物车失败!",
-      errno: 1
+      errno: 1,
     });
   }
 });
@@ -49,8 +49,8 @@ router.post("/add", async (req, res) => {
  */
 router.post("/list", async (req, res) => {
   let { openid } = req.user;
-  let data = {}
-  let sql = `SELECT cart.cartId, cart.goodsId, goods.img, goods.name, goods.price, cart.goodsNumber, goods.state , cart.checked FROM cart JOIN goods WHERE cart.openid = '${openid}' AND cart.goodsId = goods.goodsId`;
+  let data = {};
+  let sql = `SELECT cart.cartId, cart.goodsId, goods.img, goods.name, goods.price, cart.goodsNumber, goods.state FROM cart JOIN goods WHERE cart.openid = '${openid}' AND cart.goodsId = goods.goodsId`;
   data.cartList = await db.query(sql);
   res.json({
     msg: "success!",
@@ -69,15 +69,15 @@ router.post("/list", async (req, res) => {
  *
  * @apiSampleRequest /api/cart
  */
-router.post("/del", async (req, res) => {
-  let { id } = req.body;
-  let sql = `DELETE FROM cart WHERE cartId = ${id}`;
+router.post("/delete", async (req, res) => {
+  let { cartId } = req.body;
+  let sql = `DELETE FROM cart WHERE cartId = ${cartId}`;
   results = await db.query(sql);
   if (results.affectedRows > 0) {
     res.json({
       status: true,
       msg: "success!",
-      errno: 0
+      errno: 0,
     });
   }
 });
@@ -87,7 +87,7 @@ router.post("/del", async (req, res) => {
  * @apiDescription 更新商品数量
  */
 router.post("/update", async (req, res) => {
-  let data = {}
+  let data = {};
   let { goodsNumber, cartId, goodsId } = req.body;
   let { openid } = req.user;
   //判断库存够不够
@@ -117,19 +117,18 @@ router.post("/update", async (req, res) => {
   }
 });
 
-
 /**
  * @api {put} /api/cart/goodsCartCount
  * @apiDescription 获取商品数量
  */
 router.post("/goodsCartCount", async (req, res) => {
   let data = {
-    cartTotal: {}
-  }
+    cartTotal: {},
+  };
   let { openid } = req.user;
   let sql = `SELECT count(*) as goodsCount FROM cart WHERE openid = '${openid}'`;
   let count = await db.query(sql);
-  data.cartTotal.goodsCount = count[0].goodsCount
+  data.cartTotal.goodsCount = count[0].goodsCount;
   res.json({
     data: data,
     msg: "success!",
@@ -137,26 +136,22 @@ router.post("/goodsCartCount", async (req, res) => {
   });
 });
 
-/**
- * @api {put} /api/cart/checked
- * @apiDescription 选择或取消选择商品
- */
-router.post("/checked", async (req, res) => {
-  let {cartId , isChecked} = req.body
+// /**
+//  * @api {put} /api/cart/checked
+//  * @apiDescription 选择或取消选择商品
+//  */
+// router.post("/checked", async (req, res) => {
+//   let { cartId, isChecked } = req.body;
 
-  sql = `UPDATE cart SET checked = ${isChecked} WHERE cartId = ${cartId}`;
-  let count = await db.query(sql);
-  if (results.affectedRows > 0) {
-    res.json({
-      data: data,
-      msg: "success!",
-      errno: 0,
-    });
-  }
-});
-
-
-
-
+//   sql = `UPDATE cart SET checked = ${isChecked} WHERE cartId = ${cartId}`;
+//   let count = await db.query(sql);
+//   if (results.affectedRows > 0) {
+//     res.json({
+//       data: data,
+//       msg: "success!",
+//       errno: 0,
+//     });
+//   }
+// });
 
 module.exports = router;
