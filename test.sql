@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : bysj
+ Source Server         : xzd
  Source Server Type    : MySQL
- Source Server Version : 80028
+ Source Server Version : 80012
  Source Host           : localhost:3306
  Source Schema         : test
 
  Target Server Type    : MySQL
- Target Server Version : 80028
+ Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 24/02/2022 18:33:06
+ Date: 25/02/2022 00:29:47
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id 唯一标识openid',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号',
@@ -30,7 +30,7 @@ CREATE TABLE `address`  (
   `city` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '市',
   `county` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '县区',
   `street` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细地址',
-  `isDefault` int(0) NULL DEFAULT 1 COMMENT '是否默认',
+  `isDefault` int(11) NULL DEFAULT 1 COMMENT '是否默认',
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细地址',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = Dynamic;
@@ -51,7 +51,7 @@ INSERT INTO `address` VALUES (9, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 'xxx', '1362504
 -- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `fullname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
@@ -60,8 +60,8 @@ CREATE TABLE `admin`  (
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号码',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '注册邮箱',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `login_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '登录时间',
-  `login_count` bigint(0) NOT NULL DEFAULT 1 COMMENT '登录次数',
+  `login_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '登录时间',
+  `login_count` bigint(20) NOT NULL DEFAULT 1 COMMENT '登录次数',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
@@ -76,9 +76,9 @@ INSERT INTO `admin` VALUES (2, 'moz', '123456', '黄小米', '女', 'http://loca
 -- ----------------------------
 DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner`  (
-  `bannerId` int(0) NOT NULL,
+  `bannerId` int(11) NOT NULL,
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `state` int(0) NULL DEFAULT NULL COMMENT '0 - 下架  1 - 上架',
+  `state` int(11) NULL DEFAULT NULL COMMENT '0 - 下架  1 - 上架',
   PRIMARY KEY (`bannerId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -95,31 +95,34 @@ INSERT INTO `banner` VALUES (4, 'http://114.132.239.118:3003/getpic/164534025278
 -- ----------------------------
 DROP TABLE IF EXISTS `cart`;
 CREATE TABLE `cart`  (
-  `cartId` int(0) NOT NULL AUTO_INCREMENT,
+  `cartId` int(11) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
-  `goodsId` int(0) NOT NULL COMMENT '商品id',
-  `goodsNumber` int(0) NOT NULL COMMENT '商品数量',
-  `state` tinyint(0) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
+  `goodsId` int(11) NOT NULL COMMENT '商品id',
+  `goodsNumber` int(11) NOT NULL COMMENT '商品数量',
+  `state` tinyint(4) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
   `createTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `updateTime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  `updateTime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`cartId`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of cart
 -- ----------------------------
 INSERT INTO `cart` VALUES (7, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 37, 10, 1, '2022-02-23 21:45:53', '2022-02-24 11:11:37');
 INSERT INTO `cart` VALUES (9, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 36, 3, 1, '2022-02-24 10:14:59', '2022-02-24 11:11:35');
+INSERT INTO `cart` VALUES (10, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 34, 104, 1, '2022-02-25 00:11:09', '2022-02-25 00:11:55');
+INSERT INTO `cart` VALUES (11, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 27, 5, 1, '2022-02-25 00:11:17', '2022-02-25 00:11:26');
+INSERT INTO `cart` VALUES (13, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 15, 9, 1, '2022-02-25 00:22:43', '2022-02-25 00:26:13');
 
 -- ----------------------------
 -- Table structure for category
 -- ----------------------------
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
-  `cateId` int(0) NOT NULL AUTO_INCREMENT,
+  `cateId` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
-  `pId` int(0) NOT NULL COMMENT '父级id x',
-  `level` int(0) NULL DEFAULT NULL COMMENT '层级 x',
+  `pId` int(11) NOT NULL COMMENT '父级id x',
+  `level` int(11) NULL DEFAULT NULL COMMENT '层级 x',
   `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`cateId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 136 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = Dynamic;
@@ -136,9 +139,9 @@ INSERT INTO `category` VALUES (2, '男装', 1, NULL, 'http://localhost:3003/imag
 -- ----------------------------
 DROP TABLE IF EXISTS `collection`;
 CREATE TABLE `collection`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户id',
-  `goodsId` int(0) NULL DEFAULT NULL COMMENT '商品id',
+  `goodsId` int(11) NULL DEFAULT NULL COMMENT '商品id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户收藏商品' ROW_FORMAT = Dynamic;
 
@@ -153,11 +156,11 @@ INSERT INTO `collection` VALUES (2, 'oShUg5dO2dJN7gjezrL3CvBOoHP0', 38);
 -- ----------------------------
 DROP TABLE IF EXISTS `goods`;
 CREATE TABLE `goods`  (
-  `goodsId` int(0) NOT NULL AUTO_INCREMENT,
-  `cateId` int(0) NOT NULL COMMENT '分类id',
+  `goodsId` int(11) NOT NULL AUTO_INCREMENT,
+  `cateId` int(11) NOT NULL COMMENT '分类id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品名称',
   `price` decimal(10, 2) NOT NULL COMMENT '商品价格',
-  `inventory` int(0) NOT NULL COMMENT '库存 ',
+  `inventory` int(11) NOT NULL COMMENT '库存 ',
   `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品主图-360 x',
   `slider` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品轮播图片',
   `brand` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品品牌 x',
@@ -165,16 +168,16 @@ CREATE TABLE `goods`  (
   `freight` decimal(10, 0) NULL DEFAULT 0 COMMENT '商品运费 ',
   `createTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `updateTime` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `state` int(0) NULL DEFAULT 1 COMMENT '0下架 1上架',
-  `sellVolume` int(0) NULL DEFAULT 0 COMMENT '已售数量',
+  `state` int(11) NULL DEFAULT 1 COMMENT '0下架 1上架',
+  `sellVolume` int(11) NULL DEFAULT 0 COMMENT '已售数量',
   PRIMARY KEY (`goodsId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of goods
 -- ----------------------------
-INSERT INTO `goods` VALUES (15, 18, '机械师F117荣耀版 游戏本七代i7-7700HQ/GTX1050Ti 4G独显游戏本笔记本电脑', 6999.00, 998, 'http://localhost:3003/images/goods/b5dcffe0-e7b0-11e8-8eb5-2933d116d7fc_360.jpg', 'http://localhost:3003/images/goods/b7604480-e7b0-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/b8fc6850-e7b0-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/ba1615b0-e7b0-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/bb5a5580-e7b0-11e8-8eb5-2933d116d7fc_720.jpg', '机械师', '<p><img src=\"http://localhost:3003/images/details/c7c5f5e0-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width:100%;\"><img src=\"http://localhost:3003/images/details/c999a470-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/cba81210-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/ce3bdc50-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/ef071800-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/f0bcde50-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/f2c44710-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/f4ba98d0-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><br></p>', 0, '2018-11-14 09:59:57', '2020-07-22 23:39:18', 1, 0);
-INSERT INTO `goods` VALUES (16, 18, '【京东配送】AOC C2791VHE/WS 27英寸 1800R曲率 VA广视角 家用电竞双实力 不闪屏曲面显示器', 1249.00, 998, 'http://localhost:3003/images/goods/93016550-e7b1-11e8-8eb5-2933d116d7fc_360.jpg', 'http://localhost:3003/images/goods/948ebc10-e7b1-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/95d9d9b0-e7b1-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/96e3a890-e7b1-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/98a6dc60-e7b1-11e8-8eb5-2933d116d7fc_720.jpg', 'AOC', '<p><img src=\"http://localhost:3003/images/details/a1e7c9b0-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width:100%;\"><img src=\"http://localhost:3003/images/details/a3afdf80-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/a55af770-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/a7204e20-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/a89fe940-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/aa1a0620-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><br></p>', 0, '2018-11-14 10:04:52', '2020-07-22 23:39:40', 1, 0);
+INSERT INTO `goods` VALUES (15, 18, '机械师F117荣耀版 游戏本七代i7-7700HQ/GTX1050Ti 4G独显游戏本笔记本电脑', 6999.00, 9, 'http://localhost:3003/images/goods/b5dcffe0-e7b0-11e8-8eb5-2933d116d7fc_360.jpg', 'http://localhost:3003/images/goods/b7604480-e7b0-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/b8fc6850-e7b0-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/ba1615b0-e7b0-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/bb5a5580-e7b0-11e8-8eb5-2933d116d7fc_720.jpg', '机械师', '<p><img src=\"http://localhost:3003/images/details/c7c5f5e0-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width:100%;\"><img src=\"http://localhost:3003/images/details/c999a470-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/cba81210-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/ce3bdc50-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/ef071800-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/f0bcde50-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/f2c44710-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/f4ba98d0-e7b0-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><br></p>', 0, '2018-11-14 09:59:57', '2020-07-22 23:39:18', 1, 0);
+INSERT INTO `goods` VALUES (16, 18, '【京东配送】AOC C2791VHE/WS 27英寸 1800R曲率 VA广视角 家用电竞双实力 不闪屏曲面显示器', 1249.00, 9, 'http://localhost:3003/images/goods/93016550-e7b1-11e8-8eb5-2933d116d7fc_360.jpg', 'http://localhost:3003/images/goods/948ebc10-e7b1-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/95d9d9b0-e7b1-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/96e3a890-e7b1-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/98a6dc60-e7b1-11e8-8eb5-2933d116d7fc_720.jpg', 'AOC', '<p><img src=\"http://localhost:3003/images/details/a1e7c9b0-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width:100%;\"><img src=\"http://localhost:3003/images/details/a3afdf80-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/a55af770-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/a7204e20-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/a89fe940-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/aa1a0620-e7b1-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><br></p>', 0, '2018-11-14 10:04:52', '2020-07-22 23:39:40', 1, 0);
 INSERT INTO `goods` VALUES (17, 18, '京天（KOTIN）第八代i5 8400/GTX1050Ti 4GD独显吃鸡游戏组装机DIY台式组装电脑主机', 4599.00, 1000, 'http://localhost:3003/images/goods/0bda9730-e7b2-11e8-8eb5-2933d116d7fc_360.jpg', 'http://localhost:3003/images/goods/0f6d5ae0-e7b2-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/10eccef0-e7b2-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/11f628a0-e7b2-11e8-8eb5-2933d116d7fc_720.jpg', '京天', '<p><img src=\"http://localhost:3003/images/details/201879b0-e7b2-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width:100%;\"><img src=\"http://localhost:3003/images/details/219a85d0-e7b2-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/232df710-e7b2-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/24f326b0-e7b2-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/266f8d80-e7b2-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/28101e20-e7b2-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/29d12f10-e7b2-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/2c030330-e7b2-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><br></p>', 0, '2018-11-14 10:08:31', '2020-07-22 23:40:14', 1, 0);
 INSERT INTO `goods` VALUES (18, 18, '惠普(HP) 幽灵Spectre x360 13.3英寸超轻薄翻转笔记本', 8499.00, 1000, 'http://localhost:3003/images/goods/f56613b0-e7b3-11e8-8eb5-2933d116d7fc_360.jpg', 'http://localhost:3003/images/goods/f6df6d40-e7b3-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/f828b620-e7b3-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/f92083a0-e7b3-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/fa6d00d0-e7b3-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/fbd6a', 'HP', '<p><img src=\"http://localhost:3003/images/details/4a8f9220-e7b5-11e8-8eb5-2933d116d7fc.png\" style=\"max-width:100%;\"><img src=\"http://localhost:3003/images/details/4cda6c80-e7b5-11e8-8eb5-2933d116d7fc.png\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/4f0a1dc0-e7b5-11e8-8eb5-2933d116d7fc.png\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/50ccb550-e7b5-11e8-8eb5-2933d116d7fc.png\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/52886f10-e7b5-11e8-8eb5-2933d116d7fc.png\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/554b86b0-e7b5-11e8-8eb5-2933d116d7fc.png\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/57857120-e7b5-11e8-8eb5-2933d116d7fc.png\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/59596dd0-e7b5-11e8-8eb5-2933d116d7fc.png\" style=\"max-width: 100%;\"><br></p>', 0, '2018-11-14 10:31:26', '2020-07-22 23:40:37', 1, 0);
 INSERT INTO `goods` VALUES (19, 2, '【5折抢购】CH新款潮流短袖T恤衫学生休闲假两件日系韩版潮修身纯色短T恤男', 49.00, 1000, 'http://localhost:3003/images/goods/a37041a0-e7b5-11e8-8eb5-2933d116d7fc_360.jpg', 'http://localhost:3003/images/goods/a4bdf750-e7b5-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/a66e1850-e7b5-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/a76b3d00-e7b5-11e8-8eb5-2933d116d7fc_720.jpg,http://localhost:3003/images/goods/a8b4fb10-e7b5-11e8-8eb5-2933d116d7fc_720.jpg', 'CH', '<p><img src=\"http://localhost:3003/images/details/b110df90-e7b5-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width:100%;\"><img src=\"http://localhost:3003/images/details/b298b810-e7b5-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/b41fa630-e7b5-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/b59926d0-e7b5-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/b7cca8a0-e7b5-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/b90af500-e7b5-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/baba2ba0-e7b5-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><img src=\"http://localhost:3003/images/details/bd659c90-e7b5-11e8-8eb5-2933d116d7fc.jpg\" style=\"max-width: 100%;\"><br></p>', 0, '2018-11-14 10:34:06', '2020-07-22 23:22:52', 1, 0);
@@ -200,10 +203,10 @@ INSERT INTO `goods` VALUES (39, 2, '蜜搭 新款复古收腰桔梗初恋裙 夏
 -- ----------------------------
 DROP TABLE IF EXISTS `goods_gallery`;
 CREATE TABLE `goods_gallery`  (
-  `galleryId` int(0) NOT NULL AUTO_INCREMENT,
+  `galleryId` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `state` int(0) NULL DEFAULT NULL,
-  `goodsId` int(0) NULL DEFAULT NULL,
+  `state` int(11) NULL DEFAULT NULL,
+  `goodsId` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`galleryId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -221,9 +224,9 @@ INSERT INTO `goods_gallery` VALUES (5, 'http://114.132.239.118:3003/getpic/16452
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
-  `pId` int(0) NULL DEFAULT NULL COMMENT '父级id',
+  `pId` int(11) NULL DEFAULT NULL COMMENT '父级id',
   `component` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组件名称',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接url',
   `menu_order` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '显示顺序',
@@ -254,8 +257,8 @@ INSERT INTO `menu` VALUES (14, '菜单权限', 6, NULL, '/auth/menu', '6002', NU
 -- ----------------------------
 DROP TABLE IF EXISTS `order_address`;
 CREATE TABLE `order_address`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `orderId` int(0) NOT NULL COMMENT '订单id',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) NOT NULL COMMENT '订单id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号',
   `province` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '省',
@@ -278,13 +281,13 @@ INSERT INTO `order_address` VALUES (22, 16, '黄小米', '15863008280', '山东'
 -- ----------------------------
 DROP TABLE IF EXISTS `order_goods`;
 CREATE TABLE `order_goods`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `orderId` int(0) NOT NULL COMMENT '订单id',
-  `goodsId` int(0) NULL DEFAULT NULL COMMENT '商品id',
-  `goodsNumber` int(0) NULL DEFAULT NULL COMMENT '商品数量',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) NOT NULL COMMENT '订单id',
+  `goodsId` int(11) NULL DEFAULT NULL COMMENT '商品id',
+  `goodsNumber` int(11) NULL DEFAULT NULL COMMENT '商品数量',
   `price` double(20, 2) NULL DEFAULT NULL COMMENT '商品价格',
-  `state` tinyint(0) NULL DEFAULT 1 COMMENT '0-禁用，1-正常，-1-删除',
-  `updateTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  `state` tinyint(4) NULL DEFAULT 1 COMMENT '0-禁用，1-正常，-1-删除',
+  `updateTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Fixed;
 
@@ -303,8 +306,8 @@ INSERT INTO `order_goods` VALUES (14, 16, 26, 1, 259.00, 1, '2018-11-23 15:52:56
 -- ----------------------------
 DROP TABLE IF EXISTS `order_status`;
 CREATE TABLE `order_status`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `code` tinyint(0) NULL DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` tinyint(4) NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `text` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -329,10 +332,10 @@ INSERT INTO `order_status` VALUES (10, 8, 'ORDER_CLOSED', '订单关闭');
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
   `payment` double(20, 2) NULL DEFAULT NULL COMMENT '支付金额',
-  `payment_type` tinyint(0) NULL DEFAULT NULL COMMENT '1-在线支付，1-货到付款',
+  `payment_type` tinyint(4) NULL DEFAULT NULL COMMENT '1-在线支付，1-货到付款',
   `pay_time` datetime(0) NULL DEFAULT NULL COMMENT '支付时间',
   `ship_fee` double(20, 2) NULL DEFAULT NULL COMMENT '邮费',
   `ship_time` datetime(0) NULL DEFAULT NULL COMMENT '发货时间',
@@ -343,10 +346,10 @@ CREATE TABLE `orders`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `finish_time` datetime(0) NULL DEFAULT NULL COMMENT '交易完成时间',
   `close_time` datetime(0) NULL DEFAULT NULL COMMENT '交易关闭时间',
-  `order_state` int(0) NULL DEFAULT 0 COMMENT '状态字典',
-  `state` tinyint(0) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
-  `refund_state` tinyint(0) NULL DEFAULT NULL COMMENT '退款状态',
-  `comment_state` tinyint(0) NULL DEFAULT NULL COMMENT '评论状态',
+  `order_state` int(11) NULL DEFAULT 0 COMMENT '状态字典',
+  `state` tinyint(4) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
+  `refund_state` tinyint(4) NULL DEFAULT NULL COMMENT '退款状态',
+  `comment_state` tinyint(4) NULL DEFAULT NULL COMMENT '评论状态',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
@@ -362,7 +365,7 @@ INSERT INTO `orders` VALUES (16, '2', 5000.00, NULL, NULL, NULL, NULL, NULL, NUL
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
   `gender` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '男' COMMENT '性别 0：未知、1：男、2：女',
   `avatarUrl` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT './images/avatar/default.jpg' COMMENT '头像',

@@ -93,11 +93,13 @@ router.post("/update", async (req, res) => {
   //判断库存够不够
   let sql = `SELECT inventory FROM goods WHERE goodsId = ${goodsId}`;
   let goodsnumber = await db.query(sql);
-  if (goodsnumber < goodsNumber) {
+  console.log(goodsnumber);
+  if (goodsnumber[0].inventory < goodsNumber) {
     //库存不住
     res.json({
       status: false,
       msg: "库存不足!",
+      erron: 1,
     });
     return;
   }
