@@ -41,7 +41,7 @@ router.get("/list", async (req, res) => {
  * @apiSampleRequest /api/address
  */
 router.get("/addressDetail", async (req, res) => {
-  var sql = `SELECT * FROM address WHERE id = ? `;
+  let sql = `SELECT * FROM address WHERE id = ? `;
   let { id } = req.query;
   let results = await db.query(sql, id);
   if (!results.length) {

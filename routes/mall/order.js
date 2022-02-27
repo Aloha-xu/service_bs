@@ -98,7 +98,7 @@ router.post("/checkout", async (req, res) => {
 router.post("/submit", async (req, res) => {
   // 准备查询的商品id,方便使用IN
   let queryGid = [];
-  let { addressId, actualPay, goodsList, note, freightPrice } = req.body;
+  let { addressId, goodsPrices, goodsList, note, freightPrice } = req.body;
   let { openid } = req.user;
   goodsList.forEach(function (item) {
     queryGid.push(item.goodsId);
@@ -147,12 +147,12 @@ router.post("/submit", async (req, res) => {
   let orderId = uuidv1();
 
   // 订单表中生成新订单  还有一些数据没插进去
-  sql = `INSERT INTO orders (orderId,openid,actualPay,createTime,note,freightPrice,addressId) VALUES (?,?,?,CURRENT_TIMESTAMP(),?,?,?)`;
+  sql = `INSERT INTO orders (orderId,openid,goodsPrices,createTime,note,freightPrice,addressId) VALUES (?,?,?,unix_timestamp(CURRENT_TIMESTAMP()),?,?,?)`;
 
   results = await db.query(sql, [
     orderId,
     openid,
-    actualPay,
+    goodsPrices,
     note,
     freightPrice,
     addressId,
@@ -197,74 +197,38 @@ router.post("/submit", async (req, res) => {
     data: orderId,
   });
 
-  //   // 购物车对应商品复制到order_goods表中，carts表删除对应商品
-  //   sql = `INSERT INTO order_goods ( orderId, goodsId, goodsNumber, price )
 
-  //         SELECT ( ? ), c.goodsId, c.goodsNumber, g.price
-  //         FROM cart c JOIN goods g ON g.goodsId = c.goodsId
-  //         WHERE c.openid = ? AND c.goodsId IN (?);
-
-  //         DELETE FROM cart WHERE openid = ? AND goodsId IN (?)`;
-
-  //         results = await db.query(sql, [openid, actualPay]);
-
-  //   // 提取新订单id
-  //   let { insertId } = results;
-  //   // 存储收货地址快照
-  //   let sql = `INSERT INTO order_address ( order_id, name, tel, province, city, county, street, code )
-  //                    SELECT ( ? ), name, tel, province, city, county, street, code
-  //                    FROM address WHERE id = ?`;
-  //   connection.query(
-  //     sql,
-  //     [insertId, addressId],
-  //     function (error, results, fields) {
-  //       if (error || results.affectedRows <= 0) {
-  //         return connection.rollback(function () {
-  //           throw error || `${results.affectedRows} rows affected!`;
-  //         });
-  //       }
-
-  //       connection.query(
-  //         sql,
-  //         [insertId, openid, queryGid, openid, queryGid],
-  //         function (error, results, fields) {
-  //           if (error || results.affectedRows <= 0) {
-  //             return connection.rollback(function () {
-  //               throw error || `${results.affectedRows} rows affected!`;
-  //             });
-  //           }
-  //           connection.commit(function (err) {
-  //             if (err) {
-  //               return connection.rollback(function () {
-  //                 throw err;
-  //               });
-  //             }
-  //             res.json({
-  //               status: true,
-  //               msg: "success!",
-  //               data: {
-  //                 order_id: insertId,
-  //               },
-  //             });
-  //           });
-  //         }
-  //       );
-  //     }
-  //   );
 });
 
 /**
  *
  *  改变订单状态接口
- *
- *
+ *  
+ *  订单状态:0-待付款，1-待发货 买家付款成功，2-待收货 卖家已发货，7-所有状态;
  */
 router.post("/updataState", async (req, res) => {
-  let { code, orderId } = req.body;
+  let { orderState, orderId } = req.body;
   let { openid } = req.user;
 
-  let sql = `UPDATE orders SET orderState = ? WHERE orderId = ? AND openid = ?`;
-  let results = await db.query(sql, [code, orderId, openid]);
+  let sql = `UPDATE orders SET orderState = ? , updateTime = unix_timestamp(CURRENT_TIMESTAMP())`;
+
+  // if(orderState == 0){
+  //   //就是还没给钱 payTime 还是null
+  //   sql += ``
+  // }
+  if (orderState == 1) {
+    //给了钱了 那么paytime就应该更新
+    sql += `,payTime = unix_timestamp(CURRENT_TIMESTAMP())`
+  }
+  // else if(orderState == 2){
+  //   //这个发货时间应该是在后台更新的
+  // }
+
+  sql += ` WHERE orderId = ? AND openid = ?`
+
+  console.log(sql);
+
+  let results = await db.query(sql, [orderState, orderId, openid]);
   if (results.affectedRows <= 0) {
     res.json({
       msg: `更新失败!`,
@@ -285,48 +249,100 @@ router.post("/updataState", async (req, res) => {
  * @apiGroup Order
  * @apiPermission user
  *
- * @apiParam {Number} [pageSize] 一个页有多少个商品,默认4个;
- * @apiParam {Number} [pageIndex] 第几页,默认1;
- * @apiParam {Number=0,3,4,5,all} status 订单状态:0-待付款，3-待发货，4-待收货，5-待评价，all-所有状态;
+ * @apiParam  status 订单状态:0-待付款，1-待发货 买家付款成功，2-待收货 卖家已发货，7-所有状态;
  *
  * @apiSampleRequest /api/order/list
  */
-router.get("/list", function (req, res) {
-  let { pageSize = 4, pageIndex = 1, status = "all" } = req.query;
+router.post("/list", async (req, res) => {
+  let { status = 7 } = req.body;
   let { openid } = req.user;
-  let size = parseInt(pageSize);
-  let count = size * (pageIndex - 1);
   // 查询所有订单
-  let sql = `SELECT o.id, o.create_time, o.actualPay, os.text AS status
-		 FROM orders o JOIN order_status os ON o.order_state = os.CODE
-		 WHERE o.uid = ? ORDER BY o.create_time DESC LIMIT ? OFFSET ? `;
+  let sql = `SELECT o.orderId, o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code
+		 FROM orders o JOIN order_status os ON o.orderState = os.orderState
+		 WHERE o.openid = '${openid}' ORDER BY o.createTime DESC`;
   // 根据订单状态查询
-  if (status != "all") {
-    sql = `SELECT o.id, o.create_time, o.actualPay, os.text AS status
-			 FROM orders o JOIN order_status os ON o.order_state = os.CODE
-			 WHERE o.uid = ? AND o.order_state = ${status} ORDER BY o.create_time DESC LIMIT ? OFFSET ?`;
+  if (status != 7) {
+    sql = `SELECT o.orderId, o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code
+    FROM orders o JOIN order_status os ON o.orderState = os.orderState
+    WHERE o.openid = '${openid}' AND o.orderState = ${status} ORDER BY o.createTime DESC`;
   }
-  db.query(sql, [openid, size, count], function (orders) {
-    // 查询订单商品信息
-    let sql = `SELECT g.id, o.id AS order_id, g.name, g.img_md, og.goods_num, og.goods_price
-			 FROM orders o JOIN order_goods og ON o.id = og.order_id
-			 JOIN goods g ON g.id = og.goods_id
-			 WHERE o.uid = ?`;
-    if (status != "all") {
-      sql += ` AND o.order_state = ${status}`;
-    }
-    db.query(sql, [openid], (goods) => {
-      orders.forEach((order) => {
-        order.goodsList = goods.filter((item) => order.id == item.order_id);
-      });
-      //成功
-      res.json({
-        status: true,
-        msg: "success!",
-        orders,
-      });
+  let orders = await db.query(sql)
+
+  // 查询订单商品信息
+  sql = `SELECT g.goodsId, o.orderId , g.name, g.img, og.goodsNumber, g.price
+  FROM orders o JOIN order_goods og ON o.orderId = og.orderId
+  JOIN goods g ON g.goodsId = og.goodsId
+  WHERE o.openid = '${openid}'`;
+  if (status != 7) {
+    sql += ` AND o.orderState = ${status}`;
+  }
+
+  let goods = await db.query(sql)
+  orders.forEach((order) => {
+    let goodscount = 0
+    order.goodsList = goods.filter((item) => {
+      if (order.orderId == item.orderId) {
+        goodscount = item.goodsNumber + goodscount
+        return true
+      }
     });
+    order.goodsCount = goodscount
   });
+  //成功
+  res.json({
+    status: true,
+    msg: "success!",
+    data: orders,
+    errno: 0
+  });
+
 });
+
+/**
+ * @api {get} /api/order/detail 获取订单详情
+ *  orderId
+ */
+router.post("/detail", async (req, res) => {
+  let { orderId } = req.body;
+  let { openid } = req.user;
+
+  let sql = `SELECT o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime
+    FROM orders o JOIN order_status os ON o.orderState = os.orderState
+		 WHERE o.orderId = '${orderId}'`;
+
+  let orderInfo = await db.query(sql)
+
+  let { addressId } = orderInfo[0]
+
+  sql = `SELECT * FROM address WHERE id = ${addressId} `;
+
+  let addressInfo = await db.query(sql)
+
+  // 查询订单商品信息
+  sql = `SELECT g.goodsId, g.name, g.img, og.goodsNumber, g.price
+  FROM orders o JOIN order_goods og ON o.orderId = og.orderId
+  JOIN goods g ON g.goodsId = og.goodsId
+  WHERE o.orderId = '${orderId}'`;
+
+  let orderGoods = await db.query(sql)
+
+
+
+  //成功
+  res.json({
+    status: true,
+    msg: "success!",
+    data: {
+      orderGoods,
+      orderInfo: orderInfo[0],
+      addressInfo: addressInfo[0]
+    },
+    errno: 0
+  });
+
+});
+
+
+
 
 module.exports = router;

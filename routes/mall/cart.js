@@ -39,6 +39,8 @@ router.post("/add", async (req, res) => {
     });
   }
 });
+
+
 /**
  * @api {get} /api/cart/list 获取购物车列表
  * @apiName CartList
@@ -59,6 +61,8 @@ router.post("/list", async (req, res) => {
     status: true,
   });
 });
+
+
 /**
  * @api {delete} /api/cart/delete/:id 购物车删除商品
  * @apiName DeleteCart
@@ -81,6 +85,7 @@ router.post("/delete", async (req, res) => {
     });
   }
 });
+
 
 /**
  * @api {put} /api/cart/update/:id
@@ -119,6 +124,7 @@ router.post("/update", async (req, res) => {
   }
 });
 
+
 /**
  * @api {put} /api/cart/goodsCartCount
  * @apiDescription 获取商品数量
@@ -137,6 +143,7 @@ router.post("/goodsCartCount", async (req, res) => {
     errno: 0,
   });
 });
+
 
 // /**
 //  * @api {put} /api/cart/checked
