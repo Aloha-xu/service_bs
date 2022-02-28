@@ -393,4 +393,36 @@ router.post("/detail", async (req, res) => {
   });
 });
 
+
+
+
+/**
+ *
+ *  退货    refundState 1 退货状态 退货     refundReason xxxx 退货原因     orderState 4 退货中  
+ *
+ *  
+ */
+router.post("/refund", async (req, res) => {
+  let { orderId, refundReason } = req.body;
+  let { openid } = req.user;
+
+  let sql = `UPDATE orders SET orderState = 4 , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , refundState = 1 , refundReason = ? WHERE orderId = ? AND openid = ?`;
+
+  console.log(sql);
+
+  let results = await db.query(sql, [refundReason, orderId, openid]);
+  if (results.affectedRows <= 0) {
+    res.json({
+      msg: `更新失败!`,
+      errno: 1,
+    });
+    return;
+  }
+  res.json({
+    msg: `更新成功!`,
+    errno: 0,
+  });
+});
+
+
 module.exports = router;
