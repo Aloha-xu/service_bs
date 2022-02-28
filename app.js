@@ -19,6 +19,7 @@ let PCCT = require("./routes/mall/PCCT");
 let collection = require("./routes/mall/collection");
 let home = require("./routes/mall/home");
 let common = require("./routes/mall/common");
+let foot = require("./routes/mall/foot");
 
 let role = require("./routes/admin/role");
 let menu = require("./routes/admin/menu");
@@ -75,6 +76,7 @@ app.use("/api/pcct", PCCT);
 app.use("/api/collection", collection);
 app.use("/api/home", home);
 app.use("/api/common", common);
+app.use("/api/foot", foot);
 
 app.use("/api/role", role);
 app.use("/api/menu", menu);

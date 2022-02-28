@@ -196,15 +196,65 @@ router.post("/submit", async (req, res) => {
     errno: 0,
     data: orderId,
   });
+});
 
+/**
+ *
+ *  确认收货
+ *
+ *  订单状态:0-待付款，1-待发货 买家付款成功，2-待收货 卖家已发货，7-所有状态;
+ */
+router.post("/confirm", async (req, res) => {
+  let { orderId } = req.body;
+  let { openid } = req.user;
 
+  let sql = `UPDATE orders SET orderState = 3 , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , receivedTime = unix_timestamp(CURRENT_TIMESTAMP()) , finishTime = unix_timestamp(CURRENT_TIMESTAMP())`;
+  sql += ` WHERE orderId = ? AND openid = ?`;
+
+  let results = await db.query(sql, [orderId, openid]);
+  if (results.affectedRows <= 0) {
+    res.json({
+      msg: `更新失败!`,
+      errno: 1,
+    });
+    return;
+  }
+  res.json({
+    msg: `更新成功!`,
+    errno: 0,
+  });
+});
+
+/**
+ *
+ *  删除订单   1-正常，0-禁用，-1-删除
+ *
+ */
+router.post("/delete", async (req, res) => {
+  let { orderId } = req.body;
+  let { openid } = req.user;
+
+  let sql = `UPDATE orders SET state = 0 WHERE orderId = ? AND openid = ?`;
+
+  let results = await db.query(sql, [orderId, openid]);
+  if (results.affectedRows <= 0) {
+    res.json({
+      msg: `更新失败!`,
+      errno: 1,
+    });
+    return;
+  }
+  res.json({
+    msg: `更新成功!`,
+    errno: 0,
+  });
 });
 
 /**
  *
  *  改变订单状态接口
- *  
- *  订单状态:0-待付款，1-待发货 买家付款成功，2-待收货 卖家已发货，7-所有状态;
+ *
+ *  订单状态:0-待付款，1-待发货 买家付款成功，2-待收货 卖家已发货，7-所有状态   6 -订单关闭
  */
 router.post("/updataState", async (req, res) => {
   let { orderState, orderId } = req.body;
@@ -218,13 +268,18 @@ router.post("/updataState", async (req, res) => {
   // }
   if (orderState == 1) {
     //给了钱了 那么paytime就应该更新
-    sql += `,payTime = unix_timestamp(CURRENT_TIMESTAMP())`
+    sql += `,payTime = unix_timestamp(CURRENT_TIMESTAMP())`;
+  }
+  //关闭订单
+  if (orderState == 6) {
+    //给了钱了 那么paytime就应该更新
+    sql += `,closeTime = unix_timestamp(CURRENT_TIMESTAMP())`;
   }
   // else if(orderState == 2){
   //   //这个发货时间应该是在后台更新的
   // }
 
-  sql += ` WHERE orderId = ? AND openid = ?`
+  sql += ` WHERE orderId = ? AND openid = ?`;
 
   console.log(sql);
 
@@ -266,7 +321,7 @@ router.post("/list", async (req, res) => {
     FROM orders o JOIN order_status os ON o.orderState = os.orderState
     WHERE o.openid = '${openid}' AND o.orderState = ${status} ORDER BY o.createTime DESC`;
   }
-  let orders = await db.query(sql)
+  let orders = await db.query(sql);
 
   // 查询订单商品信息
   sql = `SELECT g.goodsId, o.orderId , g.name, g.img, og.goodsNumber, g.price
@@ -277,25 +332,24 @@ router.post("/list", async (req, res) => {
     sql += ` AND o.orderState = ${status}`;
   }
 
-  let goods = await db.query(sql)
+  let goods = await db.query(sql);
   orders.forEach((order) => {
-    let goodscount = 0
+    let goodscount = 0;
     order.goodsList = goods.filter((item) => {
       if (order.orderId == item.orderId) {
-        goodscount = item.goodsNumber + goodscount
-        return true
+        goodscount = item.goodsNumber + goodscount;
+        return true;
       }
     });
-    order.goodsCount = goodscount
+    order.goodsCount = goodscount;
   });
   //成功
   res.json({
     status: true,
     msg: "success!",
     data: orders,
-    errno: 0
+    errno: 0,
   });
-
 });
 
 /**
@@ -306,17 +360,17 @@ router.post("/detail", async (req, res) => {
   let { orderId } = req.body;
   let { openid } = req.user;
 
-  let sql = `SELECT o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime
+  let sql = `SELECT o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime,o.closeTime
     FROM orders o JOIN order_status os ON o.orderState = os.orderState
 		 WHERE o.orderId = '${orderId}'`;
 
-  let orderInfo = await db.query(sql)
+  let orderInfo = await db.query(sql);
 
-  let { addressId } = orderInfo[0]
+  let { addressId } = orderInfo[0];
 
   sql = `SELECT * FROM address WHERE id = ${addressId} `;
 
-  let addressInfo = await db.query(sql)
+  let addressInfo = await db.query(sql);
 
   // 查询订单商品信息
   sql = `SELECT g.goodsId, g.name, g.img, og.goodsNumber, g.price
@@ -324,9 +378,7 @@ router.post("/detail", async (req, res) => {
   JOIN goods g ON g.goodsId = og.goodsId
   WHERE o.orderId = '${orderId}'`;
 
-  let orderGoods = await db.query(sql)
-
-
+  let orderGoods = await db.query(sql);
 
   //成功
   res.json({
@@ -335,14 +387,10 @@ router.post("/detail", async (req, res) => {
     data: {
       orderGoods,
       orderInfo: orderInfo[0],
-      addressInfo: addressInfo[0]
+      addressInfo: addressInfo[0],
     },
-    errno: 0
+    errno: 0,
   });
-
 });
-
-
-
 
 module.exports = router;
