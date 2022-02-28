@@ -184,35 +184,33 @@ router.get("/sub", function (req, res) {
  *
  * @apiSampleRequest /api/menu/tree
  */
-router.get('/tree', function (req, res) {
-    let { id } = req.query;
-    let sql =
-        `SELECT m.*,i.name AS 'icon' FROM MENU m JOIN role_menu rm ON rm.menu_id = m.id LEFT JOIN ICON i ON m.icon_id = i.id WHERE rm.role_id = ? ORDER BY m.menu_order;`;
-    db.query(sql, [id], function (results) {
-        //筛选出一级菜单
-        let cate_1st = results.filter((item) => item.pId === 1 ? item : null);
-        //递归循环数据
-        parseToTree(cate_1st);
+router.get('/tree', async (req, res) => {
+    // let { id } = req.query;
+    let sql = `SELECT * FROM menu ORDER BY menu_order;`;
+    let results = await db.query(sql)
+    //筛选出一级菜单
+    let cate_1st = results.filter((item) => item.pId === 1 ? item : null);
+    //递归循环数据
+    parseToTree(cate_1st);
 
-        //递归函数
-        function parseToTree(array) {
-            array.forEach(function (parent) {
-                parent.children = [];
-                results.forEach(function (child) {
-                    if (child.pId === parent.id) {
-                        parent.children.push(child);
-                    }
-                });
-                parseToTree(parent.children);
+    //递归函数
+    function parseToTree(array) {
+        array.forEach(function (parent) {
+            parent.children = [];
+            results.forEach(function (child) {
+                if (child.pId === parent.id) {
+                    parent.children.push(child);
+                }
             });
-        }
-
-        //成功
-        res.json({
-            status: true,
-            msg: "success!",
-            data: results
+            // parseToTree(parent.children);
         });
+    }
+
+    //成功
+    res.json({
+        status: true,
+        msg: "success!",
+        data: results
     });
 });
 module.exports = router;

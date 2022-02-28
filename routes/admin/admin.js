@@ -163,6 +163,10 @@ router.post("/login", async (req, res) => {
     });
   }
 });
+
+
+
+
 /**
  * @api {get} /api/admin/list 获取管理员列表
  * @apiName AdminList
@@ -183,6 +187,9 @@ router.get("/list", function (req, res) {
     });
   });
 });
+
+
+
 /**
  * @api {delete} /api/admin/:id 删除管理员
  * @apiName DeleteAdmin
