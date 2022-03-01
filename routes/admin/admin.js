@@ -164,18 +164,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-
-
-
 /**
- * @api {get} /api/admin/list 获取管理员列表
+ * @api {get} /api/admin/adminMenager/list 获取管理员列表
  * @apiName AdminList
  * @apiGroup admin User
  * @apiPermission admin
  *
- * @apiSampleRequest /api/admin/list
  */
-router.get("/list", function (req, res) {
+router.post("/adminMenager/list", function (req, res) {
   //查询账户数据
   let sql = `SELECT a.id,a.username,a.fullname,a.email,a.sex,a.avatar,a.tel,DATE_FORMAT(a.login_time,'%Y-%m-%d %H:%i:%s') AS login_time,a.login_count,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id ORDER BY a.id`;
   db.query(sql, [], function (results) {
@@ -188,10 +184,8 @@ router.get("/list", function (req, res) {
   });
 });
 
-
-
 /**
- * @api {delete} /api/admin/:id 删除管理员
+ * @api {delete} /api/admin/adminMenager/del 删除管理员
  * @apiName DeleteAdmin
  * @apiGroup admin User
  * @apiPermission admin
@@ -203,7 +197,7 @@ router.get("/list", function (req, res) {
  *
  * @apiSampleRequest /api/admin
  */
-router.delete("/:id", function (req, res) {
+router.delete("/adminMenager/del", function (req, res) {
   let { id } = req.params;
   let sql = `DELETE FROM admin WHERE id = ?;DELETE FROM admin_role WHERE admin_id = ?;`;
   db.query(sql, [id, id], function (results) {
@@ -215,7 +209,7 @@ router.delete("/:id", function (req, res) {
   });
 });
 /**
- * @api {get} /api/admin 获取管理员个人资料
+ * @api {get} /api/admin/adminMenager/info 获取管理员个人资料
  * @apiName AdminInfo
  * @apiGroup admin User
  * @apiPermission admin
@@ -224,28 +218,29 @@ router.delete("/:id", function (req, res) {
  *
  * @apiSampleRequest /api/admin
  */
-router.get("/", function (req, res) {
+router.post("/adminMenager/info", async (req, res) => {
   let { id } = req.query;
   //查询账户数据
-  let sql = `SELECT a.id,a.username,a.fullname,a.email,a.sex,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id WHERE a.id = ?`;
-  db.query(sql, [id], function (results) {
-    if (!results.length) {
-      res.json({
-        status: false,
-        msg: "获取失败！",
-      });
-      return false;
-    }
-    // 获取成功
+  let sql = `SELECT * from admin WHERE id = ?`;
+  let results = await db.query(sql, id);
+  if (!results.length) {
     res.json({
-      status: true,
-      msg: "获取成功！",
-      data: results[0],
+      status: false,
+      msg: "获取失败！",
+      errno: 1,
     });
+    return false;
+  }
+  // 获取成功
+  res.json({
+    status: true,
+    msg: "获取成功！",
+    data: results[0],
+    errno: 0,
   });
 });
 /**
- * @api { put } /api/admin/ 更新管理员个人资料
+ * @api { put } /api/adminMenager/updata 更新管理员个人资料
  * @apiDescription 只有超级管理员才有权限修改用户角色，普通管理员无权限更改角色。
  * @apiName UpdateInfo
  * @apiGroup admin User
@@ -261,7 +256,7 @@ router.get("/", function (req, res) {
  *
  * @apiSampleRequest /api/admin
  */
-router.put("/", function (req, res) {
+router.post("/adminMenager/updata", function (req, res) {
   let { id, fullname, sex, avatar, tel, email, role } = req.body;
   let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?;
     UPDATE admin_role SET role_id = ? WHERE admin_id = ?`;
@@ -292,7 +287,7 @@ router.put("/", function (req, res) {
  *
  * @apiSampleRequest /api/admin/account
  */
-router.put("/account/", function (req, res) {
+router.post("/account", function (req, res) {
   let { id } = req.user;
   let { fullname, sex, avatar, tel, email } = req.body;
   let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?`;

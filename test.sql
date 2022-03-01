@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : xzd
+ Source Server         : bysj
  Source Server Type    : MySQL
- Source Server Version : 80012
+ Source Server Version : 80028
  Source Host           : localhost:3306
  Source Schema         : test
 
  Target Server Type    : MySQL
- Target Server Version : 80012
+ Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 28/02/2022 23:50:49
+ Date: 01/03/2022 18:36:34
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id 唯一标识openid',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号',
@@ -30,7 +30,7 @@ CREATE TABLE `address`  (
   `city` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '市',
   `county` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '县区',
   `street` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细地址',
-  `isDefault` int(11) NULL DEFAULT 1 COMMENT '是否默认',
+  `isDefault` int(0) NULL DEFAULT 1 COMMENT '是否默认',
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细地址',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = Dynamic;
@@ -51,7 +51,7 @@ INSERT INTO `address` VALUES (9, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 'xxx', '1362504
 -- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `fullname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
@@ -60,15 +60,15 @@ CREATE TABLE `admin`  (
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号码',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '注册邮箱',
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
-  `login_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '登录时间',
-  `login_count` bigint(20) NOT NULL DEFAULT 1 COMMENT '登录次数',
+  `login_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '登录时间',
+  `login_count` bigint(0) NOT NULL DEFAULT 1 COMMENT '登录次数',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '123456', '超级管理员', '男', 'http://localhost:3003/images/avatar/default.jpg', '15863008280', 'nn880328@126.com', '2019-05-14 20:39:31', '2022-02-28 23:21:08', 206);
+INSERT INTO `admin` VALUES (1, 'admin', '123456', '超级管理员', '男', 'http://localhost:3003/images/avatar/default.jpg', '15863008280', 'nn880328@126.com', '2019-05-14 20:39:31', '2022-03-01 17:42:37', 213);
 INSERT INTO `admin` VALUES (2, 'moz', '123456', '黄小米', '女', 'http://localhost:3003/images/avatar/default.jpg', '13475829262', 'nn880328@126.com', '2019-05-11 18:21:37', '2020-10-10 10:48:38', 9);
 
 -- ----------------------------
@@ -76,9 +76,9 @@ INSERT INTO `admin` VALUES (2, 'moz', '123456', '黄小米', '女', 'http://loca
 -- ----------------------------
 DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner`  (
-  `bannerId` int(11) NOT NULL,
+  `bannerId` int(0) NOT NULL,
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `state` int(11) NULL DEFAULT NULL COMMENT '0 - 下架  1 - 上架',
+  `state` int(0) NULL DEFAULT NULL COMMENT '0 - 下架  1 - 上架',
   PRIMARY KEY (`bannerId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -95,44 +95,56 @@ INSERT INTO `banner` VALUES (4, 'http://114.132.239.118:3003/getpic/164534025278
 -- ----------------------------
 DROP TABLE IF EXISTS `cart`;
 CREATE TABLE `cart`  (
-  `cartId` int(11) NOT NULL AUTO_INCREMENT,
+  `cartId` int(0) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
-  `goodsId` int(11) NOT NULL COMMENT '商品id',
-  `goodsNumber` int(11) NOT NULL COMMENT '商品数量',
-  `state` tinyint(4) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
+  `goodsId` int(0) NOT NULL COMMENT '商品id',
+  `goodsNumber` int(0) NOT NULL COMMENT '商品数量',
+  `state` tinyint(0) NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
   `createTime` timestamp(0) NULL DEFAULT NULL COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`cartId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 32 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Fixed;
 
 -- ----------------------------
+-- Records of cart
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for category
 -- ----------------------------
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
-  `cateId` int(11) NOT NULL AUTO_INCREMENT,
+  `cateId` int(0) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
-  `pId` int(11) NOT NULL COMMENT '父级id x',
-  `level` int(11) NULL DEFAULT NULL COMMENT '层级 x',
-  `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `pId` int(0) NOT NULL COMMENT '父级id',
+  `level` int(0) NULL DEFAULT NULL COMMENT '层级 x  弃用',
+  `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '弃用',
   PRIMARY KEY (`cateId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 136 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES (1, '游戏', 0, 1, '');
-INSERT INTO `category` VALUES (18, '女装', 1, NULL, 'http://localhost:3003/images/common/707d6060-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
-INSERT INTO `category` VALUES (2, '男装', 1, NULL, 'http://localhost:3003/images/common/a1306ae0-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
+INSERT INTO `category` VALUES (1, '全部', 0, 1, '');
+INSERT INTO `category` VALUES (18, '女装', 1, 2, 'http://localhost:3003/images/common/707d6060-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
+INSERT INTO `category` VALUES (2, '男装', 1, 2, 'http://localhost:3003/images/common/a1306ae0-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
+INSERT INTO `category` VALUES (3, 'JBL', 1, 2, 'http://localhost:3003/images/common/a1306ae0-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
+INSERT INTO `category` VALUES (4, '套装', 1, 2, 'http://localhost:3003/images/common/a1306ae0-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
+INSERT INTO `category` VALUES (5, '户外', 1, 2, 'http://localhost:3003/images/common/a1306ae0-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
+INSERT INTO `category` VALUES (6, '室内', 1, 2, 'http://localhost:3003/images/common/a1306ae0-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
+INSERT INTO `category` VALUES (7, '猫王', 1, 2, 'http://localhost:3003/images/common/a1306ae0-cbb7-11ea-8d4a-bf562cfb5ba9.jpeg');
+INSERT INTO `category` VALUES (138, 'lisa', 1, 2, NULL);
+INSERT INTO `category` VALUES (137, 'tttt', 1, 2, NULL);
+INSERT INTO `category` VALUES (139, 'jennie_test', 1, 2, NULL);
 
 -- ----------------------------
 -- Table structure for collection
 -- ----------------------------
 DROP TABLE IF EXISTS `collection`;
 CREATE TABLE `collection`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户id',
-  `goodsId` int(11) NULL DEFAULT NULL COMMENT '商品id',
+  `goodsId` int(0) NULL DEFAULT NULL COMMENT '商品id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户收藏商品' ROW_FORMAT = Dynamic;
 
@@ -147,11 +159,11 @@ INSERT INTO `collection` VALUES (2, 'oShUg5dO2dJN7gjezrL3CvBOoHP0', 38);
 -- ----------------------------
 DROP TABLE IF EXISTS `foot_print`;
 CREATE TABLE `foot_print`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `goodsId` int(11) NOT NULL,
+  `goodsId` int(0) NOT NULL,
   PRIMARY KEY (`id`, `openid`, `goodsId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of foot_print
@@ -171,20 +183,20 @@ INSERT INTO `foot_print` VALUES (25, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 33);
 -- ----------------------------
 DROP TABLE IF EXISTS `goods`;
 CREATE TABLE `goods`  (
-  `goodsId` int(11) NOT NULL AUTO_INCREMENT,
-  `cateId` int(11) NOT NULL COMMENT '分类id',
+  `goodsId` int(0) NOT NULL AUTO_INCREMENT,
+  `cateId` int(0) NOT NULL COMMENT '分类id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品名称',
   `price` decimal(10, 2) NOT NULL COMMENT '商品价格',
-  `inventory` int(11) NOT NULL COMMENT '库存 ',
-  `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品主图-360 x',
-  `slider` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品轮播图片',
+  `inventory` int(0) NOT NULL COMMENT '库存 ',
+  `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品主图-360 x',
+  `slider` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品轮播图片',
   `brand` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品品牌 x',
   `detail` varchar(5000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品详情',
   `freight` decimal(10, 0) NULL DEFAULT 0 COMMENT '商品运费 ',
   `createTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `updateTime` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `state` int(11) NULL DEFAULT 1 COMMENT '0下架 1上架',
-  `sellVolume` int(11) NULL DEFAULT 0 COMMENT '已售数量',
+  `state` int(0) NULL DEFAULT 1 COMMENT '0下架 1上架',
+  `sellVolume` int(0) NULL DEFAULT 0 COMMENT '已售数量',
   PRIMARY KEY (`goodsId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = Dynamic;
 
@@ -218,10 +230,10 @@ INSERT INTO `goods` VALUES (39, 2, '蜜搭 新款复古收腰桔梗初恋裙 夏
 -- ----------------------------
 DROP TABLE IF EXISTS `goods_gallery`;
 CREATE TABLE `goods_gallery`  (
-  `galleryId` int(11) NOT NULL AUTO_INCREMENT,
+  `galleryId` int(0) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `state` int(11) NULL DEFAULT NULL,
-  `goodsId` int(11) NULL DEFAULT NULL,
+  `state` int(0) NULL DEFAULT NULL,
+  `goodsId` int(0) NULL DEFAULT NULL,
   PRIMARY KEY (`galleryId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -239,9 +251,9 @@ INSERT INTO `goods_gallery` VALUES (5, 'http://114.132.239.118:3003/getpic/16452
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
-  `pId` int(11) NULL DEFAULT NULL COMMENT '父级id',
+  `pId` int(0) NULL DEFAULT NULL COMMENT '父级id',
   `component` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组件名称',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接url',
   `menu_order` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '显示顺序',
@@ -271,12 +283,12 @@ INSERT INTO `menu` VALUES (14, '菜单权限', 6, NULL, '/auth/menu', '6002');
 -- ----------------------------
 DROP TABLE IF EXISTS `order_goods`;
 CREATE TABLE `order_goods`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '无意义 就是唯一标识',
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '无意义 就是唯一标识',
   `orderId` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单id',
-  `goodsId` int(11) NULL DEFAULT NULL COMMENT '商品id',
-  `goodsNumber` int(11) NULL DEFAULT NULL COMMENT '商品数量',
+  `goodsId` int(0) NULL DEFAULT NULL COMMENT '商品id',
+  `goodsNumber` int(0) NULL DEFAULT NULL COMMENT '商品数量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 41 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 46 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of order_goods
@@ -299,8 +311,8 @@ INSERT INTO `order_goods` VALUES (45, '2d46d890-98ab-11ec-904d-8f301c1e18d7', 18
 -- ----------------------------
 DROP TABLE IF EXISTS `order_status`;
 CREATE TABLE `order_status`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `orderState` tinyint(4) NULL DEFAULT NULL,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `orderState` tinyint(0) NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `text` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -323,7 +335,7 @@ INSERT INTO `order_status` VALUES (8, 6, 'ORDER_CLOSED', '订单关闭');
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '无意义 唯一标识',
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '无意义 唯一标识',
   `orderId` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'uuid生成',
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
   `createTime` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建时间 ',
@@ -333,18 +345,18 @@ CREATE TABLE `orders`  (
   `finishTime` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '交易完成时间 就是你点击完确认收货的时间，你不点击确认收货就快递发货时间加15天',
   `closeTime` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '交易关闭时间',
   `updateTime` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新时间  ',
-  `addressId` int(11) NULL DEFAULT NULL COMMENT '快递地址id',
+  `addressId` int(0) NULL DEFAULT NULL COMMENT '快递地址id',
   `freightPrice` double(20, 2) NULL DEFAULT NULL COMMENT '邮费',
   `ship_name` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '快递公司X',
   `ship_number` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '快递单号X',
-  `orderState` int(11) NULL DEFAULT 0 COMMENT '状态字典 关联状态表',
-  `state` int(11) NULL DEFAULT 1 COMMENT '1-正常，0-删除',
-  `refundState` int(11) NULL DEFAULT 0 COMMENT '退款状态 0 否 1 退款',
+  `orderState` int(0) NULL DEFAULT 0 COMMENT '状态字典 关联状态表',
+  `state` int(0) NULL DEFAULT 1 COMMENT '1-正常，0-删除',
+  `refundState` int(0) NULL DEFAULT 0 COMMENT '退款状态 0 否 1 退款',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   `goodsPrices` double(20, 2) NULL DEFAULT NULL COMMENT '商品价格',
   `refundReason` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '退款理由',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 43 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
@@ -365,7 +377,7 @@ INSERT INTO `orders` VALUES (42, '2d46d890-98ab-11ec-904d-8f301c1e18d7', 'oGDr80
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
   `nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
   `gender` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '男' COMMENT '性别 0：未知、1：男、2：女',
   `avatarUrl` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT './images/avatar/default.jpg' COMMENT '头像',
