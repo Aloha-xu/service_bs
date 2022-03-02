@@ -81,7 +81,17 @@ router.post("/updata", async (req, res) => {
     freight,
   } = req.body;
   let sql = `UPDATE goods SET cateId=?,name=?,price=?,inventory=?,img=?,slider=?,detail=?,freight=?,updateTime = CURRENT_TIMESTAMP() WHERE goodsId=?`;
-  let results = db.query(sql, [cateId, name, price, inventory, img, slider, detail, freight, goodsId])
+  let results = db.query(sql, [
+    cateId,
+    name,
+    price,
+    inventory,
+    img,
+    slider,
+    detail,
+    freight,
+    goodsId,
+  ]);
   if (results.affectedRows <= 0) {
     res.json({
       status: false,
@@ -94,7 +104,6 @@ router.post("/updata", async (req, res) => {
     msg: "success!",
     data: results[0],
   });
-
 });
 /**
  * @api {get} /api/admin/goods/list 获取商品列表
@@ -112,13 +121,7 @@ router.post("/updata", async (req, res) => {
  * @apiSampleRequest /api/admin/goods/list
  */
 router.post("/list", async (req, res) => {
-  let {
-    pageSize = 4,
-    pageIndex = 1,
-    cateId,
-    keyword,
-    sortByPrice,
-  } = req.body;
+  let { pageSize = 4, pageIndex = 1, cateId, keyword, sortByPrice } = req.body;
   //拼接SQL
   let size = parseInt(pageSize);
   let count = size * (pageIndex - 1);
@@ -136,7 +139,8 @@ router.post("/list", async (req, res) => {
   }
   sql += ` LIMIT ${count},${size};SELECT FOUND_ROWS() as total;`;
 
-  let results = await db.query(sql)
+  let results = await db.query(sql);
+  console.log(results[0]);
   //成功
   res.json({
     status: true,
@@ -144,9 +148,6 @@ router.post("/list", async (req, res) => {
     goods: results[0],
     ...results[1][0],
   });
-
-
-
 });
 /**
  * @api {get} /api/admin/goods/detail 获取商品详情
@@ -155,7 +156,7 @@ router.post("/list", async (req, res) => {
 router.post("/detail", async (req, res) => {
   let { goodsId } = req.body;
   let sql = `SELECT * FROM goods WHERE goodsId = ?`;
-  let results = await db.query(sql, goodsId)
+  let results = await db.query(sql, goodsId);
   if (results.affectedRows <= 0) {
     res.json({
       status: false,
@@ -175,7 +176,7 @@ router.post("/detail", async (req, res) => {
 router.post("/del", async (req, res) => {
   let { goodsId } = req.body;
   let sql = `DELETE FROM goods WHERE goodsId=?`;
-  let results = await db.query(sql, goodsId)
+  let results = await db.query(sql, goodsId);
   if (results.affectedRows <= 0) {
     res.json({
       status: false,
@@ -186,7 +187,26 @@ router.post("/del", async (req, res) => {
   res.json({
     status: true,
     msg: "success!",
-
   });
 });
+/**
+ * @api {delete} /api/admin/goods/state 上下架商品
+ */
+router.post("/state", async (req, res) => {
+  let { state, goodsId } = req.body;
+  let sql = `UPDATE goods SET state=?,updateTime = CURRENT_TIMESTAMP() WHERE goodsId=?`;
+  let results = await db.query(sql, [state, goodsId]);
+  if (results.affectedRows <= 0) {
+    res.json({
+      status: false,
+      msg: "fail!",
+    });
+    return;
+  }
+  res.json({
+    status: true,
+    msg: "success!",
+  });
+});
+
 module.exports = router;
