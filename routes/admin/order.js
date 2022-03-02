@@ -72,7 +72,22 @@ router.post("/list", async (req, res) => {
 
 router.post("/ship", async (req, res) => {
   let { shipNumber, shipName, orderId } = req.body;
-  let sql = `UPDATE order SET shipNumber='${shipNumber}' ,shipName = '${shipName}' , shipTime = unix_timestamp(CURRENT_TIMESTAMP()) , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId = ${orderId}`;
+  console.log(orderId);
+  let sql = `UPDATE orders SET shipNumber = '${shipNumber}' ,shipName = '${shipName}' , shipTime = unix_timestamp(CURRENT_TIMESTAMP()) , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , orderState = 2 WHERE orderId = '${orderId}'`;
+
+  let results = await db.query(sql);
+  if (results.affectedRows <= 0) {
+    res.json({
+      status: false,
+      msg: "fail!",
+    });
+    return;
+  }
+  res.json({
+    status: true,
+    msg: "success!",
+  });
+
 });
 
 /**
@@ -83,8 +98,26 @@ router.post("/ship", async (req, res) => {
  *   更新时间updateTime
  * orderId
  *
- * 	决绝退款之后是返回之前的状态？ 3已收货/2未收货  还是8 退货失败 ？？？？？  返回之前的状态你得存有之前的状态!!!
+ * 	拒绝退款之后是返回之前的状态？ 3已收货/2未收货  还是8 退货失败 ？？？？？  返回之前的状态你得存有之前的状态!!!
  */
+
+router.post("/refund", async (req, res) => {
+  let { orderState, orderId } = req.body
+  let sql = `UPDATE orders SET orderState = ${orderState} , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId='${orderId}'`
+  let results = await db.query(sql);
+  if (results.affectedRows <= 0) {
+    res.json({
+      status: false,
+      msg: "fail!",
+    });
+    return;
+  }
+  res.json({
+    status: true,
+    msg: "success!",
+  });
+})
+
 
 /**
  *
@@ -92,7 +125,33 @@ router.post("/ship", async (req, res) => {
  *
  * 	orderState = 6     更新时间updateTime
  * 	orderId
+ * 
+ *  客户只可以在没给钱前才可以取消订单
+ *  管理员 可以在任意时候取消 已发货就退回来 收了钱就返回钱
+ * 
  */
+
+
+router.post("/cancel", async (req, res) => {
+  let { orderId } = req.body
+  let sql = `UPDATE orders SET orderState = 6 , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId='${orderId}'`
+  let results = await db.query(sql);
+  if (results.affectedRows <= 0) {
+    res.json({
+      status: false,
+      msg: "fail!",
+    });
+    return;
+  }
+  res.json({
+    status: true,
+    msg: "success!",
+  });
+})
+
+
+
+
 
 /**
  *
@@ -105,5 +164,42 @@ router.post("/ship", async (req, res) => {
  *
  *	orderId
  */
+
+router.post("/detail", async (req, res) => {
+  let { orderId } = req.body;
+
+  let sql = `SELECT o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime,o.closeTime
+    FROM orders o JOIN order_status os ON o.orderState = os.orderState
+		 WHERE o.orderId = '${orderId}'`;
+
+  let orderInfo = await db.query(sql);
+
+  let { addressId } = orderInfo[0];
+
+  sql = `SELECT * FROM address WHERE id = ${addressId} `;
+
+  let addressInfo = await db.query(sql);
+
+  // 查询订单商品信息
+  sql = `SELECT g.goodsId, g.name, g.img, og.goodsNumber, g.price
+  FROM orders o JOIN order_goods og ON o.orderId = og.orderId
+  JOIN goods g ON g.goodsId = og.goodsId
+  WHERE o.orderId = '${orderId}'`;
+
+  let orderGoods = await db.query(sql);
+
+  //成功
+  res.json({
+    status: true,
+    msg: "success!",
+    data: {
+      orderGoods,
+      orderInfo: orderInfo[0],
+      addressInfo: addressInfo[0],
+    },
+  });
+});
+
+
 
 module.exports = router;
