@@ -140,7 +140,6 @@ router.post("/list", async (req, res) => {
   sql += ` LIMIT ${count},${size};SELECT FOUND_ROWS() as total;`;
 
   let results = await db.query(sql);
-  console.log(results[0]);
   //成功
   res.json({
     status: true,
