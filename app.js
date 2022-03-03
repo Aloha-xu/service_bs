@@ -20,14 +20,12 @@ let home = require("./routes/mall/home");
 let common = require("./routes/mall/common");
 let foot = require("./routes/mall/foot");
 
-let role = require("./routes/admin/role");
 let menu = require("./routes/admin/menu");
 let admin = require("./routes/admin/admin");
 let category = require("./routes/admin/category");
 let adminGoods = require("./routes/admin/goods");
 let adminUpload = require("./routes/admin/upload");
 let adminOrder = require("./routes/admin/order");
-let icon = require("./routes/admin/icon");
 
 var app = express();
 
@@ -76,14 +74,12 @@ app.use("/api/home", home);
 app.use("/api/common", common);
 app.use("/api/foot", foot);
 
-app.use("/api/role", role);
 app.use("/api/menu", menu);
 app.use("/api/admin", admin);
 app.use("/api/category", category);
 app.use("/api/admin/goods", adminGoods);
 app.use("/api/upload", adminUpload);
 app.use("/api/admin/order", adminOrder);
-app.use("/api/admin/icon", icon);
 
 // 处理401错误 解析不到token就会UnauthorizedError
 app.use(function (err, req, res, next) {

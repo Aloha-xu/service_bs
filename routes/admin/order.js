@@ -87,7 +87,6 @@ router.post("/ship", async (req, res) => {
     status: true,
     msg: "success!",
   });
-
 });
 
 /**
@@ -102,8 +101,8 @@ router.post("/ship", async (req, res) => {
  */
 
 router.post("/refund", async (req, res) => {
-  let { orderState, orderId } = req.body
-  let sql = `UPDATE orders SET orderState = ${orderState} , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId='${orderId}'`
+  let { orderState, orderId } = req.body;
+  let sql = `UPDATE orders SET orderState = ${orderState} , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId='${orderId}'`;
   let results = await db.query(sql);
   if (results.affectedRows <= 0) {
     res.json({
@@ -116,8 +115,7 @@ router.post("/refund", async (req, res) => {
     status: true,
     msg: "success!",
   });
-})
-
+});
 
 /**
  *
@@ -125,16 +123,15 @@ router.post("/refund", async (req, res) => {
  *
  * 	orderState = 6     更新时间updateTime
  * 	orderId
- * 
+ *
  *  客户只可以在没给钱前才可以取消订单
  *  管理员 可以在任意时候取消 已发货就退回来 收了钱就返回钱
- * 
+ *
  */
 
-
 router.post("/cancel", async (req, res) => {
-  let { orderId } = req.body
-  let sql = `UPDATE orders SET orderState = 6 , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId='${orderId}'`
+  let { orderId } = req.body;
+  let sql = `UPDATE orders SET orderState = 6 , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId='${orderId}'`;
   let results = await db.query(sql);
   if (results.affectedRows <= 0) {
     res.json({
@@ -147,11 +144,7 @@ router.post("/cancel", async (req, res) => {
     status: true,
     msg: "success!",
   });
-})
-
-
-
-
+});
 
 /**
  *
@@ -168,7 +161,7 @@ router.post("/cancel", async (req, res) => {
 router.post("/detail", async (req, res) => {
   let { orderId } = req.body;
 
-  let sql = `SELECT o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime,o.closeTime
+  let sql = `SELECT o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime,o.closeTime,o.shipName,o.shipNumber
     FROM orders o JOIN order_status os ON o.orderState = os.orderState
 		 WHERE o.orderId = '${orderId}'`;
 
@@ -200,6 +193,36 @@ router.post("/detail", async (req, res) => {
   });
 });
 
+/**
+ *
+ *  修改订单的信息  /api/admin/order/update
+ *
+ *
+ *
+ */
 
+router.post("/update", async (req, res) => {
+  let {
+    shipNumber = "",
+    shipName = "",
+    orderId,
+    note,
+    freightPrice,
+  } = req.body;
+  let sql = `UPDATE orders SET shipNumber = '${shipNumber}' ,shipName = '${shipName}' , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , note = '${note}' , freightPrice = ${freightPrice} WHERE orderId = '${orderId}'`;
+
+  let results = await db.query(sql);
+  if (results.affectedRows <= 0) {
+    res.json({
+      status: false,
+      msg: "fail!",
+    });
+    return;
+  }
+  res.json({
+    status: true,
+    msg: "success!",
+  });
+});
 
 module.exports = router;
