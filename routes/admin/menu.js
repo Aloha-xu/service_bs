@@ -1,89 +1,84 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 // 数据库
-let db = require('../../config/mysql');
+let db = require("../../config/mysql");
 
 /**
- * @api {post} /api/menu 添加子菜单
- * @apiName MenuAdd
- * @apiGroup admin-Menu
- * @apiPermission admin
+ * @api {post} /api/menu/add 添加子菜单
  *
  * @apiParam {String} name 分类名称.
- * @apiParam {String} component 关联组件名称.
- * @apiParam {Number} pId 父级id.
+ * @apiParam {Number} pId 父级id.  这个pid就是你要添加子菜单的父级的menuid
  * @apiParam {String} path 菜单url地址.
- * @apiParam {String} menu_order 菜单显示顺序，按照数字从小到大排序，如2001.
+ * @apiParam {String} menuOrder 菜单显示顺序，按照数字从小到大排序，如2001.
  *
  */
-router.post("/", function (req, res) {
-    let { name, pId, component, path, menu_order } = req.body;
-    let sql = `INSERT INTO MENU (name,pId,component,path,menu_order) VALUES (?,?,?,?,?) `;
-    db.query(sql, [name, pId, component, path, menu_order], function ({ insertId }, fields) {
-        let sql = `INSERT INTO role_menu (role_id,menu_id) VALUES (1,?)`;
-        db.query(sql, [insertId], function (results, fields) {
-            if (!results.affectedRows) {
-                res.json({
-                    status: false,
-                    msg: "创建失败！"
-                });
-                return;
-            }
-            //成功
-            res.json({
-                status: true,
-                msg: "创建成功!",
-                data: {
-                    id: insertId
-                }
-            });
-        })
-
+router.post("/add", async (req, res) => {
+  let { name, pId, component, path, menuOrder } = req.body;
+  let sql = `INSERT INTO MENU (name,pId,component,path,menuOrder) VALUES (?,?,?,?,?) `;
+  let { insertId } = await db.query(sql, [
+    name,
+    pId,
+    component,
+    path,
+    menuOrder,
+  ]);
+  //给超级管理员权限
+  console.log(insertId);
+  sql = `INSERT INTO role_menu (roleId,menuId) VALUES (1,?)`;
+  let results = await db.query(sql, insertId);
+  console.log(results.affectedRows);
+  if (!results.affectedRows) {
+    res.json({
+      status: false,
+      msg: "创建失败！",
     });
+    return;
+  }
+  //成功
+  res.json({
+    status: true,
+    msg: "创建成功!",
+    data: {
+      id: insertId,
+    },
+  });
 });
 /**
- * @api {delete} /api/menu/:id 删除子菜单
- * @apiName MenuDelete
- * @apiGroup admin-Menu
- * @apiPermission admin
+ * @api {delete} /api/menu/del 删除子菜单
  *
- * @apiParam {Number} id 子菜单id.
- *
- * @apiExample {js} 参数示例:
- * /api/menu/3
+ * @apiParam {Number} menuId 子菜单menuId.
  *
  * @apiSampleRequest /api/menu
  */
-router.delete("/:id", function (req, res) {
-    let { id } = req.params;
-    let checkSQL = 'SELECT * FROM MENU WHERE pId = ?';
-    db.query(checkSQL, [id], function (results, fields) {
-        if (results.length > 0) {
-            res.json({
-                status: false,
-                msg: "拥有子级分类，不允许删除！"
-            });
-            return;
-        }
-        let sql = `DELETE FROM MENU WHERE id = ?;DELETE FROM ROLE_MENU WHERE menu_id = ?`;
-        db.query(sql, [id, id], function (results, fields) {
-            if (!results[1].affectedRows) {
-                res.json({
-                    status: false,
-                    msg: "删除失败！"
-                });
-                return;
-            }
-            //成功
-            res.json({
-                status: true,
-                msg: "删除成功!"
-            });
-        });
+router.post("/del", async (req, res) => {
+  let { menuId } = req.body;
+  //通过判断有没有pid等于你传进来的menuId  就是查一下你上面有没有父级
+  let sql = "SELECT * FROM MENU WHERE pId = ?";
+  let results = await db.query(sql, menuId);
+  if (results.length > 0) {
+    res.json({
+      status: false,
+      msg: "拥有子级分类，不允许删除！",
     });
+    return;
+  }
+  sql = `DELETE FROM MENU WHERE menuId = ?;DELETE FROM role_menu WHERE menuId = ?`;
+  results = await db.query(sql, [menuId, menuId]);
+  if (!results[1].affectedRows) {
+    res.json({
+      status: false,
+      msg: "删除失败！",
+    });
+    return;
+  }
+  //成功
+  res.json({
+    status: true,
+    msg: "删除成功!",
+  });
 });
 /**
- * @api {put} /api/menu/:id 更新子菜单
+ * @api {put} /api/menu/update 更新子菜单
  * @apiName MenuUpdate
  * @apiGroup admin-Menu
  * @apiPermission admin
@@ -95,63 +90,33 @@ router.delete("/:id", function (req, res) {
  * @apiParam {String} path 菜单url地址.
  * @apiParam {String} menu_order 菜单显示顺序，按照数字从小到大排序，如2001.
  *
- * @apiExample {js} 参数示例:
- * /api/menu/3
- *
- * @apiSampleRequest /api/menu
  */
-router.put("/:id", function (req, res) {
-    let { id } = req.params;
-    let { name, pId, component, path, menu_order } = req.body;
-    let sql = `UPDATE MENU SET name = ?,pId = ?,component = ?, path = ?, menu_order = ? WHERE id = ? `;
-    db.query(sql, [name, pId, component, path, menu_order, id], function (results, fields) {
-        if (!results.affectedRows) {
-            res.json({
-                status: false,
-                msg: "failed！"
-            });
-            return;
-        }
-        //成功
-        res.json({
-            status: true,
-            msg: "success!"
-        });
+router.post("/update", async (req, res) => {
+  let { name, pId, component, path, menuOrder, menuId } = req.body;
+  let sql = `UPDATE MENU SET name = ?,pId = ?,component = ?, path = ?, menuOrder = ? WHERE menuId = ? `;
+  let results = await db.query(sql, [
+    name,
+    pId,
+    component,
+    path,
+    menuOrder,
+    menuId,
+  ]);
+
+  if (!results.affectedRows) {
+    res.json({
+      status: false,
+      msg: "fail！",
     });
+    return;
+  }
+  //成功
+  res.json({
+    status: true,
+    msg: "success!",
+  });
 });
-/**
- * @api {put} /api/menu/icon 设置子菜单图标
- * @apiName MenuUpdateIcon
- * @apiGroup admin-Menu
- * @apiPermission admin
- *
- * @apiParam { Number } id 子菜单id.
- * @apiParam { String } icon_id element图标id.
- *
- * @apiExample {js} 参数示例:
- * /api/menu/icon/3
- *
- * @apiSampleRequest /api/menu/icon
- */
-router.put("/icon/:id", function (req, res) {
-    let { id } = req.params;
-    let { icon_id } = req.body;
-    let sql = `UPDATE MENU SET icon_id = ? WHERE id = ? `;
-    db.query(sql, [icon_id, id], function (results, fields) {
-        if (!results.affectedRows) {
-            res.json({
-                status: false,
-                msg: "failed！"
-            });
-            return;
-        }
-        //成功
-        res.json({
-            status: true,
-            msg: "success!"
-        });
-    });
-});
+
 /**
  * @api {get} /api/menu/sub 获取子菜单
  * @apiName MenuSub
@@ -162,18 +127,17 @@ router.put("/icon/:id", function (req, res) {
  *
  * @apiSampleRequest /api/menu/sub
  */
-router.get("/sub", function (req, res) {
-    let sql =
-        `SELECT m.*, i.name AS 'icon' FROM MENU m LEFT JOIN ICON i ON m.icon_id = i.id WHERE m.pId = ? ORDER BY m.menu_order`;
-    db.query(sql, [req.query.pId], function (results, fields) {
-        //成功
-        res.json({
-            status: true,
-            msg: "success!",
-            data: results
-        });
-    });
+router.post("/sub", async (req, res) => {
+  let { pId } = req.body;
+  let sql = `SELECT * FROM menu WHERE pId = ? ORDER BY menuOrder`;
+  let results = await db.query(sql, pId);
+  res.json({
+    status: true,
+    msg: "success!",
+    data: results,
+  });
 });
+
 /**
  * @api {get} /api/menu/tree 根据角色id获取侧边栏树形菜单
  * @apiName TreeMenu
@@ -184,33 +148,34 @@ router.get("/sub", function (req, res) {
  *
  * @apiSampleRequest /api/menu/tree
  */
-router.get('/tree', async (req, res) => {
-    // let { id } = req.query;
-    let sql = `SELECT * FROM menu ORDER BY menu_order;`;
-    let results = await db.query(sql)
-    //筛选出一级菜单
-    let cate_1st = results.filter((item) => item.pId === 1 ? item : null);
-    //递归循环数据
-    parseToTree(cate_1st);
+router.post("/tree", async (req, res) => {
+  let { roleId } = req.body;
+  sql = `SELECT m.* FROM MENU m JOIN role_menu rm ON rm.menuId = m.menuId WHERE rm.roleId = ?`;
+  let results = await db.query(sql, roleId);
+  console.log(results.length);
+  //筛选出一级菜单
+  let cate_1st = results.filter((item) => (item.pId === 1 ? item : null));
+  //递归循环数据
+  parseToTree(cate_1st);
 
-    //递归函数
-    function parseToTree(array) {
-        array.forEach(function (parent) {
-            parent.children = [];
-            results.forEach(function (child) {
-                if (child.pId === parent.id) {
-                    parent.children.push(child);
-                }
-            });
-            // parseToTree(parent.children);
-        });
-    }
-
-    //成功
-    res.json({
-        status: true,
-        msg: "success!",
-        data: results
+  //递归函数
+  function parseToTree(array) {
+    array.forEach(function (parent) {
+      parent.children = [];
+      results.forEach(function (child) {
+        if (child.pId === parent.menuId) {
+          parent.children.push(child);
+        }
+      });
+      // parseToTree(parent.children);
     });
+  }
+
+  //成功
+  res.json({
+    status: true,
+    msg: "success!",
+    data: results,
+  });
 });
 module.exports = router;

@@ -42,7 +42,7 @@ router.post("/add", async (req, res) => {
   });
 });
 /**
- * @api {delete} /api/role/:id 删除角色
+ * @api {delete} /api/role/del 删除角色
  * @apiName RoleDelete
  * @apiGroup admin-Role
  * @apiPermission admin
@@ -63,7 +63,7 @@ router.post("/del", async (req, res) => {
       status: false,
       msg: "fail!",
     });
-    return false;
+    return;
   }
   res.json({
     status: true,
@@ -89,7 +89,7 @@ router.post("/update", async (req, res) => {
       status: false,
       msg: "fail!",
     });
-    return false;
+    return;
   }
   res.json({
     status: true,
@@ -109,13 +109,12 @@ router.post("/update", async (req, res) => {
 router.post("/getMenuByRoleId", async (req, res) => {
   let { id } = req.body;
   //获取所有菜单
-  let sql = `SELECT menuId, name, path, menuOrder AS 'order', pId FROM MENU ORDER BY menuOrder;`;
+  let sql = `SELECT menuId, name, path, menuOrder AS 'order', pId FROM menu ORDER BY menuOrder;`;
   let results = await db.query(sql);
   //添加菜单选择状态  这是根据roleid选择出来的菜单
   sql = `SELECT m.* FROM MENU m JOIN role_menu rm ON rm.menuId = m.menuId WHERE rm.roleId = ?`;
   let menu = await db.query(sql, id);
 
-  //？？？标记上选上 有什么用？？？
   results.forEach((item) => {
     let flag = menu.find((element) => {
       return element.id === item.id;
@@ -161,18 +160,35 @@ router.post("/menu", function (req, res) {
   let { roleId, menuId } = req.body;
   //先查找是否存在
   let sql = `SELECT * FROM role_menu WHERE roleId=? AND menuId=?`;
-  let sql = `INSERT INTO role_menu (roleId,menuId) SELECT ?,? FROM DUAL WHERE NOT EXISTS (SELECT * FROM role_menu WHERE role_id = ? AND menu_id = ?)`;
-  db.query(sql, [roleId, menuId, roleId, menuId], function (results) {
-    //成功
+  let results = db.query(sql, [roleId, menuId]);
+  if (results.length) {
     res.json({
       status: true,
-      msg: "success!",
+      msg: "该角色已经存在该菜单了!",
     });
+    return;
+  }
+
+  sql = `INSERT INTO role_menu (roleId,menuId) VALUES (?,?)`;
+  results = await db.query(sql, [roleId, menuId]);
+  if (results.affectedRows <= 0) {
+    res.json({
+      status: false,
+      msg: "fail!",
+    });
+    return;
+  }
+  res.json({
+    status: true,
+    msg: "success!",
+    data: {
+      id: results.insertId,
+    },
   });
 });
 
 /**
- * @api {delete} /api/role/menu/:role_id 为指定角色删除菜单
+ * @api {delete} /api/role/menu/del 为指定角色删除菜单
  * @apiName DeleteRoleMenu
  * @apiGroup admin-Role
  * @apiPermission admin
@@ -185,16 +201,20 @@ router.post("/menu", function (req, res) {
  *
  * @apiSampleRequest /api/role/menu
  */
-router.delete("/menu/:role_id", function (req, res) {
-  let { role_id } = req.params;
-  let { menu_id } = req.query;
-  let sql = `DELETE FROM role_menu WHERE role_id = ? AND menu_id = ?`;
-  db.query(sql, [role_id, menu_id], function (results) {
-    //成功
+router.post("/menu/del", async (req, res) => {
+  let { roleId, menuId } = req.body;
+  let sql = `DELETE FROM role_menu WHERE roleId = ? AND menuId = ?`;
+  let results = await db.query(sql, [roleId, menuId]);
+  if (results.affectedRows <= 0) {
     res.json({
-      status: true,
-      msg: "success!",
+      status: false,
+      msg: "fail!",
     });
+    return;
+  }
+  res.json({
+    status: true,
+    msg: "success!",
   });
 });
 
