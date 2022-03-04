@@ -7,7 +7,7 @@ const upload = multer();
 const sharp = require("sharp");
 //uuid
 const uuidv1 = require("uuid/v1");
-const baseUrl = "http://localhost:3003";
+// const baseUrl = "http://localhost:3003";
 
 /**
  * @api {post} /api/upload/goods 上传商品主图
@@ -71,7 +71,8 @@ router.post("/goods", upload.single("file"), async function (req, res) {
       status: true,
       msg: "图片上传处理成功!",
       lgImg: "baseUrl" + fileFolder + filename + "_720." + format,
-      mdImg: baseUrl + fileFolder + filename + "_360." + format,
+      mdImg: fileFolder + filename + "_360." + format,
+      // mdImg: baseUrl + fileFolder + filename + "_360." + format,
     });
   } catch (error) {
     res.json({
@@ -145,7 +146,8 @@ router.post("/slider", upload.single("file"), async function (req, res) {
     res.json({
       status: true,
       msg: "图片上传处理成功!",
-      src: baseUrl + fileFolder + filename + "_720." + format,
+      // src: baseUrl + fileFolder + filename + "_720." + format,
+      src: fileFolder + filename + "_720." + format,
     });
   } catch (error) {
     res.json({
@@ -203,7 +205,8 @@ router.post("/editor", upload.single("file"), async function (req, res) {
     res.json({
       errno: 0,
       msg: "图片上传处理成功!",
-      data: [baseUrl + fileFolder + filename + "." + format],
+      // data: [baseUrl + fileFolder + filename + "." + format],
+      data: [fileFolder + filename + "." + format],
     });
   } catch (error) {
     res.json({
