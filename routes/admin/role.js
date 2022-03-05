@@ -156,7 +156,7 @@ router.post("/getMenuByRoleId", async (req, res) => {
  * @apiParam { Number } menu_id 菜单id。
  * @apiSampleRequest /api/role/menu
  */
-router.post("/menu", function (req, res) {
+router.post("/menu", async (req, res) => {
   let { roleId, menuId } = req.body;
   //先查找是否存在
   let sql = `SELECT * FROM role_menu WHERE roleId=? AND menuId=?`;

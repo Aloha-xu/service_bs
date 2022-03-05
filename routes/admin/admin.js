@@ -140,7 +140,7 @@ router.post("/list", async (req, res) => {
 });
 
 /**
- * @api {delete} /api/admin/adminMenager/del 删除管理员
+ * @api {delete} /api/admin/del 删除管理员
  * @apiName DeleteAdmin
  * @apiGroup admin User
  * @apiPermission admin
@@ -215,7 +215,7 @@ router.post("/info", async (req, res) => {
  * @apiSampleRequest /api/admin
  */
 router.post("/update", async (req, res) => {
-  let { id, fullname, sex, avatar, tel, email, role } = req.body;
+  let { adminId, fullname, sex, avatar, tel, email, role } = req.body;
   let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE adminId = ?;
     UPDATE admin_role SET roleId = ? WHERE adminId = ?`;
   let results = await db.query(sql, [
@@ -224,9 +224,9 @@ router.post("/update", async (req, res) => {
     avatar,
     tel,
     email,
-    id,
+    adminId,
     role,
-    id,
+    adminId,
   ]);
   if (!results.length) {
     res.json({

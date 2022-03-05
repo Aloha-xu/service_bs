@@ -20,6 +20,7 @@ let home = require("./routes/mall/home");
 let common = require("./routes/mall/common");
 let foot = require("./routes/mall/foot");
 
+let role = require("./routes/admin/role");
 let banner = require("./routes/admin/banner");
 let menu = require("./routes/admin/menu");
 let admin = require("./routes/admin/admin");
@@ -75,6 +76,7 @@ app.use("/api/home", home);
 app.use("/api/common", common);
 app.use("/api/foot", foot);
 
+app.use("/api/role", role);
 app.use("/api/banner", banner);
 app.use("/api/menu", menu);
 app.use("/api/admin", admin);
