@@ -39,7 +39,7 @@ router.post("/add", async (req, res) => {
     status: true,
     msg: "创建成功!",
     data: {
-      id: insertId,
+      menuId: insertId,
     },
   });
 });
@@ -140,11 +140,7 @@ router.post("/sub", async (req, res) => {
 
 /**
  * @api {get} /api/menu/tree 根据角色id获取侧边栏树形菜单
- * @apiName TreeMenu
- * @apiGroup admin-Menu
- * @apiPermission admin
- *
- * @apiParam {Number} id 角色id.
+ * @apiParam {Number} roleId roleId.
  *
  * @apiSampleRequest /api/menu/tree
  */
@@ -167,6 +163,7 @@ router.post("/tree", async (req, res) => {
           parent.children.push(child);
         }
       });
+      // 设计就是两层 就不递归 这个递归还需要一个终止条件
       // parseToTree(parent.children);
     });
   }
