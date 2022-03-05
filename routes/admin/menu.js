@@ -148,7 +148,7 @@ router.post("/tree", async (req, res) => {
   let { roleId } = req.body;
   sql = `SELECT m.* FROM MENU m JOIN role_menu rm ON rm.menuId = m.menuId WHERE rm.roleId = ?`;
   let results = await db.query(sql, roleId);
-  console.log(results.length);
+  // console.log(results.length);
   //筛选出一级菜单
   let cate_1st = results.filter((item) => (item.pId === 1 ? item : null));
   //递归循环数据

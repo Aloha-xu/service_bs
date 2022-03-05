@@ -4,11 +4,6 @@ const router = express.Router();
 let db = require("../../config/mysql");
 /**
  * @api {get} /api/role/list 获取角色列表
- * @apiName RoleList
- * @apiGroup admin-Role
- * @apiPermission admin
- *
- * @apiSampleRequest /api/role/list
  */
 router.post("/list", async (req, res) => {
   let sql = `SELECT roleId AS id, roleName AS name FROM role`;
@@ -21,13 +16,7 @@ router.post("/list", async (req, res) => {
 });
 /**
  * @api {post} /api/role/add 添加角色
- * @apiName RoleAdd
- * @apiGroup admin-Role
- * @apiPermission admin
- *
- * @apiParam {String} name 角色名称.
- *
- * @apiSampleRequest /api/role
+  name   roleName 角色名称.
  */
 router.post("/add", async (req, res) => {
   let { name } = req.body;
@@ -37,27 +26,18 @@ router.post("/add", async (req, res) => {
     status: true,
     msg: "success!",
     data: {
-      id: results.insertId,
+      roleId: results.insertId,
     },
   });
 });
 /**
  * @api {delete} /api/role/del 删除角色
- * @apiName RoleDelete
- * @apiGroup admin-Role
- * @apiPermission admin
- *
- * @apiParam {String} id 角色id.
- *
- * @apiExample {js} 参数示例:
- * /api/role/3
- *
- * @apiSampleRequest /api/role
+  id 角色roleId
  */
 router.post("/del", async (req, res) => {
   let { id } = req.body;
-  let sql = `DELETE FROM role WHERE roleId = ?`;
-  let results = await db.query(sql, id);
+  let sql = `DELETE FROM role WHERE roleId = ?;DELETE FROM admin_role WHERE roleId = ?`;
+  let results = await db.query(sql, [id, id]);
   if (results.affectedRows <= 0) {
     res.json({
       status: false,
@@ -72,13 +52,9 @@ router.post("/del", async (req, res) => {
 });
 /**
  * @api {put} /api/role/update 更新角色
- * @apiName RoleUpdate
- * @apiGroup admin-Role
- * @apiPermission admin
- *
- * @apiParam {String} id 角色id.
- * @apiParam {String} name 角色名称.
-
+ * 
+    id 角色roleId
+     name   roleName 角色名称.
  */
 router.post("/update", async (req, res) => {
   let { name, id } = req.body;
@@ -96,6 +72,9 @@ router.post("/update", async (req, res) => {
     msg: "success!",
   });
 });
+
+
+
 /**
  * @api {get} /api/role/getMenuByRoleId 根据角色id获取菜单配置
  * @apiName LoadRoleMenu
@@ -117,7 +96,7 @@ router.post("/getMenuByRoleId", async (req, res) => {
 
   results.forEach((item) => {
     let flag = menu.find((element) => {
-      return element.id === item.id;
+      return element.menuId === item.menuId;
     });
     item.checked = flag ? true : false;
   });
@@ -137,7 +116,7 @@ router.post("/getMenuByRoleId", async (req, res) => {
     array.forEach(function (parent) {
       parent.children = [];
       results.forEach(function (child) {
-        if (child.pId === parent.id) {
+        if (child.pId === parent.menuId) {
           parent.children.push(child);
         }
       });
@@ -147,7 +126,7 @@ router.post("/getMenuByRoleId", async (req, res) => {
 });
 
 /**
- * @api {post} /api/role/menu 为指定角色添加菜单
+ * @api {post} /api/role/addMenuByRole 为指定角色添加菜单
  * @apiName PutRoleMenu
  * @apiGroup admin-Role
  * @apiPermission admin
@@ -156,11 +135,11 @@ router.post("/getMenuByRoleId", async (req, res) => {
  * @apiParam { Number } menu_id 菜单id。
  * @apiSampleRequest /api/role/menu
  */
-router.post("/menu", async (req, res) => {
+router.post("/addMenuByRole", async (req, res) => {
   let { roleId, menuId } = req.body;
   //先查找是否存在
   let sql = `SELECT * FROM role_menu WHERE roleId=? AND menuId=?`;
-  let results = db.query(sql, [roleId, menuId]);
+  let results = await db.query(sql, [roleId, menuId]);
   if (results.length) {
     res.json({
       status: true,
@@ -201,7 +180,7 @@ router.post("/menu", async (req, res) => {
  *
  * @apiSampleRequest /api/role/menu
  */
-router.post("/menu/del", async (req, res) => {
+router.post("/delMenuByRole", async (req, res) => {
   let { roleId, menuId } = req.body;
   let sql = `DELETE FROM role_menu WHERE roleId = ? AND menuId = ?`;
   let results = await db.query(sql, [roleId, menuId]);
