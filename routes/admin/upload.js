@@ -60,9 +60,9 @@ router.post("/goods", upload.single("file"), async function (req, res) {
   var fileFolder = "/images/goods/";
   //处理图片
   try {
-    await sharp(req.file.buffer)
-      .resize(720)
-      .toFile("public" + fileFolder + filename + "_720." + format);
+    // await sharp(req.file.buffer)
+    //   .resize(720)
+    //   .toFile("public" + fileFolder + filename + "_720." + format);
     await sharp(req.file.buffer)
       .resize(360)
       .toFile("public" + fileFolder + filename + "_360." + format);
@@ -70,7 +70,7 @@ router.post("/goods", upload.single("file"), async function (req, res) {
     res.json({
       status: true,
       msg: "图片上传处理成功!",
-      lgImg: "baseUrl" + fileFolder + filename + "_720." + format,
+      // lgImg: "baseUrl" + fileFolder + filename + "_720." + format,
       mdImg: fileFolder + filename + "_360." + format,
       // mdImg: baseUrl + fileFolder + filename + "_360." + format,
     });
@@ -119,13 +119,13 @@ router.post("/slider", upload.single("file"), async function (req, res) {
   // 获取图片信息
   var { width, height, format } = await sharp(req.file.buffer).metadata();
   // 判断图片尺寸
-  if (width != height) {
-    res.status(400).json({
-      status: false,
-      msg: "图片必须为正方形，请重新上传!",
-    });
-    return;
-  }
+  // if (width != height) {
+  //   res.status(400).json({
+  //     status: false,
+  //     msg: "图片必须为正方形，请重新上传!",
+  //   });
+  //   return;
+  // }
   if (width < 300 || width > 1500) {
     res.status(400).json({
       status: false,
