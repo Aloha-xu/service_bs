@@ -33,7 +33,7 @@ router.post("/add", async (req, res) => {
     status: true,
     msg: "success!",
     data: {
-      id: results.insertId,
+      cateId: results.insertId,
     },
   });
 });
@@ -88,7 +88,7 @@ router.post("/updata", async (req, res) => {
   let results = await db.query(sql, [name, cateId]);
   if (results.affectedRows <= 0) {
     res.json({
-      status: true,
+      status: false,
       msg: "fail!",
       errno: 1,
     });

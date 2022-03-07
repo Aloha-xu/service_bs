@@ -11,7 +11,7 @@ const upload = multer();
 const sharp = require('sharp');
 //uuid
 const uuidv1 = require('uuid/v1');
-
+const baseUrl = "http://localhost:3003";
 /**
  * @api {post} /api/upload/common 通用图片上传API
  * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，avatar存储至avatar文件夹,common存储至common文件夹，type=avatar图片必须是正方形，type=common不限制尺寸。
@@ -70,7 +70,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
 		res.json({
 			status: true,
 			msg: "图片上传处理成功!",
-			src: fileFolder + filename + '.' + format
+			src: baseUrl + fileFolder + filename + '.' + format
 		});
 	} catch (error) {
 		res.json({
