@@ -3,7 +3,7 @@ const router = express.Router();
 // 数据库
 let db = require("../../config/mysql");
 /**
- * @api {get} /api/role/list 获取角色列表
+ * @api /api/role/list 获取角色列表
  */
 router.post("/list", async (req, res) => {
   let sql = `SELECT roleId AS id, roleName AS name FROM role`;
@@ -15,7 +15,7 @@ router.post("/list", async (req, res) => {
   });
 });
 /**
- * @api {post} /api/role/add 添加角色
+ * @api  /api/role/add 添加角色
   name   roleName 角色名称.
  */
 router.post("/add", async (req, res) => {
@@ -31,7 +31,7 @@ router.post("/add", async (req, res) => {
   });
 });
 /**
- * @api {delete} /api/role/del 删除角色
+ * @api  /api/role/del 删除角色
   id 角色roleId
  */
 router.post("/del", async (req, res) => {
@@ -51,7 +51,7 @@ router.post("/del", async (req, res) => {
   });
 });
 /**
- * @api {put} /api/role/update 更新角色
+ * @api /api/role/update 更新角色
  * 
     id 角色roleId
      name   roleName 角色名称.
@@ -73,17 +73,11 @@ router.post("/update", async (req, res) => {
   });
 });
 
-
-
 /**
- * @api {get} /api/role/getMenuByRoleId 根据角色id获取菜单配置
- * @apiName LoadRoleMenu
- * @apiGroup admin-Role
- * @apiPermission admin
+ * @api  /api/role/getMenuByRoleId 根据角色id获取菜单配置
  *
  * @apiParam { Number } id 角色id。
  *
- * @apiSampleRequest /api/role/config
  */
 router.post("/getMenuByRoleId", async (req, res) => {
   let { id } = req.body;
@@ -126,14 +120,10 @@ router.post("/getMenuByRoleId", async (req, res) => {
 });
 
 /**
- * @api {post} /api/role/addMenuByRole 为指定角色添加菜单
- * @apiName PutRoleMenu
- * @apiGroup admin-Role
- * @apiPermission admin
+ * @api  /api/role/addMenuByRole 为指定角色添加菜单
  *
- * @apiParam { Number } role_id 角色id。
- * @apiParam { Number } menu_id 菜单id。
- * @apiSampleRequest /api/role/menu
+ * @apiParam { Number } roleId 角色id。
+ * @apiParam { Number } menuId 菜单id。
  */
 router.post("/addMenuByRole", async (req, res) => {
   let { roleId, menuId } = req.body;
@@ -167,18 +157,11 @@ router.post("/addMenuByRole", async (req, res) => {
 });
 
 /**
- * @api {delete} /api/role/menu/del 为指定角色删除菜单
- * @apiName DeleteRoleMenu
- * @apiGroup admin-Role
- * @apiPermission admin
+ * @api  /api/role/menu/del 为指定角色删除菜单
  *
- * @apiParam { Number } role_id 角色id。
- * @apiParam { Number } menu_id 菜单id。
+ * @apiParam { Number } roleId 角色id。
+ * @apiParam { Number } menuId 菜单id。
  *
- * @apiExample {js} 参数示例:
- * /api/role/menu/3
- *
- * @apiSampleRequest /api/role/menu
  */
 router.post("/delMenuByRole", async (req, res) => {
   let { roleId, menuId } = req.body;

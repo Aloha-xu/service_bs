@@ -4,17 +4,15 @@ const router = express.Router();
 let db = require("../../config/mysql");
 
 /**
- * @api {post} /api/foot/add 添加商品至我的足迹
+ * @api /api/foot/add 添加商品至我的足迹
  */
 router.post("/add", async (req, res) => {
   let { id } = req.body;
   let { openid } = req.user;
-  console.log(id);
   //处理重复插入
   let sql = `SELECT goodsId from foot_print WHERE openid = '${openid}'`;
   let goodsIds = await db.query(sql);
   console.log(JSON.parse(JSON.stringify(goodsIds)));
-  console.log(id);
   //找到一个重复就返回ture
   let flag = goodsIds.some((item) => {
     if (item.goodsId == id) {
@@ -23,7 +21,6 @@ router.post("/add", async (req, res) => {
       return false;
     }
   });
-  console.log(flag);
   if (!flag) {
     sql = "insert into foot_print ( openid, goodsId ) VALUES (?,?)";
   } else {
@@ -49,7 +46,7 @@ router.post("/add", async (req, res) => {
 });
 
 /**
- * @api {delete} /api/foot/del 取消足迹的商品
+ * @api  /api/foot/del 取消足迹的商品
  */
 router.post("/del", async (req, res) => {
   let { id } = req.body;

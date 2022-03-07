@@ -8,15 +8,11 @@ let db = require("../../config/mysql");
  *
  * 有必要的这个接口 ，还需要判断库里面商品还有没有货，因为可能你加入购物车的时候有货，但是过几天再买就没货，可能在一两面内就没货了。我的购物车那里也有判断有没有货，但是需要刷新 ，所以还是需要确认订单页面的商品数据冲数据库里面拿。
  *
- * @api {post} /api/order/checkout 获取"确认订单"页面的数据
+ * @api  /api/order/checkout 获取"确认订单"页面的数据
  * @apiDescription 点击结算按钮之后传参至"确认订单"，此API返回"确认订单"页面需要的数据，此时订单需要用户确认商品价格、数量、支付金额，收货地址在此页面选择或者修改
- * @apiName SettleOrder
- * @apiGroup Order
- * @apiPermission user
  *
  * @apiParam {Number[]} goods 欲购买商品id，格式：[id1,id2,id3];
  *
- * @apiSampleRequest /api/order/settle
  */
 router.post("/checkout", async (req, res) => {
   let { goods } = req.body;
@@ -80,9 +76,6 @@ router.post("/checkout", async (req, res) => {
  * uuidv1生成订单号
  * CURRENT_TIMESTAMP() 生成创建时间
  * 移除购物车对应的商品 [1,2]
- * @apiName CreateOrder
- * @apiGroup Order
- * @apiPermission user
  *
  * @apiParam {Number} actualPay 支付金额,小数点至2位;
  * @apiParam {Number} addressId 收货地址id;
@@ -393,14 +386,11 @@ router.post("/detail", async (req, res) => {
   });
 });
 
-
-
-
 /**
  *
- *  退货    refundState 1 退货状态 退货     refundReason xxxx 退货原因     orderState 4 退货中  
+ *  退货    refundState 1 退货状态 退货     refundReason xxxx 退货原因     orderState 4 退货中
  *
- *  
+ *
  */
 router.post("/refund", async (req, res) => {
   let { orderId, refundReason } = req.body;
@@ -423,6 +413,5 @@ router.post("/refund", async (req, res) => {
     errno: 0,
   });
 });
-
 
 module.exports = router;

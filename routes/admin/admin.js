@@ -7,9 +7,6 @@ const jwt = require("jsonwebtoken");
 /**
  * @api {post} /api/admin/register 管理员注册
  * @apiDescription 注册成功，默认角色为运营人员，默认生成头像地址："/images/avatar/default.jpg"， 返回token, 请在头部headers中设置Authorization: `Bearer ${token}`,所有请求都必须携带token;
- * @apiName AdminRegister
- * @apiGroup admin User
- * @apiPermission admin
  *
  * @apiParam { String } username 账户名.
  * @apiParam { String } password 密码.
@@ -17,9 +14,6 @@ const jwt = require("jsonwebtoken");
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
  *
- * @apiUse SuccessResponse
- *
- * @apiSampleRequest /api/admin/register
  */
 router.post("/register", async (req, res) => {
   let { username, password, fullname, sex, tel } = req.body;
@@ -74,16 +68,9 @@ router.post("/register", async (req, res) => {
 /**
  * @api {post} /api/admin/login 管理员登录
  * @apiDescription 登录成功， 返回token, 请在头部headers中设置Authorization: `Bearer ${token}`, 所有请求都必须携带token;
- * @apiName AdminLogin
- * @apiGroup admin User
- * @apiPermission admin
  *
  * @apiParam {String} username 账户名.
  * @apiParam {String} password 密码.
- *
- * @apiUse SuccessResponse
- *
- * @apiSampleRequest /api/admin/login
  */
 
 router.post("/login", async (req, res) => {
@@ -122,10 +109,7 @@ router.post("/login", async (req, res) => {
 });
 
 /**
- * @api {get} /api/admin/adminMenager/list 获取管理员列表
- * @apiName AdminList
- * @apiGroup admin User
- * @apiPermission admin
+ * @api /api/admin/adminMenager/list 获取管理员列表
  *
  */
 router.post("/list", async (req, res) => {
@@ -140,17 +124,9 @@ router.post("/list", async (req, res) => {
 });
 
 /**
- * @api {delete} /api/admin/del 删除管理员
- * @apiName DeleteAdmin
- * @apiGroup admin User
- * @apiPermission admin
- *
- * @apiExample {js} 参数示例:
- * /api/admin/3
+ * @api  /api/admin/del 删除管理员
  *
  * @apiParam {Number} id 账户id.
- *
- * @apiSampleRequest /api/admin
  */
 router.post("/del", async (req, res) => {
   let { id } = req.body;
@@ -170,13 +146,8 @@ router.post("/del", async (req, res) => {
 });
 /**
  * @api {get} /api/admin/info 获取管理员个人资料
- * @apiName AdminInfo
- * @apiGroup admin User
- * @apiPermission admin
  *
  * @apiParam {Number} id 账户id.
- *
- * @apiSampleRequest /api/admin
  */
 router.post("/info", async (req, res) => {
   let { id } = req.body;
@@ -198,7 +169,7 @@ router.post("/info", async (req, res) => {
   });
 });
 /**
- * @api { put } /api/admin/update 更新管理员个人资料
+ * @api /api/admin/update 更新管理员个人资料
  * @apiDescription 只有超级管理员才有权限修改用户角色，普通管理员无权限更改角色。
  * @apiName UpdateInfo
  * @apiGroup admin User
@@ -245,17 +216,13 @@ router.post("/update", async (req, res) => {
 /**
  * @api { put } /api/admin/account 修改本账户信息
  * @apiDescription 管理员自行修改本账户信息，但是无权限分配角色。
- * @apiName UpdateAccount
- * @apiGroup admin User
- * @apiPermission admin
  *
  * @apiParam { String } fullname 姓名.
  * @apiParam { String } sex 性别.
  * @apiParam { String } avatar 头像.
  * @apiParam { String } tel 手机号码.
  * @apiParam { String } email 邮箱地址.
- *
- * @apiSampleRequest /api/admin/account
+
  */
 router.post("/account", async (req, res) => {
   let { id } = req.user;

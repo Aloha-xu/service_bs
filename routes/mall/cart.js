@@ -5,9 +5,6 @@ let db = require("../../config/mysql");
 
 /**
  * @api {post} /api/cart/add 添加商品至购物车
- * @apiName AddCart
- * @apiGroup Cart
- * @apiPermission user
  *
  * @apiParam {Number} id 商品id;
  * @apiParam {Number} num 商品数量,不能超过库存;
@@ -40,12 +37,8 @@ router.post("/add", async (req, res) => {
   }
 });
 
-
 /**
  * @api {get} /api/cart/list 获取购物车列表
- * @apiName CartList
- * @apiGroup Cart
- * @apiPermission user
  *
  * @apiSampleRequest /api/cart/list
  */
@@ -62,16 +55,10 @@ router.post("/list", async (req, res) => {
   });
 });
 
-
 /**
  * @api {delete} /api/cart/delete/:id 购物车删除商品
- * @apiName DeleteCart
- * @apiGroup Cart
- * @apiPermission user
  *
  * @apiParam {Number} id 购物车条目id;
- *
- * @apiSampleRequest /api/cart
  */
 router.post("/delete", async (req, res) => {
   let { cartId } = req.body;
@@ -86,7 +73,6 @@ router.post("/delete", async (req, res) => {
   }
 });
 
-
 /**
  * @api {put} /api/cart/update/:id
  * @apiDescription 更新商品数量
@@ -98,7 +84,6 @@ router.post("/update", async (req, res) => {
   //判断库存够不够
   let sql = `SELECT inventory FROM goods WHERE goodsId = ${goodsId}`;
   let goodsnumber = await db.query(sql);
-  console.log(goodsnumber);
   if (goodsnumber[0].inventory < goodsNumber) {
     //库存不住
     res.json({
@@ -121,9 +106,13 @@ router.post("/update", async (req, res) => {
       msg: "success!",
       errno: 0,
     });
+  } else {
+    res.json({
+      msg: "失败",
+      errno: 1,
+    });
   }
 });
-
 
 /**
  * @api {put} /api/cart/goodsCartCount
@@ -143,7 +132,6 @@ router.post("/goodsCartCount", async (req, res) => {
     errno: 0,
   });
 });
-
 
 // /**
 //  * @api {put} /api/cart/checked

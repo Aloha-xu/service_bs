@@ -1,52 +1,43 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 // 数据库
-let db = require('../../config/mysql');
+let db = require("../../config/mysql");
 
 /**
  * @api {post} /api/collection 添加商品至我的收藏
- * @apiName CollectionAdd
- * @apiGroup Collection
- * @apiPermission user
  *
  * @apiParam {Number} id 商品id.
- *
- * @apiSampleRequest /api/collection
  */
 router.post("/", function (req, res) {
-    let { id } = req.body;
-    let { openid } = req.user;
-    let sql = 'INSERT INTO collection ( uid, goods_id ) VALUES (?,?)';
-    db.query(sql, [openid, id], function (results) {
-        //成功
-        res.json({
-            status: true,
-            msg: "success!",
-        });
+  let { id } = req.body;
+  let { openid } = req.user;
+  let sql = "INSERT INTO collection ( uid, goods_id ) VALUES (?,?)";
+  db.query(sql, [openid, id], function (results) {
+    //成功
+    res.json({
+      status: true,
+      msg: "success!",
     });
+  });
 });
 
 /**
  * @api {delete} /api/collection/:id 取消收藏的商品
- * @apiName CollectionRemove
- * @apiGroup Collection
- * @apiPermission user
  *
  * @apiParam {Number} id 商品id.
  *
- * @apiSampleRequest /api/collection
  */
 router.delete("/:id", function (req, res) {
-    let { id } = req.params;
-    let { openid } = req.user;
-    let sql = 'DELETE FROM collection WHERE goods_id = ? and uid = ?';
-    db.query(sql, [id, openid], function (results) {
-        //成功
-        res.json({
-            status: true,
-            msg: "success!",
-        });
+  let { id } = req.params;
+  let { openid } = req.user;
+  let sql = "DELETE FROM collection WHERE goods_id = ? and uid = ?";
+  db.query(sql, [id, openid], function (results) {
+    //成功
+    res.json({
+      status: true,
+      msg: "success!",
     });
+  });
 });
 
 /**
@@ -66,16 +57,17 @@ router.delete("/:id", function (req, res) {
  * @apiSampleRequest /api/collection
  */
 router.get("/", function (req, res) {
-    let { openid } = req.user;
-    let sql = 'SELECT c.id, c.goods_id, g.name, g.hotPoint, g.price, g.marketPrice, g.img_md FROM collection c JOIN goods g ON c.goods_id = g.id WHERE uid = ?';
-    db.query(sql, [openid], function (results) {
-        //成功
-        res.json({
-            status: true,
-            msg: "success!",
-            data: results,
-        });
+  let { openid } = req.user;
+  let sql =
+    "SELECT c.id, c.goods_id, g.name, g.hotPoint, g.price, g.marketPrice, g.img_md FROM collection c JOIN goods g ON c.goods_id = g.id WHERE uid = ?";
+  db.query(sql, [openid], function (results) {
+    //成功
+    res.json({
+      status: true,
+      msg: "success!",
+      data: results,
     });
+  });
 });
 
 module.exports = router;

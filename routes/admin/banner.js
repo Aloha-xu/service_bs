@@ -44,8 +44,7 @@ router.post("/add", async (req, res) => {
   });
 });
 /**
- * @api {delete} /api/banner/del
- *
+ * @api  /api/banner/del
  *  bannerId
  *
  */
@@ -66,7 +65,7 @@ router.post("/del", async (req, res) => {
   });
 });
 /**
- * @api {put} /api/banner/update 更新分类
+ * @api  /api/banner/update 更新分类
  *
  */
 router.post("/update", async (req, res) => {

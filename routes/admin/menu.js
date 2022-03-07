@@ -4,7 +4,7 @@ const router = express.Router();
 let db = require("../../config/mysql");
 
 /**
- * @api {post} /api/menu/add 添加子菜单
+ * @api /api/menu/add 添加子菜单
  *
  * @apiParam {String} name 分类名称.
  * @apiParam {Number} pId 父级id.  这个pid就是你要添加子菜单的父级的menuid
@@ -23,7 +23,6 @@ router.post("/add", async (req, res) => {
     menuOrder,
   ]);
   //给超级管理员权限
-  console.log(insertId);
   sql = `INSERT INTO role_menu (roleId,menuId) VALUES (1,?)`;
   let results = await db.query(sql, insertId);
   console.log(results.affectedRows);
@@ -44,11 +43,10 @@ router.post("/add", async (req, res) => {
   });
 });
 /**
- * @api {delete} /api/menu/del 删除子菜单
+ * @api  /api/menu/del 删除子菜单
  *
  * @apiParam {Number} menuId 子菜单menuId.
  *
- * @apiSampleRequest /api/menu
  */
 router.post("/del", async (req, res) => {
   let { menuId } = req.body;
@@ -78,10 +76,8 @@ router.post("/del", async (req, res) => {
   });
 });
 /**
- * @api {put} /api/menu/update 更新子菜单
- * @apiName MenuUpdate
- * @apiGroup admin-Menu
- * @apiPermission admin
+ * @api  /api/menu/update 更新子菜单
+
  *
  * @apiParam {Number} id 子菜单id.
  * @apiParam {String} name 分类名称.
@@ -118,14 +114,10 @@ router.post("/update", async (req, res) => {
 });
 
 /**
- * @api {get} /api/menu/sub 获取子菜单
- * @apiName MenuSub
- * @apiGroup admin-Menu
- * @apiPermission admin
+ * @api  /api/menu/sub 获取子菜单
  *
  * @apiParam { Number } pId 父级菜单id。 注： 获取一级菜单pId = 1;
- *
- * @apiSampleRequest /api/menu/sub
+
  */
 router.post("/sub", async (req, res) => {
   let { pId } = req.body;
@@ -139,16 +131,13 @@ router.post("/sub", async (req, res) => {
 });
 
 /**
- * @api {get} /api/menu/tree 根据角色id获取侧边栏树形菜单
+ * @api  /api/menu/tree 根据角色id获取侧边栏树形菜单
  * @apiParam {Number} roleId roleId.
- *
- * @apiSampleRequest /api/menu/tree
  */
 router.post("/tree", async (req, res) => {
   let { roleId } = req.body;
   sql = `SELECT m.* FROM MENU m JOIN role_menu rm ON rm.menuId = m.menuId WHERE rm.roleId = ?`;
   let results = await db.query(sql, roleId);
-  // console.log(results.length);
   //筛选出一级菜单
   let cate_1st = results.filter((item) => (item.pId === 1 ? item : null));
   //递归循环数据

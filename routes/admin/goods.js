@@ -14,7 +14,7 @@ let db = require("../../config/mysql");
  * @apiParam {String} [hotPoint] 商品热点描述;
  * @apiParam {Number} price 商品价格;
  * @apiParam {Number} inventory 商品库存;
- * @apiParam {String} img 商品主图-720;
+ * @apiParam {String} img
  * @apiParam {String} slider 商品轮播图片，例：slider:'src1,src2,src3';
  * @apiParam {String} detail 商品详情,一般存储为HTML代码;
  * @apiParam {Number} freight 商品运费;
@@ -59,7 +59,7 @@ router.post("/release", async (req, res) => {
  * @apiParam {String} [hotPoint] 商品热点描述;
  * @apiParam {Number} price 商品价格;
  * @apiParam {Number} inventory 商品库存;
- * @apiParam {String} img 商品主图-720;
+ * @apiParam {String} img 商品主图
  * @apiParam {String} slider 商品轮播图片，例：slider:'src1,src2,src3';
  * @apiParam {String} detail 商品详情,一般存储为HTML代码;
  * @apiParam {Number} freight 商品运费;

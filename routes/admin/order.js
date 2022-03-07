@@ -5,9 +5,6 @@ let db = require("../../config/mysql");
 /**
  * @api {get} /api/admin/order/list 获取所有账户订单列表
  * @apiDescription 获取系统中的订单列表，根据订单状态获取列表，具备分页功能
- * @apiName AdminOrderList
- * @apiGroup admin Order
- * @apiPermission admin
  *
  * @apiParam {Number} [pageSize] 一个页有多少个商品,默认4个;
  * @apiParam {Number} [pageIndex] 第几页,默认1;
@@ -72,9 +69,7 @@ router.post("/list", async (req, res) => {
 
 router.post("/ship", async (req, res) => {
   let { shipNumber, shipName, orderId } = req.body;
-  console.log(orderId);
   let sql = `UPDATE orders SET shipNumber = '${shipNumber}' ,shipName = '${shipName}' , shipTime = unix_timestamp(CURRENT_TIMESTAMP()) , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , orderState = 2 WHERE orderId = '${orderId}'`;
-
   let results = await db.query(sql);
   if (results.affectedRows <= 0) {
     res.json({

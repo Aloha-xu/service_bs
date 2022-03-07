@@ -6,11 +6,6 @@ const fs = require("fs");
 const path = require("path");
 /**
  * @api {get} /api/category/all 获取所有树形分类
- * @apiName allCategory
- * @apiGroup admin-Category
- * @apiPermission admin
- *
- * @apiSampleRequest /api/category/all
  */
 router.post("/all", function (req, res) {
   let sql = `SELECT * FROM category `;
@@ -25,13 +20,9 @@ router.post("/all", function (req, res) {
 });
 /**
  * @api {post} /api/category/add 添加子分类
- * @apiName categoryAdd
- * @apiGroup admin-Category
- * @apiPermission admin
  *
  * @apiParam {String} name 分类名称.
  * @apiParam {Number} pId 父级id.
- * @apiParam {Number} [level] 分类所在层级.
  *
  */
 router.post("/add", async (req, res) => {
@@ -48,16 +39,9 @@ router.post("/add", async (req, res) => {
 });
 /**
  * @api {delete} /api/category/del 删除分类
- * @apiName categoryDelete
- * @apiGroup admin-Category
- * @apiPermission admin
  *
- * @apiParam {Number} id 分类id.
+ * @apiParam {Number} cateId 分类cateId.
  *
- * @apiExample {js} 参数示例:
- * /api/category/3
- *
- * @apiSampleRequest /api/category
  */
 router.post("/del", async (req, res) => {
   let { cateId } = req.body;
@@ -91,17 +75,11 @@ router.post("/del", async (req, res) => {
 });
 /**
  * @api {put} /api/category/updata 更新分类
- * @apiName updateCategory
- * @apiGroup admin-Category
- * @apiPermission admin
+
  *
- * @apiParam {Number} id 分类id.
+ * @apiParam {Number} cateId 分类cateId.
  * @apiParam {String} name 分类名称.
- *
- * @apiExample {js} 参数示例:
- * /api/category/3
- *
- * @apiSampleRequest /api/category
+
  */
 router.post("/updata", async (req, res) => {
   let { name, cateId } = req.body;
@@ -125,18 +103,13 @@ router.post("/updata", async (req, res) => {
 });
 /**
  * @api {get} /api/category/sub 获取子级分类
- * @apiName categorySub
- * @apiGroup Category
- * @apiPermission admin user
  *
  * @apiParam {Number} pId 父级分类id。注：获取一级分类pId = 1，获取根分类pId = 0;
- *
- * @apiSampleRequest /api/category/sub
+
  */
 router.post("/sub", async (req, res) => {
   let { pId } = req.body;
   let sql = `SELECT * FROM category WHERE pId = ? `;
-  console.log(sql);
   let results = await db.query(sql, pId);
   //成功
   res.json({

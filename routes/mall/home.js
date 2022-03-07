@@ -4,23 +4,15 @@ const router = express.Router();
 let db = require("../../config/mysql");
 
 /**
- * @api {get} api/home/appInfo 获取首页详情
- * @apiName
- * @apiGroup
- * @apiPermission
- *
- * @apiParam
- *
- * @apiSampleRequest
+ * @api  api/home/appInfo 获取首页详情
  */
-
 
 router.get("/appInfo", async (req, res) => {
   // let {uId} = req.query
   let data = {
     banner: {},
     categoryList: [],
-    cartCount: 0
+    cartCount: 0,
   };
   //拿到banner数据
   let sql = `SELECT * FROM banner`;
@@ -32,7 +24,10 @@ router.get("/appInfo", async (req, res) => {
   for (let i = 0; i < categoryList.length; i++) {
     data.categoryList.push(categoryList[i]);
     sql = `select b.* from category a left join goods b on a.cateId=b.cateId where a.cateId=? limit 6 `;
-    data.categoryList[i].goodsList = await db.query(sql, categoryList[i].cateId);
+    data.categoryList[i].goodsList = await db.query(
+      sql,
+      categoryList[i].cateId
+    );
   }
 
   //判断登陆没有 无登录 返回0 有登陆才执行
@@ -45,10 +40,8 @@ router.get("/appInfo", async (req, res) => {
   res.json({
     msg: "success!",
     data,
-    errno: 0
+    errno: 0,
   });
-
-
 });
 
 module.exports = router;

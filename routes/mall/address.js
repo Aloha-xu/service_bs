@@ -4,10 +4,7 @@ const router = express.Router();
 let db = require("../../config/mysql");
 
 /**
- * @api {get} /api/address/list 获取收货地址列表
- * @apiName addressList
- * @apiGroup Address
- * @apiPermission user
+ * @api /api/address/list 获取收货地址列表
  *
  * @apiSampleRequest /api/address/list
  */
@@ -31,14 +28,10 @@ router.get("/list", async (req, res) => {
 });
 
 /**
- * @api {get} /api/address/addressDetail/:id 根据id获取收货地址详情
- * @apiName addressDetail
- * @apiGroup Address
- * @apiPermission user
+ * @api  /api/address/addressDetail/:id 根据id获取收货地址详情
  *
  * @apiParam {Number} id 收货地址id.
  *
- * @apiSampleRequest /api/address
  */
 router.get("/addressDetail", async (req, res) => {
   let sql = `SELECT * FROM address WHERE id = ? `;
@@ -61,9 +54,6 @@ router.get("/addressDetail", async (req, res) => {
 
 /**
  * @api {post} /api/address/addAddress 添加收货地址
- * @apiName addressAdd
- * @apiGroup Address
- * @apiPermission user
  *
  * @apiParam {String} name 收货人姓名.
  * @apiParam {String} tel 电话.
@@ -74,16 +64,15 @@ router.get("/addressDetail", async (req, res) => {
  * @apiParam {String} code 邮编.
  * @apiParam {Number=1,0} isDefault 是否默认 1-默认,0-否.
  *
- * @apiSampleRequest /api/address/
  */
 router.post("/addAddress", async (req, res) => {
-  let sql
+  let sql;
   let { name, tel, province, city, county, street, isDefault } = req.body;
   let { openid } = req.user;
   //判断是不是设置了默认值
   if (isDefault == 1) {
-    sql = `UPDATE address SET isDefault = 0 WHERE isDefault = 1`
-    await db.query(sql)
+    sql = `UPDATE address SET isDefault = 0 WHERE isDefault = 1`;
+    await db.query(sql);
   }
   sql = `INSERT INTO address(openid, name, tel, province, city, county, street, isDefault) VALUES(?,?,?,?,?,?,?,?)`;
   let results = await db.query(sql, [
@@ -102,14 +91,17 @@ router.post("/addAddress", async (req, res) => {
       msg: "添加成功！",
       errno: 0,
     });
+  } else {
+    res.json({
+      status: false,
+      msg: "失败",
+      errno: 1,
+    });
   }
 });
 
 /**
  * @api {put} /api/address/updataAdress/:id 修改收货地址
- * @apiName addressUpdate
- * @apiGroup Address
- * @apiPermission user
 
  * @apiParam {Number} id 收货地址id.
  * @apiParam {String} name 收货人姓名.
@@ -124,13 +116,13 @@ router.post("/addAddress", async (req, res) => {
  * @apiSampleRequest /api/address/
  */
 router.post("/updataAdress", async (req, res) => {
-  let sql
+  let sql;
   let { name, tel, province, city, county, street, isDefault, id } = req.body;
   //   let { openid } = req.user;
   //判断是不是设置了默认值
   if (isDefault == 1) {
-    sql = `UPDATE address SET isDefault = 0 WHERE isDefault = 1`
-    await db.query(sql)
+    sql = `UPDATE address SET isDefault = 0 WHERE isDefault = 1`;
+    await db.query(sql);
   }
   sql = `UPDATE address SET name = ?, tel = ?, province = ?, city = ?, county = ?, street = ?, isDefault = ? WHERE id = ?`;
   let results = await db.query(sql, [
@@ -149,18 +141,20 @@ router.post("/updataAdress", async (req, res) => {
       msg: "修改成功！",
       errno: 0,
     });
+  } else {
+    res.json({
+      status: false,
+      msg: "失败",
+      errno: 1,
+    });
   }
 });
 
 /**
- * @api {delete} /api/address/delAdsress/:id 删除收货地址
- * @apiName addressDelete
- * @apiGroup Address
- * @apiPermission user
+ * @api /api/address/delAdsress 删除收货地址
  *
  * @apiParam {Number} id 收货地址id.
- *
- * @apiSampleRequest /api/address
+
  */
 router.get("/delAdsress", async (req, res) => {
   let { id } = req.query;
@@ -173,10 +167,13 @@ router.get("/delAdsress", async (req, res) => {
       msg: "删除成功！",
       errno: 0,
     });
-
+  } else {
+    res.json({
+      status: false,
+      msg: "失败",
+      errno: 1,
+    });
   }
-
-
 });
 
 module.exports = router;
