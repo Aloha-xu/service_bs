@@ -189,11 +189,7 @@ router.post("/detail", async (req, res) => {
 });
 
 /**
- *
  *  修改订单的信息  /api/admin/order/update
- *
- *
- *
  */
 
 router.post("/update", async (req, res) => {

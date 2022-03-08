@@ -13,15 +13,9 @@ let db = require("../../config/mysql");
  *
  */
 router.post("/add", async (req, res) => {
-  let { name, pId, component, path, menuOrder } = req.body;
-  let sql = `INSERT INTO MENU (name,pId,component,path,menuOrder) VALUES (?,?,?,?,?) `;
-  let { insertId } = await db.query(sql, [
-    name,
-    pId,
-    component,
-    path,
-    menuOrder,
-  ]);
+  let { name, pId, path, menuOrder } = req.body;
+  let sql = `INSERT INTO MENU (name,pId,path,menuOrder) VALUES (?,?,?,?) `;
+  let { insertId } = await db.query(sql, [name, pId, path, menuOrder]);
   //给超级管理员权限
   sql = `INSERT INTO role_menu (roleId,menuId) VALUES (1,?)`;
   let results = await db.query(sql, insertId);
@@ -81,23 +75,15 @@ router.post("/del", async (req, res) => {
  *
  * @apiParam {Number} id 子菜单id.
  * @apiParam {String} name 分类名称.
- * @apiParam {String} component 关联组件名称.
  * @apiParam {Number} pId 父级id.
  * @apiParam {String} path 菜单url地址.
  * @apiParam {String} menu_order 菜单显示顺序，按照数字从小到大排序，如2001.
  *
  */
 router.post("/update", async (req, res) => {
-  let { name, pId, component, path, menuOrder, menuId } = req.body;
-  let sql = `UPDATE MENU SET name = ?,pId = ?,component = ?, path = ?, menuOrder = ? WHERE menuId = ? `;
-  let results = await db.query(sql, [
-    name,
-    pId,
-    component,
-    path,
-    menuOrder,
-    menuId,
-  ]);
+  let { name, pId, path, menuOrder, menuId } = req.body;
+  let sql = `UPDATE MENU SET name = ?,pId = ?, path = ?, menuOrder = ? WHERE menuId = ? `;
+  let results = await db.query(sql, [name, pId, path, menuOrder, menuId]);
 
   if (!results.affectedRows) {
     res.json({
@@ -136,7 +122,7 @@ router.post("/sub", async (req, res) => {
  */
 router.post("/tree", async (req, res) => {
   let { roleId } = req.body;
-  sql = `SELECT m.* FROM MENU m JOIN role_menu rm ON rm.menuId = m.menuId WHERE rm.roleId = ?`;
+  sql = `SELECT m.* FROM MENU m JOIN role_menu rm ON rm.menuId = m.menuId WHERE rm.roleId = ? ORDER BY menuOrder`;
   let results = await db.query(sql, roleId);
   //筛选出一级菜单
   let cate_1st = results.filter((item) => (item.pId === 1 ? item : null));

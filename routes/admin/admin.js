@@ -85,7 +85,12 @@ router.post("/login", async (req, res) => {
     });
     return false;
   }
+
   let { adminId } = results[0];
+
+  sql = `SELECT roleId FROM admin_role WHERE adminId = ?`;
+  let roleId = await db.query(sql, adminId);
+
   // 更新登陆时间，登陆次数
   sql = `UPDATE admin SET loginCount = loginCount + 1 WHERE adminId = ?;`;
   let response = await db.query(sql, adminId);
@@ -103,6 +108,7 @@ router.post("/login", async (req, res) => {
       data: {
         token,
         id: adminId,
+        roleId: roleId[0].roleId,
       },
     });
   }
@@ -114,7 +120,7 @@ router.post("/login", async (req, res) => {
  */
 router.post("/list", async (req, res) => {
   //查询账户数据
-  let sql = `SELECT a.adminId,a.username,a.fullname,a.email,a.sex,a.avatar,a.tel,DATE_FORMAT(a.loginTime,'%Y-%m-%d %H:%i:%s') AS loginTime,a.loginCount,r.roleName,r.roleId AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.adminId = ar.adminId LEFT JOIN role AS r ON r.roleId = ar.roleId ORDER BY a.adminId`;
+  let sql = `SELECT a.adminId,a.username,a.fullname,a.sex,a.avatar,a.tel,DATE_FORMAT(a.loginTime,'%Y-%m-%d %H:%i:%s') AS loginTime,a.loginCount,r.roleName,r.roleId AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.adminId = ar.adminId LEFT JOIN role AS r ON r.roleId = ar.roleId ORDER BY a.adminId`;
   let results = await db.query(sql);
   res.json({
     status: true,
@@ -180,21 +186,19 @@ router.post("/info", async (req, res) => {
  * @apiParam {String} sex 性别.
  * @apiParam {String} avatar 头像.
  * @apiParam { String } tel 手机号码.
- * @apiParam { String } email 邮箱地址.
  * @apiParam { String } role 账户角色id.
  *
  * @apiSampleRequest /api/admin
  */
 router.post("/update", async (req, res) => {
-  let { adminId, fullname, sex, avatar, tel, email, role } = req.body;
-  let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE adminId = ?;
+  let { adminId, fullname, sex, avatar, tel, role } = req.body;
+  let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ? WHERE adminId = ?;
     UPDATE admin_role SET roleId = ? WHERE adminId = ?`;
   let results = await db.query(sql, [
     fullname,
     sex,
     avatar,
     tel,
-    email,
     adminId,
     role,
     adminId,
@@ -221,14 +225,13 @@ router.post("/update", async (req, res) => {
  * @apiParam { String } sex 性别.
  * @apiParam { String } avatar 头像.
  * @apiParam { String } tel 手机号码.
- * @apiParam { String } email 邮箱地址.
 
  */
 router.post("/account", async (req, res) => {
   let { id } = req.user;
-  let { fullname, sex, avatar, tel, email } = req.body;
-  let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE adminId = ?`;
-  let results = await db.query(sql, [fullname, sex, avatar, tel, email, id]);
+  let { fullname, sex, avatar, tel } = req.body;
+  let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ? WHERE adminId = ?`;
+  let results = await db.query(sql, [fullname, sex, avatar, tel, id]);
   if (!results.affectedRows) {
     res.json({
       status: false,
