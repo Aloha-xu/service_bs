@@ -4,7 +4,7 @@ const router = express.Router();
 let db = require("../../config/mysql");
 
 /**
- * @api {post} /api/cart/add 添加商品至购物车
+ * @api  /api/cart/add 添加商品至购物车
  *
  * @apiParam {Number} id 商品id;
  * @apiParam {Number} num 商品数量,不能超过库存;
@@ -21,7 +21,7 @@ router.post("/add", async (req, res) => {
   sql = `INSERT INTO cart ( openid , goodsId , goodsNumber , createTime ) VALUES ( '${openid}' , ${goodsId} , ${number} ,CURRENT_TIMESTAMP())`;
   // 已有此商品，增加数量
   if (results.length > 0) {
-    sql = `UPDATE cart SET goodsNumber = goodsNumber + ${number} , updateTime = CURRENT_TIMESTAMP() WHERE goodsId = ${goodsId} AND openid = '${openid}'`;
+    sql = `UPDATE cart SET goodsNumber = goodsNumber + ${number}  WHERE goodsId = ${goodsId} AND openid = '${openid}'`;
   }
   results = await db.query(sql);
   if (results.affectedRows > 0) {
@@ -38,7 +38,7 @@ router.post("/add", async (req, res) => {
 });
 
 /**
- * @api {get} /api/cart/list 获取购物车列表
+ * @api  /api/cart/list 获取购物车列表
  *
  * @apiSampleRequest /api/cart/list
  */
@@ -56,7 +56,7 @@ router.post("/list", async (req, res) => {
 });
 
 /**
- * @api {delete} /api/cart/delete/:id 购物车删除商品
+ * @api  /api/cart/delete/:id 购物车删除商品
  *
  * @apiParam {Number} id 购物车条目id;
  */
@@ -70,11 +70,17 @@ router.post("/delete", async (req, res) => {
       msg: "success!",
       errno: 0,
     });
+  } else {
+    res.json({
+      status: fasle,
+      msg: "fail!",
+      errno: 1,
+    });
   }
 });
 
 /**
- * @api {put} /api/cart/update/:id
+ * @api  /api/cart/update/:id
  * @apiDescription 更新商品数量
  */
 router.post("/update", async (req, res) => {
@@ -115,8 +121,8 @@ router.post("/update", async (req, res) => {
 });
 
 /**
- * @api {put} /api/cart/goodsCartCount
- * @apiDescription 获取商品数量
+ * @api  /api/cart/goodsCartCount
+ * @apiDescription 获取购物车商品数量
  */
 router.post("/goodsCartCount", async (req, res) => {
   let data = {
@@ -132,23 +138,5 @@ router.post("/goodsCartCount", async (req, res) => {
     errno: 0,
   });
 });
-
-// /**
-//  * @api {put} /api/cart/checked
-//  * @apiDescription 选择或取消选择商品
-//  */
-// router.post("/checked", async (req, res) => {
-//   let { cartId, isChecked } = req.body;
-
-//   sql = `UPDATE cart SET checked = ${isChecked} WHERE cartId = ${cartId}`;
-//   let count = await db.query(sql);
-//   if (results.affectedRows > 0) {
-//     res.json({
-//       data: data,
-//       msg: "success!",
-//       errno: 0,
-//     });
-//   }
-// });
 
 module.exports = router;

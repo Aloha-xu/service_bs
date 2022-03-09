@@ -111,6 +111,11 @@ router.post("/login", async (req, res) => {
         roleId: roleId[0].roleId,
       },
     });
+  } else {
+    res.json({
+      status: false,
+      msg: "登录失败！",
+    });
   }
 });
 
@@ -122,11 +127,18 @@ router.post("/list", async (req, res) => {
   //查询账户数据
   let sql = `SELECT a.adminId,a.username,a.fullname,a.sex,a.avatar,a.tel,DATE_FORMAT(a.loginTime,'%Y-%m-%d %H:%i:%s') AS loginTime,a.loginCount,r.roleName,r.roleId AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.adminId = ar.adminId LEFT JOIN role AS r ON r.roleId = ar.roleId ORDER BY a.adminId`;
   let results = await db.query(sql);
-  res.json({
-    status: true,
-    msg: "获取成功！",
-    data: results,
-  });
+  if (results.length > 0) {
+    res.json({
+      status: true,
+      msg: "获取成功！",
+      data: results,
+    });
+  } else {
+    res.json({
+      status: false,
+      msg: "获取失败！",
+    });
+  }
 });
 
 /**

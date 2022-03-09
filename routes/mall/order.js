@@ -87,6 +87,9 @@ router.post("/checkout", async (req, res) => {
  *    ···········这个接口生成的订单数据状态是0 都是0的 就是买家未付款·············
  *              等待后面接口修改状态吧
  *
+ *
+ *  ---------  少了一个逻辑  给了钱 就给他在已售加一  库存减一
+ *
  */
 router.post("/submit", async (req, res) => {
   // 准备查询的商品id,方便使用IN
@@ -121,7 +124,7 @@ router.post("/submit", async (req, res) => {
     return;
   }
 
-  // 库存充足,对应商品减库存,拼接SQL
+  // 库存充足,对应商品减库存,拼接SQL  已售要加一
   sql = `UPDATE goods SET inventory = CASE goodsId `;
   goodsList.forEach((item) => {
     sql += `WHEN ${item.goodsId} THEN inventory - ${item.num} `;
@@ -130,7 +133,21 @@ router.post("/submit", async (req, res) => {
   results = await db.query(sql);
   if (results.changedRows <= 0) {
     res.json({
-      msg: `${results.changedRows} rows changed!`,
+      msg: "库存减少失败",
+      errno: 1,
+    });
+    return;
+  }
+  //已售要加一
+  sql = `UPDATE goods SET sellVolume = CASE goodsId `;
+  goodsList.forEach((item) => {
+    sql += `WHEN ${item.goodsId} THEN sellVolume + ${item.num} `;
+  });
+  sql += `END WHERE goodsId IN (${queryGid});`;
+  results = await db.query(sql);
+  if (results.changedRows <= 0) {
+    res.json({
+      msg: "已售增加失败",
       errno: 1,
     });
     return;
@@ -140,7 +157,7 @@ router.post("/submit", async (req, res) => {
   let orderId = uuidv1();
 
   // 订单表中生成新订单  还有一些数据没插进去
-  sql = `INSERT INTO orders (orderId,openid,goodsPrices,createTime,note,freightPrice,addressId) VALUES (?,?,?,unix_timestamp(CURRENT_TIMESTAMP()),?,?,?)`;
+  sql = `INSERT INTO orders (orderId,openid,goodsPrices,note,freightPrice,addressId) VALUES (?,?,?,?,?,?)`;
 
   results = await db.query(sql, [
     orderId,
@@ -201,7 +218,7 @@ router.post("/confirm", async (req, res) => {
   let { orderId } = req.body;
   let { openid } = req.user;
 
-  let sql = `UPDATE orders SET orderState = 3 , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , receivedTime = unix_timestamp(CURRENT_TIMESTAMP()) , finishTime = unix_timestamp(CURRENT_TIMESTAMP())`;
+  let sql = `UPDATE orders SET orderState = 3 , receivedTime = CURRENT_TIMESTAMP() , finishTime = CURRENT_TIMESTAMP()`;
   sql += ` WHERE orderId = ? AND openid = ?`;
 
   let results = await db.query(sql, [orderId, openid]);
@@ -253,20 +270,21 @@ router.post("/updataState", async (req, res) => {
   let { orderState, orderId } = req.body;
   let { openid } = req.user;
 
-  let sql = `UPDATE orders SET orderState = ? , updateTime = unix_timestamp(CURRENT_TIMESTAMP())`;
+  let sql = `UPDATE orders SET orderState = ? `;
 
   // if(orderState == 0){
   //   //就是还没给钱 payTime 还是null
   //   sql += ``
   // }
+  //付款了 等待发货
   if (orderState == 1) {
     //给了钱了 那么paytime就应该更新
-    sql += `,payTime = unix_timestamp(CURRENT_TIMESTAMP())`;
+    sql += `,payTime =CURRENT_TIMESTAMP()`;
   }
   //关闭订单
   if (orderState == 6) {
-    //给了钱了 那么paytime就应该更新
-    sql += `,closeTime = unix_timestamp(CURRENT_TIMESTAMP())`;
+    //关闭了订单那么就需要返回去库存与已售的数据
+    sql += `,closeTime = CURRENT_TIMESTAMP()`;
   }
   // else if(orderState == 2){
   //   //这个发货时间应该是在后台更新的
@@ -284,6 +302,45 @@ router.post("/updataState", async (req, res) => {
     });
     return;
   }
+
+  //关闭了订单那么就需要返回去库存与已售的数据
+  if (orderState == 6) {
+    let queryGid = [];
+    let sql = `SELECT goodsId,goodsNumber AS num FROM order_goods WHERE orderId = '${orderId}' `;
+    let goodsList = await db.query(sql);
+    goodsList.forEach(function (item) {
+      queryGid.push(item.goodsId);
+    });
+    // 库存充足,对应商品减库存,拼接SQL  已售要加一
+    sql = `UPDATE goods SET inventory = CASE goodsId `;
+    goodsList.forEach((item) => {
+      sql += `WHEN ${item.goodsId} THEN inventory + ${item.num} `;
+    });
+    sql += `END WHERE goodsId IN (${queryGid});`;
+    let results = await db.query(sql);
+    if (results.changedRows <= 0) {
+      res.json({
+        msg: "fail!!",
+        errno: 1,
+      });
+      return;
+    }
+    //已售要加一
+    sql = `UPDATE goods SET sellVolume = CASE goodsId `;
+    goodsList.forEach((item) => {
+      sql += `WHEN ${item.goodsId} THEN sellVolume - ${item.num} `;
+    });
+    sql += `END WHERE goodsId IN (${queryGid});`;
+    results = await db.query(sql);
+    if (results.changedRows <= 0) {
+      res.json({
+        msg: "fail!!",
+        errno: 1,
+      });
+      return;
+    }
+  }
+
   res.json({
     msg: `更新成功!`,
     errno: 0,
@@ -305,12 +362,12 @@ router.post("/list", async (req, res) => {
   let { status = 7 } = req.body;
   let { openid } = req.user;
   // 查询所有订单
-  let sql = `SELECT o.orderId, o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code
+  let sql = `SELECT o.orderId, DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code
 		 FROM orders o JOIN order_status os ON o.orderState = os.orderState
 		 WHERE o.openid = '${openid}' ORDER BY o.createTime DESC`;
   // 根据订单状态查询
   if (status != 7) {
-    sql = `SELECT o.orderId, o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code
+    sql = `SELECT o.orderId, DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code
     FROM orders o JOIN order_status os ON o.orderState = os.orderState
     WHERE o.openid = '${openid}' AND o.orderState = ${status} ORDER BY o.createTime DESC`;
   }
@@ -353,8 +410,7 @@ router.post("/detail", async (req, res) => {
   let { orderId } = req.body;
   let { openid } = req.user;
 
-  let sql = `SELECT o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime,o.closeTime
-    FROM orders o JOIN order_status os ON o.orderState = os.orderState
+  let sql = `SELECT DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,DATE_FORMAT(o.finishTime,'%Y-%m-%d %H:%i:%s') AS finishTime , DATE_FORMAT(o.shipTime,'%Y-%m-%d %H:%i:%s') AS shipTime , DATE_FORMAT(o.payTime,'%Y-%m-%d %H:%i:%s') AS payTime , DATE_FORMAT(o.receivedTime,'%Y-%m-%d %H:%i:%s') AS receivedTime , DATE_FORMAT(o.closeTime,'%Y-%m-%d %H:%i:%s') AS closeTime FROM orders o JOIN order_status os ON o.orderState = os.orderState
 		 WHERE o.orderId = '${orderId}'`;
 
   let orderInfo = await db.query(sql);
@@ -389,6 +445,7 @@ router.post("/detail", async (req, res) => {
 /**
  *
  *  退货    refundState 1 退货状态 退货     refundReason xxxx 退货原因     orderState 4 退货中
+ *    退货成功 之后 就需要把已卖和库存返回正常？ 需不需要？ 需要
  *
  *
  */
@@ -396,7 +453,7 @@ router.post("/refund", async (req, res) => {
   let { orderId, refundReason } = req.body;
   let { openid } = req.user;
 
-  let sql = `UPDATE orders SET orderState = 4 , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , refundState = 1 , refundReason = ? WHERE orderId = ? AND openid = ?`;
+  let sql = `UPDATE orders SET orderState = 4 , refundState = 1 , refundReason = ? WHERE orderId = ? AND openid = ?`;
 
   console.log(sql);
 

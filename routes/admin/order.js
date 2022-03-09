@@ -17,12 +17,10 @@ router.post("/list", async (req, res) => {
   let size = parseInt(pageSize);
   let count = size * (pageIndex - 1);
   // 查询所有订单
-  let sql = `SELECT o.orderId, o.createTime, o.goodsPrices, os.text AS status , o.refundReason , o.freightPrice , os.orderState As code
-		   FROM orders o JOIN order_status os ON o.orderState = os.orderState
-		   WHERE 1 = 1 ORDER BY o.createTime DESC LIMIT ${size} OFFSET ${count}`;
+  let sql = `SELECT o.orderId, DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.refundReason , o.freightPrice , os.orderState As code FROM orders o JOIN order_status os ON o.orderState = os.orderState WHERE 1 = 1 ORDER BY o.createTime DESC LIMIT ${size} OFFSET ${count}`;
   // 根据订单状态查询
   if (status != 7) {
-    sql = `SELECT o.orderId, o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code
+    sql = `SELECT o.orderId, DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code , o.refundReason
 	  FROM orders o JOIN order_status os ON o.orderState = os.orderState
 	  WHERE 1 = 1 AND o.orderState = ${status} ORDER BY o.createTime DESC LIMIT ${size} OFFSET ${count}`;
   }
@@ -69,7 +67,7 @@ router.post("/list", async (req, res) => {
 
 router.post("/ship", async (req, res) => {
   let { shipNumber, shipName, orderId } = req.body;
-  let sql = `UPDATE orders SET shipNumber = '${shipNumber}' ,shipName = '${shipName}' , shipTime = unix_timestamp(CURRENT_TIMESTAMP()) , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , orderState = 2 WHERE orderId = '${orderId}'`;
+  let sql = `UPDATE orders SET shipNumber = '${shipNumber}' ,shipName = '${shipName}' , shipTime = CURRENT_TIMESTAMP() , orderState = 2 WHERE orderId = '${orderId}'`;
   let results = await db.query(sql);
   if (results.affectedRows <= 0) {
     res.json({
@@ -89,15 +87,54 @@ router.post("/ship", async (req, res) => {
  * 	管理员确认商品退货 /api/admin/order/refund
  *
  * 	orderState = 5 - s  8 - f
- *   更新时间updateTime
- * orderId
+ *  orderId
  *
  * 	拒绝退款之后是返回之前的状态？ 3已收货/2未收货  还是8 退货失败 ？？？？？  返回之前的状态你得存有之前的状态!!!
+ *
+ *
+ *  退货成功 之后 就需要把已卖和库存返回正常？ 需不需要？ 需要
+ *
  */
 
 router.post("/refund", async (req, res) => {
   let { orderState, orderId } = req.body;
-  let sql = `UPDATE orders SET orderState = ${orderState} , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId='${orderId}'`;
+  if (orderState == 5) {
+    let queryGid = [];
+    let sql = `SELECT goodsId,goodsNumber AS num FROM order_goods WHERE orderId = '${orderId}' `;
+    let goodsList = await db.query(sql);
+    goodsList.forEach(function (item) {
+      queryGid.push(item.goodsId);
+    });
+    // 库存充足,对应商品减库存,拼接SQL  已售要加一
+    sql = `UPDATE goods SET inventory = CASE goodsId `;
+    goodsList.forEach((item) => {
+      sql += `WHEN ${item.goodsId} THEN inventory + ${item.num} `;
+    });
+    sql += `END WHERE goodsId IN (${queryGid});`;
+    let results = await db.query(sql);
+    if (results.changedRows <= 0) {
+      res.json({
+        msg: "fail!!",
+        errno: 1,
+      });
+      return;
+    }
+    //已售要加一
+    sql = `UPDATE goods SET sellVolume = CASE goodsId `;
+    goodsList.forEach((item) => {
+      sql += `WHEN ${item.goodsId} THEN sellVolume - ${item.num} `;
+    });
+    sql += `END WHERE goodsId IN (${queryGid});`;
+    results = await db.query(sql);
+    if (results.changedRows <= 0) {
+      res.json({
+        msg: "fail!!",
+        errno: 1,
+      });
+      return;
+    }
+  }
+  let sql = `UPDATE orders SET orderState = ${orderState} WHERE orderId='${orderId}'`;
   let results = await db.query(sql);
   if (results.affectedRows <= 0) {
     res.json({
@@ -126,7 +163,7 @@ router.post("/refund", async (req, res) => {
 
 router.post("/cancel", async (req, res) => {
   let { orderId } = req.body;
-  let sql = `UPDATE orders SET orderState = 6 , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) WHERE orderId='${orderId}'`;
+  let sql = `UPDATE orders SET orderState = 6 WHERE orderId='${orderId}'`;
   let results = await db.query(sql);
   if (results.affectedRows <= 0) {
     res.json({
@@ -156,7 +193,7 @@ router.post("/cancel", async (req, res) => {
 router.post("/detail", async (req, res) => {
   let { orderId } = req.body;
 
-  let sql = `SELECT o.createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime,o.closeTime,o.shipName,o.shipNumber
+  let sql = `SELECT DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code ,o.addressId, o.note ,o.orderId,o.finishTime,o.shipTime,o.payTime,o.receivedTime,o.closeTime,o.shipName,o.shipNumber
     FROM orders o JOIN order_status os ON o.orderState = os.orderState
 		 WHERE o.orderId = '${orderId}'`;
 
@@ -200,7 +237,7 @@ router.post("/update", async (req, res) => {
     note,
     freightPrice,
   } = req.body;
-  let sql = `UPDATE orders SET shipNumber = '${shipNumber}' ,shipName = '${shipName}' , updateTime = unix_timestamp(CURRENT_TIMESTAMP()) , note = '${note}' , freightPrice = ${freightPrice} WHERE orderId = '${orderId}'`;
+  let sql = `UPDATE orders SET shipNumber = '${shipNumber}' ,shipName = '${shipName}' , note = '${note}' , freightPrice = ${freightPrice} WHERE orderId = '${orderId}'`;
 
   let results = await db.query(sql);
   if (results.affectedRows <= 0) {

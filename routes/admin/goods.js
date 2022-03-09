@@ -80,7 +80,7 @@ router.post("/updata", async (req, res) => {
     detail,
     freight,
   } = req.body;
-  let sql = `UPDATE goods SET cateId=?,name=?,price=?,inventory=?,img=?,slider=?,detail=?,freight=?,updateTime = CURRENT_TIMESTAMP() WHERE goodsId=?`;
+  let sql = `UPDATE goods SET cateId=?,name=?,price=?,inventory=?,img=?,slider=?,detail=?,freight=? WHERE goodsId=?`;
   let results = db.query(sql, [
     cateId,
     name,
@@ -193,7 +193,7 @@ router.post("/del", async (req, res) => {
  */
 router.post("/state", async (req, res) => {
   let { state, goodsId } = req.body;
-  let sql = `UPDATE goods SET state=?,updateTime = CURRENT_TIMESTAMP() WHERE goodsId=?`;
+  let sql = `UPDATE goods SET state=? WHERE goodsId=?`;
   let results = await db.query(sql, [state, goodsId]);
   if (results.affectedRows <= 0) {
     res.json({

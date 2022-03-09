@@ -20,7 +20,6 @@ const baseUrl = "http://localhost:3003";
  *
  * @apiSampleRequest /api/upload/goods
  *
- * @apiSuccess {String} lgImg 返回720宽度图片地址.
  * @apiSuccess {String} mdImg 返回360宽度图片地址.
  */
 router.post("/goods", upload.single("file"), async function (req, res) {
@@ -60,9 +59,6 @@ router.post("/goods", upload.single("file"), async function (req, res) {
   var fileFolder = "/images/goods/";
   //处理图片
   try {
-    // await sharp(req.file.buffer)
-    //   .resize(720)
-    //   .toFile("public" + fileFolder + filename + "_720." + format);
     await sharp(req.file.buffer)
       .resize(360)
       .toFile("public" + fileFolder + filename + "_360." + format);
@@ -70,9 +66,7 @@ router.post("/goods", upload.single("file"), async function (req, res) {
     res.json({
       status: true,
       msg: "图片上传处理成功!",
-      // lgImg: "baseUrl" + fileFolder + filename + "_720." + format,
       mdImg: baseUrl + fileFolder + filename + "_360." + format,
-      // mdImg: baseUrl + fileFolder + filename + "_360." + format,
     });
   } catch (error) {
     res.json({
@@ -146,7 +140,6 @@ router.post("/slider", upload.single("file"), async function (req, res) {
     res.json({
       status: true,
       msg: "图片上传处理成功!",
-      // src: baseUrl + fileFolder + filename + "_720." + format,
       src: baseUrl + fileFolder + filename + "_720." + format,
     });
   } catch (error) {
@@ -205,7 +198,6 @@ router.post("/editor", upload.single("file"), async function (req, res) {
     res.json({
       errno: 0,
       msg: "图片上传处理成功!",
-      // data: [baseUrl + fileFolder + filename + "." + format],
       data: [baseUrl + fileFolder + filename + "." + format],
     });
   } catch (error) {

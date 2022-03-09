@@ -46,12 +46,13 @@ router.get("/list", async (req, res) => {
   let count = size * (currentPage - 1);
   // 1 = 1 就是必定执行
   let sql = `SELECT * FROM goods WHERE 1 = 1`;
-  if (cateId) {
-    //AND where条件 同时满足
-    //cateId = 0 的时候是全部
-    if (cateId != 0) {
-      sql += ` AND cateId = ${cateId}`;
-    }
+  // if (cateId == 1) {
+  //   //AND where条件 同时满足
+  //   //cateId = 1 的时候是全部
+
+  // }
+  if (cateId != 1) {
+    sql += ` AND cateId = ${cateId}`;
   }
   if (keyword) {
     sql += ` AND name LIKE '%${keyword}%'`;
@@ -94,15 +95,11 @@ router.get("/detail", async (req, res) => {
   //商品信息
   let sql = `SELECT * FROM goods WHERE goodsId = ?;`;
   let info = await db.query(sql, Number(goodsId));
-  //商品的轮播图
-  sql = `SELECT * FROM goods_gallery WHERE goodsId = ?;`;
-  let gallery = await db.query(sql, Number(goodsId));
   res.json({
     errno: 0,
     msg: "success!",
     data: {
       info,
-      gallery,
     },
   });
 });
