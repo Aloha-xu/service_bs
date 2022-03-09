@@ -57,5 +57,3 @@ http://localhost:3003/api/
 http://localhost:3003/admin/
 ```
 
-//注意修改
-goods 的数据库的库存名字改了 其他页面可能需要修改 未修改 inventory

@@ -24,7 +24,6 @@ router.get("/list", async (req, res) => {
     data: null,
     totalPages: 0,
   };
-
   // 如果没有传递参数的情况
   if (JSON.stringify(req.query) === "{}") {
     res.status(400).json({
@@ -33,25 +32,13 @@ router.get("/list", async (req, res) => {
     return;
   }
 
-  // // 验证传递的参数是否正确,否则返回参数不对
-  // if (!req.query.hasOwnProperty('cateId') || !req.query.hasOwnProperty('pageSize') || !req.query.hasOwnProperty('currentPage')) {
-  //   res.status(400).json({
-  //     msg: "传递的参数有误请检查"
-  //   });
-  //   return
-  // }
-
   //拼接SQL
   let size = parseInt(pageSize);
   let count = size * (currentPage - 1);
   // 1 = 1 就是必定执行
   let sql = `SELECT * FROM goods WHERE 1 = 1`;
-  // if (cateId == 1) {
-  //   //AND where条件 同时满足
-  //   //cateId = 1 的时候是全部
 
-  // }
-  if (cateId != 1) {
+  if (cateId != 1 && cateId) {
     sql += ` AND cateId = ${cateId}`;
   }
   if (keyword) {
@@ -63,6 +50,7 @@ router.get("/list", async (req, res) => {
   data.totalPages = Math.ceil(data.count / pageSize);
   //limit参数，第一个参数：从哪儿开始查；第二个参数：查几条
   sql += ` ORDER BY createTime DESC LIMIT ${count},${size};`;
+  console.log(sql);
   data.data = await db.query(sql);
   res.json({
     errno: 0,
