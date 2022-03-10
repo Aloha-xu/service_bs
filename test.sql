@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : xzd
+ Source Server         : bysj
  Source Server Type    : MySQL
- Source Server Version : 80012
+ Source Server Version : 80028
  Source Host           : localhost:3306
  Source Schema         : test
 
  Target Server Type    : MySQL
- Target Server Version : 80012
+ Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 09/03/2022 23:16:25
+ Date: 10/03/2022 15:39:20
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id 唯一标识openid',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号',
@@ -30,7 +30,7 @@ CREATE TABLE `address`  (
   `city` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '市',
   `county` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '县区',
   `street` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细地址',
-  `isDefault` int(11) NULL DEFAULT 1 COMMENT '是否默认',
+  `isDefault` int(0) NULL DEFAULT 1 COMMENT '是否默认',
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细地址',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = Dynamic;
@@ -51,33 +51,33 @@ INSERT INTO `address` VALUES (9, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 'xxx', '1362504
 -- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
-  `adminId` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名 账户 12位',
-  `password` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码 12位 ',
+  `adminId` int(0) NOT NULL AUTO_INCREMENT,
+  `username` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名 账户 12位 不允许修改',
+  `password` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码  md5加密后 32位 ',
   `fullname` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名 5个汉字',
-  `sex` tinyint(4) NOT NULL DEFAULT 0 COMMENT '性别 男0 女1',
+  `sex` tinyint(0) NOT NULL DEFAULT 0 COMMENT '性别 男0 女1',
   `avatar` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '/images/avatar/default.jpg' COMMENT '头像',
   `tel` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号码',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `loginTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '登录时间',
-  `loginCount` int(11) NOT NULL DEFAULT 1 COMMENT '登录次数',
+  `loginCount` int(0) NOT NULL DEFAULT 1 COMMENT '登录次数',
   PRIMARY KEY (`adminId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '123456', '超级管理员', 0, '/images/avatar/218b7fa0-9c80-11ec-9dd2-2bd0ff6e15da.jpeg', '13620427379', '2021-09-14 20:39:31', '2022-03-09 14:15:02', 262);
-INSERT INTO `admin` VALUES (2, 'moz', '123456', '黄小米', 1, 'http://localhost:3003/images/avatar/default.jpg', '13475829262', '2021-09-11 18:21:37', '2022-03-09 09:31:01', 9);
+INSERT INTO `admin` VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', '超级管理员', 0, '/images/avatar/218b7fa0-9c80-11ec-9dd2-2bd0ff6e15da.jpeg', '13620427379', '2021-09-14 20:39:31', '2022-03-10 15:24:14', 268);
+INSERT INTO `admin` VALUES (2, 'moz', 'c33367701511b4f6020ec61ded352059', '黄小米好是', 1, 'http://localhost:3003/images/avatar/97632fa0-a015-11ec-a0b8-c7f0b643fc2f.png', '13475829232', '2021-09-11 18:21:37', '2022-03-10 14:47:07', 13);
 
 -- ----------------------------
 -- Table structure for admin_role
 -- ----------------------------
 DROP TABLE IF EXISTS `admin_role`;
 CREATE TABLE `admin_role`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `adminId` int(11) NULL DEFAULT NULL COMMENT '用户id',
-  `roleId` int(11) NULL DEFAULT NULL COMMENT '角色id',
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `adminId` int(0) NULL DEFAULT NULL COMMENT '用户id',
+  `roleId` int(0) NULL DEFAULT NULL COMMENT '角色id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
 
@@ -92,10 +92,10 @@ INSERT INTO `admin_role` VALUES (2, 2, 2);
 -- ----------------------------
 DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner`  (
-  `bannerId` int(11) NOT NULL AUTO_INCREMENT,
+  `bannerId` int(0) NOT NULL AUTO_INCREMENT,
   `url` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `state` tinyint(4) NOT NULL DEFAULT 1 COMMENT '0 - 下架  1 - 上架',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `state` tinyint(0) NOT NULL DEFAULT 1 COMMENT '0 - 下架  1 - 上架',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`bannerId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -103,7 +103,7 @@ CREATE TABLE `banner`  (
 -- ----------------------------
 -- Records of banner
 -- ----------------------------
-INSERT INTO `banner` VALUES (2, 'http://localhost:3003/images/goods/17fa8f90-9f8b-11ec-b6c3-05ae5cb5c700_360.jpeg', 1, '2022-03-09 09:30:57', '2022-03-09 17:27:11');
+INSERT INTO `banner` VALUES (2, 'http://localhost:3003/images/goods/17fa8f90-9f8b-11ec-b6c3-05ae5cb5c700_360.jpeg', 1, '2022-03-09 09:30:57', '2022-03-10 15:28:40');
 INSERT INTO `banner` VALUES (3, 'http://localhost:3003/images/goods/1ede2bf0-9f8b-11ec-b6c3-05ae5cb5c700_360.jpeg', 1, '2022-03-09 09:30:57', '2022-03-09 17:27:22');
 INSERT INTO `banner` VALUES (4, 'http://localhost:3003/images/goods/24f8fa10-9f8b-11ec-b6c3-05ae5cb5c700_360.jpeg', 1, '2022-03-09 09:30:57', '2022-03-09 17:27:32');
 
@@ -112,24 +112,28 @@ INSERT INTO `banner` VALUES (4, 'http://localhost:3003/images/goods/24f8fa10-9f8
 -- ----------------------------
 DROP TABLE IF EXISTS `cart`;
 CREATE TABLE `cart`  (
-  `cartId` int(11) NOT NULL AUTO_INCREMENT,
+  `cartId` int(0) NOT NULL AUTO_INCREMENT,
   `openid` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id uuid最大36位',
-  `goodsId` int(11) NOT NULL COMMENT '商品id',
-  `goodsNumber` int(11) NOT NULL COMMENT '商品数量',
-  `state` tinyint(4) NOT NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `goodsId` int(0) NOT NULL COMMENT '商品id',
+  `goodsNumber` int(0) NOT NULL COMMENT '商品数量',
+  `state` tinyint(0) NOT NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`cartId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 45 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Fixed;
+
+-- ----------------------------
+-- Records of cart
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for category
 -- ----------------------------
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
-  `cateId` int(11) NOT NULL AUTO_INCREMENT,
+  `cateId` int(0) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
-  `pId` int(11) NOT NULL COMMENT '父级id',
+  `pId` int(0) NOT NULL COMMENT '父级id',
   PRIMARY KEY (`cateId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 144 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = Dynamic;
 
@@ -148,9 +152,9 @@ INSERT INTO `category` VALUES (6, 'SONY', 1);
 -- ----------------------------
 DROP TABLE IF EXISTS `foot_print`;
 CREATE TABLE `foot_print`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
   `openid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `goodsId` int(11) NOT NULL,
+  `goodsId` int(0) NOT NULL,
   PRIMARY KEY (`id`, `openid`, `goodsId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
@@ -185,19 +189,19 @@ INSERT INTO `foot_print` VALUES (38, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 45);
 -- ----------------------------
 DROP TABLE IF EXISTS `goods`;
 CREATE TABLE `goods`  (
-  `goodsId` int(11) NOT NULL AUTO_INCREMENT,
-  `cateId` int(11) NOT NULL COMMENT '分类id',
+  `goodsId` int(0) NOT NULL AUTO_INCREMENT,
+  `cateId` int(0) NOT NULL COMMENT '分类id',
   `name` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品名称',
   `price` decimal(8, 2) NOT NULL COMMENT '商品价格 八位长度 包括小数点后面的两位',
-  `inventory` int(11) NOT NULL COMMENT '库存 ',
+  `inventory` int(0) NOT NULL COMMENT '库存 ',
   `img` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品主图-一张',
   `slider` varchar(600) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品轮播图片-最多6张',
   `detail` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品详情-',
   `freight` decimal(6, 0) NOT NULL DEFAULT 0 COMMENT '商品运费 0-999999',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-  `state` tinyint(4) NOT NULL DEFAULT 1 COMMENT '0下架 1上架',
-  `sellVolume` int(11) NOT NULL DEFAULT 0 COMMENT '已售数量',
+  `state` tinyint(0) NOT NULL DEFAULT 1 COMMENT '0下架 1上架',
+  `sellVolume` int(0) NOT NULL DEFAULT 0 COMMENT '已售数量',
   PRIMARY KEY (`goodsId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = Dynamic;
 
@@ -215,8 +219,8 @@ INSERT INTO `goods` VALUES (53, 5, '小度智能屏Air蓝牙音箱百度官方�
 INSERT INTO `goods` VALUES (54, 4, '【陈小春推荐】索爱无线蓝牙音箱迷你小型音响家用3d环绕重低音炮便携式高音质插卡车载新款智能通用适用华为', 99.00, 100, 'http://localhost:3003/images/goods/3de41470-9e2c-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/402fb220-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/41e5c690-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/43aaa810-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/53b7d160-9ea9-11ec-94ba-812cfdc15bd1_720.png', '<p><img src=\"http://localhost:3003/images/details/46b4b3c0-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/48bcb8c0-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/4a974520-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/4e43ab50-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 9, '2022-03-07 23:36:58', '2022-03-08 14:31:04', 0, 0);
 INSERT INTO `goods` VALUES (41, 5, 'SADA/赛达长条电脑音响台式家用多媒体超重低音炮迷你小型音箱有线笔记本usb影响带麦克风一体喇叭桌面高音质', 89.90, 1000, 'http://localhost:3003/images/goods/66f0b730-9d0d-11ec-a616-016da32fd14f_360.jpeg', 'http://localhost:3003/images/goods/cc8bf4f0-9d0e-11ec-9d3b-1728c8412c9d_720.png,http://localhost:3003/images/goods/cff97d60-9d0e-11ec-9d3b-1728c8412c9d_720.png,http://localhost:3003/images/goods/d31e8b20-9d0e-11ec-9d3b-1728c8412c9d_720.png,http://localhost:3003/images/goods/d5d26080-9d0e-11ec-9d3b-1728c8412c9d_720.png', '<p><img src=\"http://localhost:3003/images/details/5023da80-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/6a616200-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/7c7119e0-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/84e51a40-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/87e8bd50-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 10, '2022-03-06 13:37:45', NULL, 1, 0);
 INSERT INTO `goods` VALUES (42, 4, 'SADA/赛达 电脑音响台式机家用桌面有源音箱超重低音炮高音质笔记本喇叭蓝牙有线2.0连接外放扬声器小型影响', 69.00, 1000, 'http://localhost:3003/images/goods/4bd25a10-9d64-11ec-9981-277f5ffccb87_360.jpeg', 'http://localhost:3003/images/goods/55c53240-9d64-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/58da1360-9d64-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/5b5d89f0-9d64-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/5e484dd0-9d64-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/60a1ce30-9d64-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/637c3e60-9d64-11ec-9981-277f5ffccb87_720.png', '<p><img src=\"http://localhost:3003/images/details/767592f0-9d64-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/7a1d1720-9d64-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/7dc2c690-9d64-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/835af730-9d64-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/8d36c4f0-9d64-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 12, '2022-03-06 23:46:20', NULL, 1, 0);
-INSERT INTO `goods` VALUES (43, 3, 'JBL Boombox2 音乐战神2代无线蓝牙音箱高功率便携户外音响低音炮', 3899.00, 1000, 'http://localhost:3003/images/goods/1e73b540-9d65-11ec-9981-277f5ffccb87_360.png', 'http://localhost:3003/images/goods/21ac9920-9d65-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/240c3400-9d65-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/260e1e80-9d65-11ec-9981-277f5ffccb87_720.png', '<p><img src=\"http://localhost:3003/images/details/2bd30470-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/30662120-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"/images/details/351a8170-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/384645f0-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/3ba109b0-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 10, '2022-03-06 23:51:11', '2022-03-09 14:28:02', 1, 0);
-INSERT INTO `goods` VALUES (44, 3, 'JBL GO3金砖3代无线蓝牙音箱重低音小音响便携式户外迷你低音炮', 399.00, 1000, 'http://localhost:3003/images/goods/5f833960-9e15-11ec-8158-379cd5d38610_360.jpeg', 'http://localhost:3003/images/goods/6211d380-9e15-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/64090fa0-9e15-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/6734fb30-9e15-11ec-8158-379cd5d38610_720.png', '<p><img src=\"http://localhost:3003/images/details/6c233030-9e15-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/6e81b9a0-9e15-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/71011180-9e15-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/742052e0-9e15-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 10, '2022-03-07 20:52:36', NULL, 1, 0);
+INSERT INTO `goods` VALUES (43, 3, 'JBL Boombox2 音乐战神2代无线蓝牙音箱高功率便携户外音响低音炮', 3899.00, 999, 'http://localhost:3003/images/goods/1e73b540-9d65-11ec-9981-277f5ffccb87_360.png', 'http://localhost:3003/images/goods/21ac9920-9d65-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/240c3400-9d65-11ec-9981-277f5ffccb87_720.png,http://localhost:3003/images/goods/260e1e80-9d65-11ec-9981-277f5ffccb87_720.png', '<p><img src=\"http://localhost:3003/images/details/2bd30470-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/30662120-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"/images/details/351a8170-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/384645f0-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/3ba109b0-9d65-11ec-9981-277f5ffccb87.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 10, '2022-03-06 23:51:11', '2022-03-10 15:33:23', 1, 1);
+INSERT INTO `goods` VALUES (44, 3, 'JBL GO3金砖3代无线蓝牙音箱重低音小音响便携式户外迷你低音炮', 399.00, 999, 'http://localhost:3003/images/goods/5f833960-9e15-11ec-8158-379cd5d38610_360.jpeg', 'http://localhost:3003/images/goods/6211d380-9e15-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/64090fa0-9e15-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/6734fb30-9e15-11ec-8158-379cd5d38610_720.png', '<p><img src=\"http://localhost:3003/images/details/6c233030-9e15-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/6e81b9a0-9e15-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/71011180-9e15-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/742052e0-9e15-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 10, '2022-03-07 20:52:36', '2022-03-10 15:33:34', 1, 1);
 INSERT INTO `goods` VALUES (45, 2, '浮洛德 专业舞台音响套装单双18寸同轴户外大型演出婚庆线阵无源大功率全频防水远程HIFI酒吧音箱低音炮设备', 19999.00, 999, 'http://localhost:3003/images/goods/e413d6d0-9e15-11ec-8158-379cd5d38610_360.png', 'http://localhost:3003/images/goods/e7cee300-9e15-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/eb068e60-9e15-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/eca28b20-9e15-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/ef51a590-9e15-11ec-8158-379cd5d38610_720.png', '<p><img src=\"http://localhost:3003/images/details/0da68a10-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/10a746f0-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/133c70c0-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 20:57:03', '2022-03-09 22:57:45', 1, 1);
 
 -- ----------------------------
@@ -224,11 +228,11 @@ INSERT INTO `goods` VALUES (45, 2, '浮洛德 专业舞台音响套装单双18�
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu`  (
-  `menuId` int(11) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
+  `menuId` int(0) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
   `name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称 10个汉族',
-  `pId` int(11) NULL DEFAULT NULL COMMENT '父级id',
+  `pId` int(0) NULL DEFAULT NULL COMMENT '父级id',
   `path` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接url 路由路径',
-  `menuOrder` int(11) NULL DEFAULT NULL COMMENT '显示顺序',
+  `menuOrder` int(0) NULL DEFAULT NULL COMMENT '显示顺序',
   PRIMARY KEY (`menuId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 85 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -250,20 +254,20 @@ INSERT INTO `menu` VALUES (12, '账户信息', 5, '/user/info', 4001);
 INSERT INTO `menu` VALUES (13, '角色权限', 6, '/auth/role', 6001);
 INSERT INTO `menu` VALUES (15, '轮播图管理', 1, NULL, 1000);
 INSERT INTO `menu` VALUES (16, '轮播图列表', 15, '/banner/list', 1001);
-INSERT INTO `menu` VALUES (83, '菜单管理', 1, '', 7000);
-INSERT INTO `menu` VALUES (84, '菜单分类', 83, '/auth/menu', 7001);
+INSERT INTO `menu` VALUES (17, '菜单管理', 1, '', 7000);
+INSERT INTO `menu` VALUES (18, '菜单分类', 17, '/auth/menu', 7001);
 
 -- ----------------------------
 -- Table structure for order_goods
 -- ----------------------------
 DROP TABLE IF EXISTS `order_goods`;
 CREATE TABLE `order_goods`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '无意义 就是唯一标识',
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '无意义 就是唯一标识',
   `orderId` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单id',
-  `goodsId` int(11) NULL DEFAULT NULL COMMENT '商品id',
-  `goodsNumber` int(11) NULL DEFAULT NULL COMMENT '商品数量',
+  `goodsId` int(0) NULL DEFAULT NULL COMMENT '商品id',
+  `goodsNumber` int(0) NULL DEFAULT NULL COMMENT '商品数量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 57 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 60 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of order_goods
@@ -282,14 +286,16 @@ INSERT INTO `order_goods` VALUES (56, 'b2a52be0-9f72-11ec-8fb7-77418b702cbf', 53
 INSERT INTO `order_goods` VALUES (57, '478cf8f0-9fb9-11ec-8d3b-5f800b779ddd', 45, 1);
 INSERT INTO `order_goods` VALUES (58, '478cf8f0-9fb9-11ec-8d3b-5f800b779ddd', 53, 1);
 INSERT INTO `order_goods` VALUES (59, '736d0220-9fba-11ec-8d3b-5f800b779ddd', 46, 1);
+INSERT INTO `order_goods` VALUES (60, '5de96580-a044-11ec-87d6-673f3e8d8689', 43, 1);
+INSERT INTO `order_goods` VALUES (61, '64569960-a044-11ec-87d6-673f3e8d8689', 44, 1);
 
 -- ----------------------------
 -- Table structure for order_status
 -- ----------------------------
 DROP TABLE IF EXISTS `order_status`;
 CREATE TABLE `order_status`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `orderState` tinyint(4) NOT NULL COMMENT '带符号的范围是-128到127',
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `orderState` tinyint(0) NOT NULL COMMENT '带符号的范围是-128到127',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `text` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -313,28 +319,28 @@ INSERT INTO `order_status` VALUES (9, 8, 'GOODS_RETURNED_FAIL', '退货失败');
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '无意义 唯一标识',
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '无意义 唯一标识',
   `orderId` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'uuid生成',
   `openid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间 ',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间 ',
   `payTime` timestamp(0) NULL DEFAULT NULL COMMENT '支付时间',
   `shipTime` timestamp(0) NULL DEFAULT NULL COMMENT '发货时间 后台填写',
   `receivedTime` timestamp(0) NULL DEFAULT NULL COMMENT '收货时间  只可以是用户手动点击确认收货的那个时间',
   `finishTime` timestamp(0) NULL DEFAULT NULL COMMENT '交易完成时间 就是你点击完确认收货的时间，你不点击确认收货就快递发货时间加15天',
   `closeTime` timestamp(0) NULL DEFAULT NULL COMMENT '交易关闭时间 就是买家取消订单/卖家取消订单 / 整个流程结束了 / 买家超过3天未付款 这个情况先不写',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间  ',
-  `addressId` int(11) NULL DEFAULT NULL COMMENT '快递地址id',
+  `addressId` int(0) NULL DEFAULT NULL COMMENT '快递地址id',
   `freightPrice` decimal(6, 0) NULL DEFAULT NULL COMMENT '邮费',
-  `shipName` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '快递公司',
-  `shipNumber` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '快递单号',
-  `orderState` tinyint(4) NULL DEFAULT 0 COMMENT '状态字典 关联状态表',
-  `state` tinyint(4) NULL DEFAULT 1 COMMENT '1-正常，0-删除',
-  `refundState` tinyint(4) NULL DEFAULT 0 COMMENT '退款状态 0 否 1 退款',
+  `shipName` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '快递公司 四个字的公司',
+  `shipNumber` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '快递单号 最长的是20位',
+  `orderState` tinyint(0) NULL DEFAULT 0 COMMENT '状态字典 关联状态表',
+  `state` tinyint(0) NULL DEFAULT 1 COMMENT '1-正常，0-删除',
+  `refundState` tinyint(0) NULL DEFAULT 0 COMMENT '退款状态 0 否 1 退款',
   `note` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   `goodsPrices` decimal(8, 2) NULL DEFAULT NULL COMMENT '商品价格',
   `refundReason` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '退款理由',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 53 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
@@ -342,22 +348,24 @@ CREATE TABLE `orders`  (
 INSERT INTO `orders` VALUES (43, 'f2db15c0-9f5a-11ec-ad32-65dc077d7904', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 11:42:31', '2022-03-09 11:42:32', NULL, NULL, NULL, NULL, '2022-03-09 11:42:32', 6, 0, NULL, NULL, 1, 1, 0, '', 299.00, NULL);
 INSERT INTO `orders` VALUES (44, 'fe9aacc0-9f5c-11ec-a563-838d9e0e85af', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 11:57:09', '2022-03-09 11:57:10', NULL, NULL, NULL, NULL, '2022-03-09 11:57:10', 6, 0, NULL, NULL, 1, 1, 0, '', 358.00, NULL);
 INSERT INTO `orders` VALUES (45, '02c56ab0-9f5d-11ec-a563-838d9e0e85af', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 11:57:16', '2022-03-09 23:05:28', NULL, NULL, NULL, NULL, '2022-03-09 23:05:28', 6, 0, NULL, NULL, 1, 1, 0, '', 1499.00, NULL);
-INSERT INTO `orders` VALUES (46, '2d7c52a0-9f5d-11ec-a563-838d9e0e85af', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 11:58:28', '2022-03-09 11:58:29', NULL, NULL, NULL, NULL, '2022-03-09 11:58:29', 6, 0, NULL, NULL, 1, 1, 0, '', 299.00, NULL);
-INSERT INTO `orders` VALUES (47, '3904e600-9f5d-11ec-a563-838d9e0e85af', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 11:58:47', '2022-03-09 11:58:49', NULL, NULL, NULL, NULL, '2022-03-09 11:58:49', 6, 0, NULL, NULL, 1, 1, 0, '', 4499.00, NULL);
+INSERT INTO `orders` VALUES (46, '2d7c52a0-9f5d-11ec-a563-838d9e0e85af', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 11:58:28', '2022-03-09 11:58:29', NULL, NULL, NULL, NULL, '2022-03-10 09:49:31', 6, 0, NULL, NULL, 6, 1, 0, '', 299.00, NULL);
+INSERT INTO `orders` VALUES (47, '3904e600-9f5d-11ec-a563-838d9e0e85af', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 11:58:47', '2022-03-09 11:58:49', '2022-03-10 09:43:27', NULL, NULL, NULL, '2022-03-10 09:54:34', 6, 0, '韵达快递', '123456789', 6, 1, 0, '', 4499.00, NULL);
 INSERT INTO `orders` VALUES (48, '6115c0f0-9f6d-11ec-9fdf-f15ea67a406b', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 13:54:27', '2022-03-09 13:54:28', NULL, NULL, NULL, NULL, '2022-03-09 14:13:03', 6, 0, NULL, NULL, 4, 1, 1, '', 13497.00, '1111');
 INSERT INTO `orders` VALUES (49, '4f032610-9f71-11ec-a081-1f362a4853b2', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 14:22:34', NULL, NULL, NULL, NULL, '2022-03-09 14:23:01', '2022-03-09 14:23:01', 6, 0, NULL, NULL, 6, 1, 0, '', 8998.00, NULL);
-INSERT INTO `orders` VALUES (50, '0c9ce620-9f72-11ec-8fb7-77418b702cbf', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 14:27:52', NULL, NULL, NULL, NULL, '2022-03-09 14:28:02', '2022-03-09 14:28:02', 6, 0, NULL, NULL, 6, 1, 0, '', 3899.00, NULL);
+INSERT INTO `orders` VALUES (50, '0c9ce620-9f72-11ec-8fb7-77418b702cbf', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 14:27:52', NULL, NULL, NULL, NULL, '2022-03-09 14:28:02', '2022-03-10 09:55:18', 6, 0, 'null', 'null', 6, 1, 0, '111', 3899.00, NULL);
 INSERT INTO `orders` VALUES (51, '670b1370-9f72-11ec-8fb7-77418b702cbf', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 14:30:24', NULL, NULL, NULL, NULL, '2022-03-09 14:31:35', '2022-03-09 14:31:35', 6, 0, NULL, NULL, 6, 1, 0, '', 269.00, NULL);
 INSERT INTO `orders` VALUES (52, 'b2a52be0-9f72-11ec-8fb7-77418b702cbf', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 14:32:31', '2022-03-09 14:32:32', NULL, NULL, NULL, NULL, '2022-03-09 14:43:57', 6, 0, NULL, NULL, 5, 1, 1, '', 269.00, '1321321313');
-INSERT INTO `orders` VALUES (53, '478cf8f0-9fb9-11ec-8d3b-5f800b779ddd', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 22:57:45', '2022-03-09 23:05:15', NULL, NULL, NULL, NULL, '2022-03-09 23:05:15', 5, 0, NULL, NULL, 1, 1, 0, 'test', 20268.00, NULL);
-INSERT INTO `orders` VALUES (54, '736d0220-9fba-11ec-8d3b-5f800b779ddd', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 23:06:09', NULL, NULL, NULL, NULL, NULL, NULL, 6, 0, NULL, NULL, 0, 1, 0, '', 19998.00, NULL);
+INSERT INTO `orders` VALUES (53, '478cf8f0-9fb9-11ec-8d3b-5f800b779ddd', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 22:57:45', '2022-03-09 23:05:15', '2022-03-10 09:43:00', NULL, NULL, NULL, '2022-03-10 09:43:00', 5, 0, '圆通', '13246789987', 2, 1, 0, 'test', 20268.00, NULL);
+INSERT INTO `orders` VALUES (54, '736d0220-9fba-11ec-8d3b-5f800b779ddd', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 23:06:09', NULL, NULL, NULL, NULL, NULL, '2022-03-10 09:52:53', 6, 20, 'null', 'null', 0, 1, 0, '修改了邮费', 19998.00, NULL);
+INSERT INTO `orders` VALUES (55, '5de96580-a044-11ec-87d6-673f3e8d8689', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-10 15:33:23', '2022-03-10 15:33:25', NULL, NULL, NULL, NULL, '2022-03-10 15:33:25', 4, 0, NULL, NULL, 1, 1, 0, '13465', 3899.00, NULL);
+INSERT INTO `orders` VALUES (56, '64569960-a044-11ec-87d6-673f3e8d8689', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-10 15:33:34', '2022-03-10 15:33:47', NULL, NULL, NULL, NULL, '2022-03-10 15:33:47', 6, 0, NULL, NULL, 1, 1, 0, '', 399.00, NULL);
 
 -- ----------------------------
 -- Table structure for role
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`  (
-  `roleId` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色id',
+  `roleId` int(0) NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `roleName` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称 5个汉字',
   PRIMARY KEY (`roleId`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -374,9 +382,9 @@ INSERT INTO `role` VALUES (3, '运营人员');
 -- ----------------------------
 DROP TABLE IF EXISTS `role_menu`;
 CREATE TABLE `role_menu`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `roleId` int(11) NULL DEFAULT NULL COMMENT '角色id',
-  `menuId` int(11) NULL DEFAULT NULL COMMENT '权限id',
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `roleId` int(0) NULL DEFAULT NULL COMMENT '角色id',
+  `menuId` int(0) NULL DEFAULT NULL COMMENT '权限id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 144 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
 
@@ -400,40 +408,34 @@ INSERT INTO `role_menu` VALUES (27, 2, 2);
 INSERT INTO `role_menu` VALUES (30, 2, 9);
 INSERT INTO `role_menu` VALUES (29, 2, 8);
 INSERT INTO `role_menu` VALUES (28, 2, 7);
-INSERT INTO `role_menu` VALUES (21, 2, 3);
-INSERT INTO `role_menu` VALUES (22, 2, 10);
+INSERT INTO `role_menu` VALUES (4, 2, 18);
 INSERT INTO `role_menu` VALUES (23, 2, 4);
 INSERT INTO `role_menu` VALUES (24, 2, 11);
 INSERT INTO `role_menu` VALUES (25, 2, 5);
 INSERT INTO `role_menu` VALUES (26, 2, 12);
-INSERT INTO `role_menu` VALUES (43, 4, 2);
-INSERT INTO `role_menu` VALUES (44, 4, 7);
-INSERT INTO `role_menu` VALUES (45, 4, 8);
-INSERT INTO `role_menu` VALUES (46, 4, 9);
-INSERT INTO `role_menu` VALUES (47, 3, 2);
-INSERT INTO `role_menu` VALUES (48, 3, 7);
-INSERT INTO `role_menu` VALUES (51, 3, 8);
-INSERT INTO `role_menu` VALUES (50, 3, 9);
-INSERT INTO `role_menu` VALUES (52, 3, 4);
-INSERT INTO `role_menu` VALUES (53, 3, 11);
-INSERT INTO `role_menu` VALUES (54, 3, 5);
-INSERT INTO `role_menu` VALUES (55, 3, 12);
-INSERT INTO `role_menu` VALUES (56, 4, 5);
-INSERT INTO `role_menu` VALUES (57, 4, 12);
-INSERT INTO `role_menu` VALUES (99, 1, 60);
+INSERT INTO `role_menu` VALUES (165, 3, 12);
+INSERT INTO `role_menu` VALUES (164, 3, 5);
+INSERT INTO `role_menu` VALUES (162, 3, 4);
+INSERT INTO `role_menu` VALUES (163, 3, 11);
+INSERT INTO `role_menu` VALUES (161, 3, 9);
+INSERT INTO `role_menu` VALUES (160, 3, 8);
+INSERT INTO `role_menu` VALUES (159, 3, 7);
+INSERT INTO `role_menu` VALUES (158, 3, 2);
+INSERT INTO `role_menu` VALUES (1, 1, 17);
 INSERT INTO `role_menu` VALUES (142, 1, 4);
 INSERT INTO `role_menu` VALUES (143, 1, 11);
-INSERT INTO `role_menu` VALUES (95, 1, 56);
-INSERT INTO `role_menu` VALUES (133, 1, 84);
+INSERT INTO `role_menu` VALUES (2, 1, 18);
 INSERT INTO `role_menu` VALUES (135, 2, 16);
-INSERT INTO `role_menu` VALUES (132, 1, 83);
+INSERT INTO `role_menu` VALUES (3, 2, 17);
+INSERT INTO `role_menu` VALUES (154, 3, 15);
+INSERT INTO `role_menu` VALUES (155, 3, 16);
 
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(0) NOT NULL AUTO_INCREMENT,
   `nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
   `gender` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '男' COMMENT '性别 0：未知、1：男、2：女',
   `avatarUrl` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT './images/avatar/default.jpg' COMMENT '头像',
