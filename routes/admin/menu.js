@@ -54,6 +54,7 @@ router.post("/del", async (req, res) => {
     });
     return;
   }
+  //先删除菜单再删除role_menu的关联行
   sql = `DELETE FROM MENU WHERE menuId = ?;DELETE FROM role_menu WHERE menuId = ?`;
   results = await db.query(sql, [menuId, menuId]);
   if (!results[1].affectedRows) {

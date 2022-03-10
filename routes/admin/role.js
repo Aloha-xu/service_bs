@@ -36,8 +36,8 @@ router.post("/add", async (req, res) => {
  */
 router.post("/del", async (req, res) => {
   let { id } = req.body;
-  let sql = `DELETE FROM role WHERE roleId = ?;DELETE FROM admin_role WHERE roleId = ?`;
-  let results = await db.query(sql, [id, id]);
+  let sql = `DELETE FROM role WHERE roleId = ?;DELETE FROM admin_role WHERE roleId = ?;DELETE FROM role_menu WHERE roleId = ?`;
+  let results = await db.query(sql, [id, id, id]);
   if (results.affectedRows <= 0) {
     res.json({
       status: false,
