@@ -17,12 +17,12 @@ router.post("/list", async (req, res) => {
   let size = parseInt(pageSize);
   let count = size * (pageIndex - 1);
   // 查询所有订单
-  let sql = `SELECT o.orderId, DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.refundReason , o.freightPrice , os.orderState As code FROM orders o JOIN order_status os ON o.orderState = os.orderState WHERE 1 = 1 ORDER BY o.createTime DESC LIMIT ${size} OFFSET ${count}`;
+  let sql = `SELECT SQL_CALC_FOUND_ROWS *, o.orderId, DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.refundReason , o.freightPrice , os.orderState As code FROM orders o JOIN order_status os ON o.orderState = os.orderState WHERE 1 = 1 ORDER BY o.createTime DESC LIMIT ${count},${size};SELECT FOUND_ROWS() as total;`;
   // 根据订单状态查询
   if (status != 7) {
-    sql = `SELECT o.orderId, DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code , o.refundReason
+    sql = `SELECT SQL_CALC_FOUND_ROWS *, o.orderId, DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') AS createTime, o.goodsPrices, os.text AS status , o.freightPrice , os.orderState As code , o.refundReason
 	  FROM orders o JOIN order_status os ON o.orderState = os.orderState
-	  WHERE 1 = 1 AND o.orderState = ${status} ORDER BY o.createTime DESC LIMIT ${size} OFFSET ${count}`;
+	  WHERE 1 = 1 AND o.orderState = ${status} ORDER BY o.createTime DESC LIMIT ${count},${size};SELECT FOUND_ROWS() as total;`;
   }
   let orders = await db.query(sql);
 
@@ -36,7 +36,7 @@ router.post("/list", async (req, res) => {
   }
 
   let goods = await db.query(sql);
-  orders.forEach((order) => {
+  orders[0].forEach((order) => {
     let goodscount = 0;
     order.goodsList = goods.filter((item) => {
       if (order.orderId == item.orderId) {
@@ -50,7 +50,8 @@ router.post("/list", async (req, res) => {
   res.json({
     status: true,
     msg: "success!",
-    data: orders,
+    data: orders[0],
+    total: orders[1][0].total,
     errno: 0,
   });
 });
