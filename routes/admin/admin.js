@@ -189,8 +189,6 @@ router.post("/info", async (req, res) => {
 /**
  * @api /api/admin/update 更新管理员个人资料
  * @apiDescription 只有超级管理员才有权限修改用户角色，普通管理员无权限更改角色。
- * @apiName UpdateInfo
- * @apiGroup admin User
  * @apiPermission 超级管理员
  *
  * @apiParam {Number} id 账户id.
@@ -199,23 +197,21 @@ router.post("/info", async (req, res) => {
  * @apiParam {String} avatar 头像.
  * @apiParam { String } tel 手机号码.
  * @apiParam { String } role 账户角色id.
+ * @apiParam { String } password 账户角色password.  md5加密
  *
- * @apiSampleRequest /api/admin
+ *
+ * 疑问 我传了参数id=''  这样node接收到的是undefined 还是''？？？？
+ *   是undefiend
  */
 router.post("/update", async (req, res) => {
-  let { adminId, fullname, sex, avatar, tel, role } = req.body;
-  let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ? WHERE adminId = ?;
-    UPDATE admin_role SET roleId = ? WHERE adminId = ?`;
-  let results = await db.query(sql, [
-    fullname,
-    sex,
-    avatar,
-    tel,
-    adminId,
-    role,
-    adminId,
-  ]);
-  if (!results.length) {
+  let { adminId, fullname, sex, avatar, tel, role, password } = req.body;
+  console.log(adminId, fullname, sex, avatar, tel, role, password);
+  let sql = `UPDATE admin SET fullname = '${fullname}',sex = ${sex},avatar = '${avatar}',tel = '${tel}' WHERE adminId = ${adminId};UPDATE admin_role SET roleId = ${role} WHERE adminId = ${adminId}`;
+  if (password) {
+    sql = `UPDATE admin SET password = '${password}' WHERE adminId = ${adminId}`;
+  }
+  let results = await db.query(sql);
+  if (results.affectedRows <= 0) {
     res.json({
       status: false,
       msg: "获取失败！",
@@ -241,9 +237,12 @@ router.post("/update", async (req, res) => {
  */
 router.post("/account", async (req, res) => {
   let { id } = req.user;
-  let { fullname, sex, avatar, tel } = req.body;
-  let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ? WHERE adminId = ?`;
-  let results = await db.query(sql, [fullname, sex, avatar, tel, id]);
+  let { fullname, sex, avatar, tel, password } = req.body;
+  let sql = `UPDATE admin SET fullname = '${fullname}',sex = ${sex},avatar = '${avatar}',tel = '${tel}' WHERE adminId = ${id}`;
+  if (password) {
+    sql = `UPDATE admin SET password = '${password}' WHERE adminId = ${id}`;
+  }
+  let results = await db.query(sql);
   if (!results.affectedRows) {
     res.json({
       status: false,
