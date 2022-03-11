@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 10/03/2022 15:39:20
+ Date: 11/03/2022 10:38:52
 */
 
 SET NAMES utf8mb4;
@@ -98,7 +98,7 @@ CREATE TABLE `banner`  (
   `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`bannerId`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of banner
@@ -120,11 +120,12 @@ CREATE TABLE `cart`  (
   `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`cartId`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 45 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of cart
 -- ----------------------------
+INSERT INTO `cart` VALUES (48, 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', 51, 1, 1, '2022-03-11 10:26:25', NULL);
 
 -- ----------------------------
 -- Table structure for category
@@ -135,7 +136,7 @@ CREATE TABLE `category`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `pId` int(0) NOT NULL COMMENT '父级id',
   PRIMARY KEY (`cateId`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 144 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 145 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of category
@@ -208,13 +209,13 @@ CREATE TABLE `goods`  (
 -- ----------------------------
 -- Records of goods
 -- ----------------------------
-INSERT INTO `goods` VALUES (46, 2, '专业线阵音响 单双15寸舞台演出大功率音响套装 婚庆落地无源音箱', 19998.00, 99, 'http://localhost:3003/images/goods/73743ef0-9e16-11ec-8158-379cd5d38610_360.png', 'http://localhost:3003/images/goods/75954a30-9e16-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/796787e0-9e16-11ec-8158-379cd5d38610_720.png', '<p><img src=\"http://localhost:3003/images/details/80c27720-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/82f1b330-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/8500e420-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/88204c90-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 21:00:17', '2022-03-09 23:06:09', 1, 1);
+INSERT INTO `goods` VALUES (46, 2, '专业线阵音响 单双15寸舞台演出大功率音响套装 婚庆落地无源音箱', 19998.00, 100, 'http://localhost:3003/images/goods/73743ef0-9e16-11ec-8158-379cd5d38610_360.png', 'http://localhost:3003/images/goods/75954a30-9e16-11ec-8158-379cd5d38610_720.png,http://localhost:3003/images/goods/796787e0-9e16-11ec-8158-379cd5d38610_720.png', '<p><img src=\"http://localhost:3003/images/details/80c27720-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/82f1b330-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/8500e420-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/88204c90-9e16-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 21:00:17', '2022-03-11 10:07:06', 1, 0);
 INSERT INTO `goods` VALUES (47, 4, '李佳埼推荐 蓝牙音箱小音响超重低音炮迷你无线家用小型高端户外大音量3d客厅环绕高音质手机便携式新款车载', 59.00, 999, 'http://localhost:3003/images/goods/16b79850-9e17-11ec-8158-379cd5d38610_360.png', 'http://localhost:3003/images/goods/19d68b90-9e17-11ec-8158-379cd5d38610_720.png', '<p><img src=\"http://localhost:3003/images/details/2390eea0-9e17-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/25e39130-9e17-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/291ee610-9e17-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/2b0950f0-9e17-11ec-8158-379cd5d38610.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 21:04:57', '2022-03-09 11:57:09', 1, 0);
 INSERT INTO `goods` VALUES (48, 6, 'Sony/索尼 HT-A9 家庭影院 7.1.4声道 360空间声场杜比全景声家影', 1499.00, 999, 'http://localhost:3003/images/goods/02036170-9e24-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/04608b50-9e24-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/08fea480-9e24-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/0c69bbf0-9e24-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/13072790-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/15ac08d0-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/18ffeec0-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/1b9f2ab0-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 22:37:27', '2022-03-09 11:57:16', 1, 0);
 INSERT INTO `goods` VALUES (49, 6, '日本直邮Sony索尼「S-Master」搭载音响CMT-SBT 收音蓝牙组合音响', 2619.00, 1000, 'http://localhost:3003/images/goods/e1a3ea70-9e24-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/e5ccfab0-9e24-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/e9f8f120-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/ed0fa700-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/ef7905e0-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/f2c8f430-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 22:43:29', NULL, 1, 0);
 INSERT INTO `goods` VALUES (50, 6, 'Sony/索尼 SRS-RA5000 旗舰级高解析度蓝牙音箱 无线音箱', 4499.00, 994, 'http://localhost:3003/images/goods/29b59f70-9e25-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/4fdbdbb0-9e25-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/52af1ff0-9e25-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/5826d040-9e25-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/5b959130-9e25-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/5e53ede0-9e25-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/6064f390-9e25-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 22:46:32', '2022-03-09 14:22:34', 1, 5);
 INSERT INTO `goods` VALUES (51, 5, '天猫精灵X5智能音箱音响蓝牙闹钟早教机语音声控ai机器人送礼', 299.00, 1000, 'http://localhost:3003/images/goods/02403f30-9e2b-11ec-a481-f99b1b5f7de6_360.jpeg', 'http://localhost:3003/images/goods/046ae760-9e2b-11ec-a481-f99b1b5f7de6_720.jpeg', '<p><img src=\"http://localhost:3003/images/details/09305eb0-9e2b-11ec-a481-f99b1b5f7de6.jpeg\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/40cd6e30-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/46f75780-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/49303080-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 23:28:51', NULL, 1, 0);
-INSERT INTO `goods` VALUES (52, 5, '华为蓝牙音箱智能音响家用高音质低音炮无线wifi蓝牙小型迷你ai2', 299.00, 996, 'http://localhost:3003/images/goods/863782d0-9e2b-11ec-a481-f99b1b5f7de6_360.jpeg', 'http://localhost:3003/images/goods/87a591c0-9e2b-11ec-a481-f99b1b5f7de6_720.jpeg,http://localhost:3003/images/goods/89728990-9e2b-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/8d8a82d0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/905143f0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/93e232e0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/968ba800-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/983fc0a0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 23:31:03', '2022-03-09 11:58:28', 1, 0);
+INSERT INTO `goods` VALUES (52, 5, '华为蓝牙音箱智能音响家用高音质低音炮无线wifi蓝牙小型迷你ai2', 299.00, 995, 'http://localhost:3003/images/goods/863782d0-9e2b-11ec-a481-f99b1b5f7de6_360.jpeg', 'http://localhost:3003/images/goods/87a591c0-9e2b-11ec-a481-f99b1b5f7de6_720.jpeg,http://localhost:3003/images/goods/89728990-9e2b-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/8d8a82d0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/905143f0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/93e232e0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/968ba800-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/983fc0a0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 23:31:03', '2022-03-11 10:15:00', 1, 1);
 INSERT INTO `goods` VALUES (53, 5, '小度智能屏Air蓝牙音箱百度官方音响5.45英寸向往的生活送礼包邮', 269.00, 999, 'http://localhost:3003/images/goods/b791c9d0-9e2b-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/bb235500-9e2b-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/bea4daa0-9e2b-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/c118e7e0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/c4697270-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/c843c670-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 23:32:29', '2022-03-09 22:57:45', 1, 1);
 INSERT INTO `goods` VALUES (54, 4, '【陈小春推荐】索爱无线蓝牙音箱迷你小型音响家用3d环绕重低音炮便携式高音质插卡车载新款智能通用适用华为', 99.00, 100, 'http://localhost:3003/images/goods/3de41470-9e2c-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/402fb220-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/41e5c690-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/43aaa810-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/53b7d160-9ea9-11ec-94ba-812cfdc15bd1_720.png', '<p><img src=\"http://localhost:3003/images/details/46b4b3c0-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/48bcb8c0-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/4a974520-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/4e43ab50-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 9, '2022-03-07 23:36:58', '2022-03-08 14:31:04', 0, 0);
 INSERT INTO `goods` VALUES (41, 5, 'SADA/赛达长条电脑音响台式家用多媒体超重低音炮迷你小型音箱有线笔记本usb影响带麦克风一体喇叭桌面高音质', 89.90, 1000, 'http://localhost:3003/images/goods/66f0b730-9d0d-11ec-a616-016da32fd14f_360.jpeg', 'http://localhost:3003/images/goods/cc8bf4f0-9d0e-11ec-9d3b-1728c8412c9d_720.png,http://localhost:3003/images/goods/cff97d60-9d0e-11ec-9d3b-1728c8412c9d_720.png,http://localhost:3003/images/goods/d31e8b20-9d0e-11ec-9d3b-1728c8412c9d_720.png,http://localhost:3003/images/goods/d5d26080-9d0e-11ec-9d3b-1728c8412c9d_720.png', '<p><img src=\"http://localhost:3003/images/details/5023da80-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/6a616200-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/7c7119e0-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/84e51a40-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/87e8bd50-9d0f-11ec-9d3b-1728c8412c9d.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 10, '2022-03-06 13:37:45', NULL, 1, 0);
@@ -267,7 +268,7 @@ CREATE TABLE `order_goods`  (
   `goodsId` int(0) NULL DEFAULT NULL COMMENT '商品id',
   `goodsNumber` int(0) NULL DEFAULT NULL COMMENT '商品数量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 60 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 63 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of order_goods
@@ -288,6 +289,7 @@ INSERT INTO `order_goods` VALUES (58, '478cf8f0-9fb9-11ec-8d3b-5f800b779ddd', 53
 INSERT INTO `order_goods` VALUES (59, '736d0220-9fba-11ec-8d3b-5f800b779ddd', 46, 1);
 INSERT INTO `order_goods` VALUES (60, '5de96580-a044-11ec-87d6-673f3e8d8689', 43, 1);
 INSERT INTO `order_goods` VALUES (61, '64569960-a044-11ec-87d6-673f3e8d8689', 44, 1);
+INSERT INTO `order_goods` VALUES (62, '0df10db0-a0e1-11ec-907d-fbbe06c18ce2', 52, 1);
 
 -- ----------------------------
 -- Table structure for order_status
@@ -340,7 +342,7 @@ CREATE TABLE `orders`  (
   `goodsPrices` decimal(8, 2) NULL DEFAULT NULL COMMENT '商品价格',
   `refundReason` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '退款理由',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 58 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of orders
@@ -356,9 +358,10 @@ INSERT INTO `orders` VALUES (50, '0c9ce620-9f72-11ec-8fb7-77418b702cbf', 'oGDr80
 INSERT INTO `orders` VALUES (51, '670b1370-9f72-11ec-8fb7-77418b702cbf', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 14:30:24', NULL, NULL, NULL, NULL, '2022-03-09 14:31:35', '2022-03-09 14:31:35', 6, 0, NULL, NULL, 6, 1, 0, '', 269.00, NULL);
 INSERT INTO `orders` VALUES (52, 'b2a52be0-9f72-11ec-8fb7-77418b702cbf', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 14:32:31', '2022-03-09 14:32:32', NULL, NULL, NULL, NULL, '2022-03-09 14:43:57', 6, 0, NULL, NULL, 5, 1, 1, '', 269.00, '1321321313');
 INSERT INTO `orders` VALUES (53, '478cf8f0-9fb9-11ec-8d3b-5f800b779ddd', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 22:57:45', '2022-03-09 23:05:15', '2022-03-10 09:43:00', NULL, NULL, NULL, '2022-03-10 09:43:00', 5, 0, '圆通', '13246789987', 2, 1, 0, 'test', 20268.00, NULL);
-INSERT INTO `orders` VALUES (54, '736d0220-9fba-11ec-8d3b-5f800b779ddd', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 23:06:09', NULL, NULL, NULL, NULL, NULL, '2022-03-10 09:52:53', 6, 20, 'null', 'null', 0, 1, 0, '修改了邮费', 19998.00, NULL);
+INSERT INTO `orders` VALUES (54, '736d0220-9fba-11ec-8d3b-5f800b779ddd', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-09 23:06:09', NULL, NULL, NULL, NULL, '2022-03-11 10:07:06', '2022-03-11 10:07:06', 6, 20, 'null', 'null', 6, 1, 0, '修改了邮费', 19998.00, NULL);
 INSERT INTO `orders` VALUES (55, '5de96580-a044-11ec-87d6-673f3e8d8689', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-10 15:33:23', '2022-03-10 15:33:25', NULL, NULL, NULL, NULL, '2022-03-10 15:33:25', 4, 0, NULL, NULL, 1, 1, 0, '13465', 3899.00, NULL);
 INSERT INTO `orders` VALUES (56, '64569960-a044-11ec-87d6-673f3e8d8689', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-10 15:33:34', '2022-03-10 15:33:47', NULL, NULL, NULL, NULL, '2022-03-10 15:33:47', 6, 0, NULL, NULL, 1, 1, 0, '', 399.00, NULL);
+INSERT INTO `orders` VALUES (57, '0df10db0-a0e1-11ec-907d-fbbe06c18ce2', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-11 10:15:00', NULL, NULL, NULL, NULL, NULL, NULL, 6, 0, NULL, NULL, 0, 1, 0, '', 299.00, NULL);
 
 -- ----------------------------
 -- Table structure for role
@@ -368,7 +371,7 @@ CREATE TABLE `role`  (
   `roleId` int(0) NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `roleName` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称 5个汉字',
   PRIMARY KEY (`roleId`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
@@ -386,7 +389,7 @@ CREATE TABLE `role_menu`  (
   `roleId` int(0) NULL DEFAULT NULL COMMENT '角色id',
   `menuId` int(0) NULL DEFAULT NULL COMMENT '权限id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 144 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 188 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of role_menu
