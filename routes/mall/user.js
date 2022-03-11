@@ -41,7 +41,6 @@ router.post("/token", function (req, res) {
       return;
     }
     let data = JSON.parse(body);
-    console.log(data);
     // 微信api返回错误
     if (data.errcode) {
       res.json({

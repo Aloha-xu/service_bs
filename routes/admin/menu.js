@@ -19,7 +19,6 @@ router.post("/add", async (req, res) => {
   //给超级管理员权限
   sql = `INSERT INTO role_menu (roleId,menuId) VALUES (1,?)`;
   let results = await db.query(sql, insertId);
-  console.log(results.affectedRows);
   if (!results.affectedRows) {
     res.json({
       status: false,

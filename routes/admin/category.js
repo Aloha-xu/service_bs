@@ -83,7 +83,6 @@ router.post("/del", async (req, res) => {
  */
 router.post("/updata", async (req, res) => {
   let { name, cateId } = req.body;
-  console.log(cateId);
   let sql = `UPDATE category SET name = ?  WHERE cateId = ? `;
   let results = await db.query(sql, [name, cateId]);
   if (results.affectedRows <= 0) {

@@ -292,8 +292,6 @@ router.post("/updataState", async (req, res) => {
 
   sql += ` WHERE orderId = ? AND openid = ?`;
 
-  console.log(sql);
-
   let results = await db.query(sql, [orderState, orderId, openid]);
   if (results.affectedRows <= 0) {
     res.json({
@@ -454,8 +452,6 @@ router.post("/refund", async (req, res) => {
   let { openid } = req.user;
 
   let sql = `UPDATE orders SET orderState = 4 , refundState = 1 , refundReason = ? WHERE orderId = ? AND openid = ?`;
-
-  console.log(sql);
 
   let results = await db.query(sql, [refundReason, orderId, openid]);
   if (results.affectedRows <= 0) {

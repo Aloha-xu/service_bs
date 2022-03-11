@@ -12,7 +12,6 @@ router.post("/add", async (req, res) => {
   //处理重复插入
   let sql = `SELECT goodsId from foot_print WHERE openid = '${openid}'`;
   let goodsIds = await db.query(sql);
-  console.log(JSON.parse(JSON.stringify(goodsIds)));
   //找到一个重复就返回ture
   let flag = goodsIds.some((item) => {
     if (item.goodsId == id) {
