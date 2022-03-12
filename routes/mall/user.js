@@ -24,8 +24,7 @@ let { appid, appSecret } = require("../../config/wx");
 // config.headers.Authorization = getTOKEN();
 router.post("/token", function (req, res) {
   let { code, rawData } = req.body.info;
-  let { nickName, gender, avatarUrl, country, province, city } =
-    JSON.parse(rawData);
+  let { nickName, gender, avatarUrl, country, province, city } = JSON.parse(rawData);
   // 请求微信API
   let url = `https:/\/\api.weixin.qq.com/\sns/\jscode2session?appid=${appid}&secret=${appSecret}&js_code=${code}&grant_type=authorization_code`;
   request(url, async (error, response, body) => {
@@ -53,32 +52,6 @@ router.post("/token", function (req, res) {
     let token = jwt.sign(data, "secret");
     // 查询数据库中是否有此openid
     let sql = `SELECT * FROM user WHERE openid =?`;
-    // db.query(sql, [data.openid], function (results) {
-    //   // 如果没有此openid，插入新的数据
-    //   if (results.length == 0) {
-    //     let sql = "INSERT INTO user (openid,session_key) VALUES (?,?)";
-    //     db.query(sql, [data.openid, data.session_key], function (results) {
-    //       if (results.affectedRows > 0) {
-    //         res.json({
-    //           status: true,
-    //           token: token,
-    //         });
-    //       }
-    //     });
-    //     return;
-    //   }
-    //   // 如果有此openid，更新session_key的数据
-    //   let sql = "UPDATE user SET session_key = ? WHERE openid = ?";
-    //   db.query(sql, [data.session_key, data.openid], function (results) {
-    //     if (results.affectedRows > 0) {
-    //       res.json({
-    //         status: true,
-    //         token: token,
-    //       });
-    //       return;
-    //     }
-    //   });
-    // });
     let userInfo = await db.query(sql, data.openid);
     // 如果没有此openid，插入新的数据
     if (userInfo.length == 0) {
@@ -118,41 +91,5 @@ router.post("/token", function (req, res) {
   });
 });
 
-//弃用
-/**
- * @api {put} /api/user/info 上传微信用户信息
- * @apiName userInfoUpload
- * @apiGroup User
- * @apiPermission user
- *
- * @apiParam { String } nickName 用户昵称.
- * @apiParam { Number } gender 性别.
- * @apiParam { String } avatarUrl 头像.
- * @apiParam { String } country 国家.
- * @apiParam { String } province 省.
- * @apiParam { String } city 市.
- *
- * @apiSampleRequest /api/user/info
- */
-// router.put("/info", async (req, res) => {
-//   let { nickName, gender, avatarUrl, country, province, city } = req.body;
-//   let { openid } = req.user;
-//   let sql = `UPDATE user SET nickname = ?, sex = ?, avatar = ?, country = ?, province = ?, city = ? WHERE openid = ?`;
-//   let results = await db.query(sql, [
-//     nickName,
-//     gender,
-//     avatarUrl,
-//     country,
-//     province,
-//     city,
-//     openid,
-//   ]);
-//   if (results.affectedRows) {
-//     res.json({
-//       status: true,
-//       msg: "存储信息成功！",
-//     });
-//   }
-// });
 
 module.exports = router;

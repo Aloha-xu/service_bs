@@ -12,6 +12,11 @@ router.get("/list", async (req, res) => {
   let { openid } = req.user;
   var sql = "SELECT * FROM address WHERE openid = ?";
   let results = await db.query(sql, openid);
+
+  results.forEach(item => {
+    item.id = item.addressId
+  })
+
   if (!results.length) {
     res.json({
       status: false,
@@ -34,9 +39,12 @@ router.get("/list", async (req, res) => {
  *
  */
 router.get("/addressDetail", async (req, res) => {
-  let sql = `SELECT * FROM address WHERE id = ? `;
+  let sql = `SELECT * FROM address WHERE addressId = ? `;
   let { id } = req.query;
   let results = await db.query(sql, id);
+  results.forEach(item => {
+    item.id = item.addressId
+  })
   if (!results.length) {
     res.json({
       status: false,
@@ -124,7 +132,7 @@ router.post("/updataAdress", async (req, res) => {
     sql = `UPDATE address SET isDefault = 0 WHERE isDefault = 1`;
     await db.query(sql);
   }
-  sql = `UPDATE address SET name = ?, tel = ?, province = ?, city = ?, county = ?, street = ?, isDefault = ? WHERE id = ?`;
+  sql = `UPDATE address SET name = ?, tel = ?, province = ?, city = ?, county = ?, street = ?, isDefault = ? WHERE addressId = ?`;
   let results = await db.query(sql, [
     name,
     tel,
@@ -158,7 +166,7 @@ router.post("/updataAdress", async (req, res) => {
  */
 router.get("/delAdsress", async (req, res) => {
   let { id } = req.query;
-  let sql = `DELETE FROM address WHERE id = ? `;
+  let sql = `DELETE FROM address WHERE addressId = ? `;
   let results = await db.query(sql, id);
   if (results.affectedRows > 0) {
     res.json({

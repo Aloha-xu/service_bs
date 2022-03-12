@@ -63,7 +63,7 @@ router.post("/checkout", async (req, res) => {
       orderTotalPrice,
       goodsCount,
       outStock: outStock ? 1 : 0,
-      addressId: checkedAddress[0].id,
+      addressId: checkedAddress[0].addressId,
     },
     errno: 0,
   });
@@ -415,7 +415,7 @@ router.post("/detail", async (req, res) => {
 
   let { addressId } = orderInfo[0];
 
-  sql = `SELECT * FROM address WHERE id = ${addressId} `;
+  sql = `SELECT * FROM address WHERE addressId = ${addressId} `;
 
   let addressInfo = await db.query(sql);
 

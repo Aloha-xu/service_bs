@@ -202,7 +202,7 @@ router.post("/detail", async (req, res) => {
 
   let { addressId } = orderInfo[0];
 
-  sql = `SELECT * FROM address WHERE id = ${addressId} `;
+  sql = `SELECT * FROM address WHERE addressId = ${addressId} `;
 
   let addressInfo = await db.query(sql);
 
