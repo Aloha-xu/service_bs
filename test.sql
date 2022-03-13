@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 13/03/2022 00:41:37
+ Date: 13/03/2022 21:53:50
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,7 @@ CREATE TABLE `address`  (
   `street` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '详细地址',
   `isDefault` int(1) NOT NULL DEFAULT 1 COMMENT '是否默认',
   PRIMARY KEY (`addressId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of address
@@ -55,11 +55,11 @@ CREATE TABLE `admin`  (
   `sex` tinyint(1) NOT NULL DEFAULT 0 COMMENT '性别 男0 女1',
   `avatar` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '/images/avatar/default.jpg' COMMENT '头像',
   `tel` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号码',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `loginTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '登录时间',
   `loginCount` int(11) NOT NULL DEFAULT 1 COMMENT '登录次数',
   PRIMARY KEY (`adminId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of admin
@@ -76,7 +76,7 @@ CREATE TABLE `admin_role`  (
   `adminId` int(11) NOT NULL COMMENT '用户id 外键',
   `roleId` int(11) NOT NULL COMMENT '角色id 外键',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of admin_role
@@ -92,10 +92,10 @@ CREATE TABLE `banner`  (
   `bannerId` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `state` int(1) NOT NULL DEFAULT 1 COMMENT '0 - 下架  1 - 上架',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`bannerId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of banner
@@ -114,10 +114,14 @@ CREATE TABLE `cart`  (
   `goodsId` int(11) NOT NULL COMMENT '商品id',
   `goodsNumber` int(6) NOT NULL COMMENT '商品数量',
   `state` int(1) NOT NULL DEFAULT 1 COMMENT '1-正常，0-禁用，-1-删除',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`cartId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of cart
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for category
@@ -128,7 +132,7 @@ CREATE TABLE `category`  (
   `name` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称 5个字',
   `pId` int(11) NOT NULL COMMENT '父级id',
   PRIMARY KEY (`cateId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 145 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of category
@@ -149,7 +153,7 @@ CREATE TABLE `foot_print`  (
   `openid` varchar(28) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '外键',
   `goodsId` int(11) NOT NULL COMMENT '外键',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 41 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of foot_print
@@ -191,12 +195,12 @@ CREATE TABLE `goods`  (
   `slider` varchar(600) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品轮播图片-最多6张',
   `detail` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品详情-',
   `freight` decimal(6, 0) NOT NULL DEFAULT 0 COMMENT '商品运费 0-999999',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `updateTime` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   `state` int(1) NOT NULL DEFAULT 1 COMMENT '0下架 1上架',
   `sellVolume` int(11) NOT NULL DEFAULT 0 COMMENT '已售数量',
   PRIMARY KEY (`goodsId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of goods
@@ -212,7 +216,7 @@ INSERT INTO `goods` VALUES (48, 6, 'Sony/索尼 HT-A9 家庭影院 7.1.4声道 3
 INSERT INTO `goods` VALUES (49, 6, '日本直邮Sony索尼「S-Master」搭载音响CMT-SBT 收音蓝牙组合音响', 2619.00, 1000, 'http://localhost:3003/images/goods/e1a3ea70-9e24-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/e5ccfab0-9e24-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/e9f8f120-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/ed0fa700-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/ef7905e0-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/f2c8f430-9e24-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 22:43:29', NULL, 1, 0);
 INSERT INTO `goods` VALUES (50, 6, 'Sony/索尼 SRS-RA5000 旗舰级高解析度蓝牙音箱 无线音箱', 4499.00, 990, 'http://localhost:3003/images/goods/29b59f70-9e25-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/4fdbdbb0-9e25-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/52af1ff0-9e25-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/5826d040-9e25-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/5b959130-9e25-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/5e53ede0-9e25-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/6064f390-9e25-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 22:46:32', '2022-03-12 19:23:25', 1, 9);
 INSERT INTO `goods` VALUES (51, 5, '天猫精灵X5智能音箱音响蓝牙闹钟早教机语音声控ai机器人送礼', 299.00, 992, 'http://localhost:3003/images/goods/02403f30-9e2b-11ec-a481-f99b1b5f7de6_360.jpeg', 'http://localhost:3003/images/goods/046ae760-9e2b-11ec-a481-f99b1b5f7de6_720.jpeg', '<p><img src=\"http://localhost:3003/images/details/09305eb0-9e2b-11ec-a481-f99b1b5f7de6.jpeg\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/40cd6e30-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/46f75780-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/49303080-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 23:28:51', '2022-03-12 19:23:25', 1, 8);
-INSERT INTO `goods` VALUES (52, 5, '华为蓝牙音箱智能音响家用高音质低音炮无线wifi蓝牙小型迷你ai2', 299.00, 995, 'http://localhost:3003/images/goods/863782d0-9e2b-11ec-a481-f99b1b5f7de6_360.jpeg', 'http://localhost:3003/images/goods/87a591c0-9e2b-11ec-a481-f99b1b5f7de6_720.jpeg,http://localhost:3003/images/goods/89728990-9e2b-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/8d8a82d0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/905143f0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/93e232e0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/968ba800-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/983fc0a0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 23:31:03', '2022-03-11 10:15:00', 1, 1);
+INSERT INTO `goods` VALUES (52, 5, '华为蓝牙音箱智能音响家用高音质低音炮无线wifi蓝牙小型迷你ai2', 299.00, 994, 'http://localhost:3003/images/goods/863782d0-9e2b-11ec-a481-f99b1b5f7de6_360.jpeg', 'http://localhost:3003/images/goods/87a591c0-9e2b-11ec-a481-f99b1b5f7de6_720.jpeg,http://localhost:3003/images/goods/89728990-9e2b-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/8d8a82d0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/905143f0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/93e232e0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/968ba800-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/983fc0a0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 23:31:03', '2022-03-13 15:28:49', 1, 2);
 INSERT INTO `goods` VALUES (53, 5, '小度智能屏Air蓝牙音箱百度官方音响5.45英寸向往的生活送礼包邮', 269.00, 999, 'http://localhost:3003/images/goods/b791c9d0-9e2b-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/bb235500-9e2b-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/bea4daa0-9e2b-11ec-a481-f99b1b5f7de6_720.png', '<p><img src=\"http://localhost:3003/images/details/c118e7e0-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/c4697270-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/c843c670-9e2b-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 0, '2022-03-07 23:32:29', '2022-03-09 22:57:45', 1, 1);
 INSERT INTO `goods` VALUES (54, 4, '【陈小春推荐】索爱无线蓝牙音箱迷你小型音响家用3d环绕重低音炮便携式高音质插卡车载新款智能通用适用华为', 99.00, 100, 'http://localhost:3003/images/goods/3de41470-9e2c-11ec-a481-f99b1b5f7de6_360.png', 'http://localhost:3003/images/goods/402fb220-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/41e5c690-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/43aaa810-9e2c-11ec-a481-f99b1b5f7de6_720.png,http://localhost:3003/images/goods/53b7d160-9ea9-11ec-94ba-812cfdc15bd1_720.png', '<p><img src=\"http://localhost:3003/images/details/46b4b3c0-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/48bcb8c0-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/4a974520-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/><img src=\"http://localhost:3003/images/details/4e43ab50-9e2c-11ec-a481-f99b1b5f7de6.png\" style=\"max-width:100%;\" contenteditable=\"false\"/></p>', 9, '2022-03-07 23:36:58', '2022-03-08 14:31:04', 0, 0);
 
@@ -227,7 +231,7 @@ CREATE TABLE `menu`  (
   `path` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接url 路由路径',
   `menuOrder` int(5) NOT NULL COMMENT '显示顺序 到万',
   PRIMARY KEY (`menuId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 85 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of menu
@@ -260,7 +264,7 @@ CREATE TABLE `order_goods`  (
   `goodsId` int(11) NOT NULL COMMENT '商品id',
   `goodsNumber` int(11) NOT NULL COMMENT '商品数量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单-商品表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of order_goods
@@ -284,6 +288,7 @@ INSERT INTO `order_goods` VALUES (61, '64569960-a044-11ec-87d6-673f3e8d8689', 44
 INSERT INTO `order_goods` VALUES (62, '0df10db0-a0e1-11ec-907d-fbbe06c18ce2', 52, 1);
 INSERT INTO `order_goods` VALUES (63, 'd5a5ea90-a1f6-11ec-b6b7-99bad28222d5', 51, 3);
 INSERT INTO `order_goods` VALUES (64, 'd5a5ea90-a1f6-11ec-b6b7-99bad28222d5', 50, 4);
+INSERT INTO `order_goods` VALUES (65, '39c563e0-a29f-11ec-bf42-b17a9ef1779d', 52, 1);
 
 -- ----------------------------
 -- Table structure for order_status
@@ -295,7 +300,7 @@ CREATE TABLE `order_status`  (
   `name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `text` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `orderState`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态-字典表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单状态-字典表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of order_status
@@ -318,7 +323,7 @@ CREATE TABLE `orders`  (
   `id` int(11) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '无意义 唯一标识',
   `orderId` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'uuid生成',
   `openid` varchar(28) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
-  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间 ',
+  `createTime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间 ',
   `payTime` timestamp(0) NULL DEFAULT NULL COMMENT '支付时间',
   `shipTime` timestamp(0) NULL DEFAULT NULL COMMENT '发货时间 后台填写',
   `receivedTime` timestamp(0) NULL DEFAULT NULL COMMENT '收货时间  只可以是用户手动点击确认收货的那个时间',
@@ -336,7 +341,7 @@ CREATE TABLE `orders`  (
   `goodsPrices` decimal(8, 2) NOT NULL COMMENT '商品价格',
   `refundReason` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '退款理由',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 64 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 64 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of orders
@@ -355,6 +360,7 @@ INSERT INTO `orders` VALUES (00000000054, '736d0220-9fba-11ec-8d3b-5f800b779ddd'
 INSERT INTO `orders` VALUES (00000000056, '64569960-a044-11ec-87d6-673f3e8d8689', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-10 15:33:34', '2022-03-10 15:33:47', NULL, NULL, NULL, NULL, '2022-03-12 17:57:26', 6, 0, NULL, NULL, 6, 1, 0, '', 399.00, NULL);
 INSERT INTO `orders` VALUES (00000000057, '0df10db0-a0e1-11ec-907d-fbbe06c18ce2', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-11 10:15:00', '2022-03-12 17:49:18', NULL, NULL, NULL, NULL, '2022-03-12 17:57:21', 6, 0, 'tes', '121212121212', 6, 1, 0, '2121212', 299.00, NULL);
 INSERT INTO `orders` VALUES (00000000063, 'd5a5ea90-a1f6-11ec-b6b7-99bad28222d5', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-12 19:23:26', '2022-03-12 19:23:29', NULL, NULL, NULL, NULL, '2022-03-12 19:23:29', 8, 0, NULL, NULL, 1, 1, 0, '', 18893.00, NULL);
+INSERT INTO `orders` VALUES (00000000064, '39c563e0-a29f-11ec-bf42-b17a9ef1779d', 'oGDr80q7hxWmQf5BSJg2yy_FwqpQ', '2022-03-13 15:28:49', '2022-03-13 15:28:50', NULL, NULL, NULL, NULL, '2022-03-13 15:28:50', 8, 0, NULL, NULL, 1, 1, 0, '', 299.00, NULL);
 
 -- ----------------------------
 -- Table structure for role
@@ -364,7 +370,7 @@ CREATE TABLE `role`  (
   `roleId` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `roleName` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称 5个汉字',
   PRIMARY KEY (`roleId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of role
@@ -382,7 +388,7 @@ CREATE TABLE `role_menu`  (
   `roleId` int(11) NOT NULL COMMENT '角色id 外键',
   `menuId` int(11) NOT NULL COMMENT '权限id 外键',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 188 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 165 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of role_menu
@@ -441,7 +447,7 @@ CREATE TABLE `user`  (
   `openid` varchar(28) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '小程序唯一标示id',
   `session_key` varchar(28) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '会话密钥',
   PRIMARY KEY (`id`, `openid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
